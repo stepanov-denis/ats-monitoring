@@ -1,0 +1,18 @@
+[package]
+name = "ats-monitoring"
+version = "0.1.0"
+edition = "2018"
+authors = ["Stepanov Denis <stepanov.d.m@yandex.ru>"]
+description = "An application for sending notifications via the SMS gateway API and recording events in the PostgreSQL DBMS about the status of the ATS (city power grid, generator, UPS)."
+license = "Apache-2.0"
+repository = "https://github.com/stepanov-denis/ats-monitoring/"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+postgres = "0.19.1"
+timer = "0.2.0"
+chrono = "0.4.19"
+reqwest = { version = "0.11.4", features = ["blocking"] }
+error-chain = "0.12.4"
+online = { version = "3.0.1",  default-features = false, features = ["sync"] }
