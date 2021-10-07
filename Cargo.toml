@@ -6,7 +6,7 @@ authors = ["Stepanov Denis <stepanov.d.m@yandex.ru>"]
 description = "An application for sending notifications via the SMS gateway API and recording events in the PostgreSQL DBMS about the status of the ATS (city power grid, generator, UPS)."
 license = "Apache-2.0"
 repository = "https://github.com/stepanov-denis/ats-monitoring/"
-keywords = ["smart home", "scada", "notifications"]
+keywords = ["scada", "notifications"]
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
