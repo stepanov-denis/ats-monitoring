@@ -37,6 +37,23 @@ CREATE TABLE события_авр (
     время_и_дата timestamp default current_timestamp
 );
 ```
+```
+CREATE TABLE зимний_сад (
+    фитоосвещение_1 int NOT NULL,
+    фитоосвещение_2 int NOT NULL,
+    фитоосвещение_3 int NOT NULL,
+    фитоосвещение_4 int NOT NULL,
+    вентилятор int NOT NULL,
+    автополив_1 int NOT NULL,
+    автополив_2 int NOT NULL,
+    автополив_3 int NOT NULL,
+    температура int NOT NULL,
+    влажность int NOT NULL,
+    освещенность_в_помещении int NOT NULL, 
+    освещенность_на_улице int NOT NULL,
+    дата_и_время timestamp default current_timestamp
+);
+```
 * Install [Lectus Modbus OPC/DDE server](http://www.lectussoft.com/)
 * In Lectus Modbus OPC/DDE server settings connect an external PostgreSQL DBMS
 * Open configuration file "modbus map for ats-monitoring" in Lectus Modbus OPC/DDE server
