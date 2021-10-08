@@ -6,6 +6,7 @@ use std::time::Duration;
 mod generator_monitoring;
 mod power_supply_monitoring;
 
+/// Timer for adjusting the execution time of thread loops.
 fn timer_3sec() {
     let timer = timer::Timer::new();
     let (tx, rx) = channel();

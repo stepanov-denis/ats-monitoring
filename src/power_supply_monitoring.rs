@@ -689,6 +689,33 @@ pub mod power_supply {
         Ok(())
     }
 
+    /// Timer for delay 'inner: loop.
+    fn timer_3sec() {
+        let timer = timer::Timer::new();
+        let (tx, rx) = channel();
+
+        let _guard = timer.schedule_with_delay(chrono::Duration::seconds(3), move || {
+            tx.send(()).unwrap();
+            let _ignored = tx.send(());
+        });
+
+        rx.recv().unwrap();
+    }
+
+    /// Timer for delaying the operation of the stream in order to wait
+    /// for confirmation of a power failure from the mains.
+    fn timer_90sec() {
+        let timer = timer::Timer::new();
+        let (tx, rx) = channel();
+
+        let _guard = timer.schedule_with_delay(chrono::Duration::seconds(90), move || {
+            tx.send(()).unwrap();
+            let _ignored = tx.send(());
+        });
+
+        rx.recv().unwrap();
+    }
+
     /// Main spawn - the function for detecting a power failure from the mains/restoring power from the mains,
     /// successful start of the generator, failure of the generator start, and notifications about these events.
     /// Additional spawn - the function of determining the serviceability/malfunction of the generator
@@ -746,13 +773,7 @@ pub mod power_supply {
                                     println!("Произошел сбой питания от электросети");
                                     println!("Ожидание (90 секунд) подтверждения отсутствия питания от электросети");
                                     log_power_failure();
-                                    let timer = timer::Timer::new();
-                                    let (tx, rx) = channel();
-                                    let _guard = timer.schedule_with_delay(chrono::Duration::seconds(90), move || {
-                                        tx.send(()).unwrap();
-                                        let _ignored = tx.send(());
-                                    });
-                                    rx.recv().unwrap();
+                                    timer_90sec();
                                     // Checking the connection of the PostgreSQL DBMS with the OPC server. 
                                     for row in client
                                         .query(
@@ -945,15 +966,7 @@ pub mod power_supply {
                                                                                                 } else {
                                                                                                     println!("Питание от электросети еще не было восстановлено, после отключения");
                                                                                                     log_power_dont_restored();
-                                                                                                    let timer = timer::Timer::new();
-                                                                                                    let (tx, rx) = channel();
-                                                                                                
-                                                                                                    let _guard = timer.schedule_with_delay(chrono::Duration::seconds(3), move || {
-                                                                                                        tx.send(()).unwrap();
-                                                                                                        let _ignored = tx.send(());
-                                                                                                    });
-                                                                                                
-                                                                                                    rx.recv().unwrap();
+                                                                                                    timer_3sec();
                                                                                                 }
                                                                                             }
                                                                                         } else {
