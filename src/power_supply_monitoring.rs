@@ -1,17 +1,9 @@
 pub mod power_supply {
     extern crate chrono;
     extern crate timer;
-    use error_chain::error_chain;
     use online::sync::check;
-    use postgres::{Client, NoTls};
+    use postgres::{Client, NoTls, Error};
     use std::sync::mpsc::channel;
-
-    error_chain! {
-        foreign_links {
-            Io(std::io::Error);
-            HttpRequest(reqwest::Error);
-        }
-    }
 
     /// The structure of power supply from the power grid.
     pub struct PowerSupply {
@@ -36,20 +28,20 @@ pub mod power_supply {
     }
 
     /// Records the event "Питание от электросети есть." in the sql table "события_авр".
-    pub fn event_power_ok() -> Result<()> {
+    pub fn event_power_ok() -> Result<(), Error> {
         let mut client =
-            Client::connect("postgresql://postgres:postgres@localhost/postgres", NoTls).unwrap();
+            Client::connect("postgresql://postgres:postgres@localhost/postgres", NoTls)?;
         let event = "Питание от электросети есть.";
         client
             .execute("INSERT INTO события_авр (событие) VALUES ($1)", &[&event])
-            .unwrap();
+            ?;
 
         for row in client
             .query(
                 "SELECT событие, время_и_дата FROM события_авр ORDER BY время_и_дата DESC limit 1",
                 &[],
             )
-            .unwrap()
+            ?
         {
             let event: &str = row.get(0);
 
@@ -59,20 +51,20 @@ pub mod power_supply {
     }
 
     /// Records the event "Сбой питания от электросети. Успешный старт генератора." in the sql table "события_авр".
-    pub fn event_power_failure_start_generator_ok() -> Result<()> {
+    pub fn event_power_failure_start_generator_ok() -> Result<(), Error> {
         let mut client =
-            Client::connect("postgresql://postgres:postgres@localhost/postgres", NoTls).unwrap();
+            Client::connect("postgresql://postgres:postgres@localhost/postgres", NoTls)?;
         let event = "Сбой питания от электросети. Успешный старт генератора.";
         client
             .execute("INSERT INTO события_авр (событие) VALUES ($1)", &[&event])
-            .unwrap();
+            ?;
 
         for row in client
             .query(
                 "SELECT событие, время_и_дата FROM события_авр ORDER BY время_и_дата DESC limit 1",
                 &[],
             )
-            .unwrap()
+            ?
         {
             let event: &str = row.get(0);
 
@@ -82,20 +74,20 @@ pub mod power_supply {
     }
 
     /// Records the event "Сбой питания от электросети. Сбой старта генератора." in the sql table "события_авр".
-    pub fn event_power_failure_start_generator_err() -> Result<()> {
+    pub fn event_power_failure_start_generator_err() -> Result<(), Error> {
         let mut client =
             Client::connect("postgresql://postgres:postgres@localhost/postgres", NoTls).unwrap();
         let event = "Сбой питания от электросети. Сбой старта генератора.";
         client
             .execute("INSERT INTO события_авр (событие) VALUES ($1)", &[&event])
-            .unwrap();
+            ?;
 
         for row in client
             .query(
                 "SELECT событие, время_и_дата FROM события_авр ORDER BY время_и_дата DESC limit 1",
                 &[],
             )
-            .unwrap()
+            ?
         {
             let event: &str = row.get(0);
 
@@ -105,20 +97,20 @@ pub mod power_supply {
     }
 
     /// Records the event "Питание от электросети восстановлено. Генератор исправен. Генератор работает." in the sql table "события_авр".
-    pub fn event_power_restored_generator_work_ok() -> Result<()> {
+    pub fn event_power_restored_generator_work_ok() -> Result<(), Error> {
         let mut client =
-            Client::connect("postgresql://postgres:postgres@localhost/postgres", NoTls).unwrap();
+            Client::connect("postgresql://postgres:postgres@localhost/postgres", NoTls)?;
         let event = "Питание от электросети восстановлено. Генератор исправен. Генератор работает.";
         client
             .execute("INSERT INTO события_авр (событие) VALUES ($1)", &[&event])
-            .unwrap();
+            ?;
 
         for row in client
             .query(
                 "SELECT событие, время_и_дата FROM события_авр ORDER BY время_и_дата DESC limit 1",
                 &[],
             )
-            .unwrap()
+            ?
         {
             let event: &str = row.get(0);
 
@@ -128,21 +120,21 @@ pub mod power_supply {
     }
 
     /// Records the event "Питание от электросети восстановлено. Генератор неисправен. Генератор не работает." in the sql table "события_авр".
-    pub fn event_power_restored_generator_work_err() -> Result<()> {
+    pub fn event_power_restored_generator_work_err() -> Result<(), Error> {
         let mut client =
-            Client::connect("postgresql://postgres:postgres@localhost/postgres", NoTls).unwrap();
+            Client::connect("postgresql://postgres:postgres@localhost/postgres", NoTls)?;
         let event =
             "Питание от электросети восстановлено. Генератор неисправен. Генератор не работает.";
         client
             .execute("INSERT INTO события_авр (событие) VALUES ($1)", &[&event])
-            .unwrap();
+            ?;
 
         for row in client
             .query(
                 "SELECT событие, время_и_дата FROM события_авр ORDER BY время_и_дата DESC limit 1",
                 &[],
             )
-            .unwrap()
+            ?
         {
             let event: &str = row.get(0);
 
@@ -152,20 +144,20 @@ pub mod power_supply {
     }
 
     /// Records the event "Авария! Генератор неисправен! Срочно произведите сервисные работы!" in the sql table "события_авр".
-    pub fn event_generator_work_err() -> Result<()> {
+    pub fn event_generator_work_err() -> Result<(), Error> {
         let mut client =
-            Client::connect("postgresql://postgres:postgres@localhost/postgres", NoTls).unwrap();
+            Client::connect("postgresql://postgres:postgres@localhost/postgres", NoTls)?;
         let event = "Авария! Генератор неисправен! Срочно произведите сервисные работы!";
         client
             .execute("INSERT INTO события_авр (событие) VALUES ($1)", &[&event])
-            .unwrap();
+            ?;
 
         for row in client
             .query(
                 "SELECT событие, время_и_дата FROM события_авр ORDER BY время_и_дата DESC limit 1",
                 &[],
             )
-            .unwrap()
+            ?
         {
             let event: &str = row.get(0);
 
@@ -175,21 +167,21 @@ pub mod power_supply {
     }
 
     /// Records the event "Работоспособность генератора восстановлена. Генератор исправен. Генератор работает." in the sql table "события_авр".
-    pub fn event_generator_work_restored() -> Result<()> {
+    pub fn event_generator_work_restored() -> Result<(), Error> {
         let mut client =
-            Client::connect("postgresql://postgres:postgres@localhost/postgres", NoTls).unwrap();
+            Client::connect("postgresql://postgres:postgres@localhost/postgres", NoTls)?;
         let event =
             "Работоспособность генератора восстановлена. Генератор исправен. Генератор работает.";
         client
             .execute("INSERT INTO события_авр (событие) VALUES ($1)", &[&event])
-            .unwrap();
+            ?;
 
         for row in client
             .query(
                 "SELECT событие, время_и_дата FROM события_авр ORDER BY время_и_дата DESC limit 1",
                 &[],
             )
-            .unwrap()
+            ?
         {
             let event: &str = row.get(0);
 
@@ -199,20 +191,20 @@ pub mod power_supply {
     }
 
     /// Records the event "Генератор в режиме трансляции питания от электросети работает исправно." in the sql table "события_авр".
-    pub fn event_generator_work_ok() -> Result<()> {
+    pub fn event_generator_work_ok() -> Result<(), Error> {
         let mut client =
-            Client::connect("postgresql://postgres:postgres@localhost/postgres", NoTls).unwrap();
+            Client::connect("postgresql://postgres:postgres@localhost/postgres", NoTls)?;
         let event = "Генератор в режиме трансляции питания от электросети работает исправно.";
         client
             .execute("INSERT INTO события_авр (событие) VALUES ($1)", &[&event])
-            .unwrap();
+            ?;
 
         for row in client
             .query(
                 "SELECT событие, время_и_дата FROM события_авр ORDER BY время_и_дата DESC limit 1",
                 &[],
             )
-            .unwrap()
+            ?
         {
             let event: &str = row.get(0);
 
@@ -222,23 +214,23 @@ pub mod power_supply {
     }
 
     /// Records log "Произошел сбой питания от электросети! Ожидание (90 секунд) подтверждения отсутствия питания от электросети." in the sql table "журнал_работы_приложения".
-    pub fn log_power_failure() -> Result<()> {
+    pub fn log_power_failure() -> Result<(), Error> {
         let mut client =
-            Client::connect("postgresql://postgres:postgres@localhost/postgres", NoTls).unwrap();
+            Client::connect("postgresql://postgres:postgres@localhost/postgres", NoTls)?;
         let event = "Произошел сбой питания от электросети! Ожидание (90 секунд) подтверждения отсутствия питания от электросети.";
         client
             .execute(
                 "INSERT INTO журнал_работы_приложения (событие) VALUES ($1)",
                 &[&event],
             )
-            .unwrap();
+            ?;
 
         for row in client
             .query(
                 "SELECT событие, время_и_дата FROM журнал_работы_приложения ORDER BY время_и_дата DESC limit 1",
                 &[],
             )
-            .unwrap()
+            ?
         {
             let event: &str = row.get(0);
 
@@ -248,23 +240,23 @@ pub mod power_supply {
     }
 
     /// Records log "Питание от электросети есть." in the sql table "журнал_работы_приложения".
-    pub fn log_power_ok() -> Result<()> {
+    pub fn log_power_ok() -> Result<(), Error> {
         let mut client =
-            Client::connect("postgresql://postgres:postgres@localhost/postgres", NoTls).unwrap();
+            Client::connect("postgresql://postgres:postgres@localhost/postgres", NoTls)?;
         let event = "Питание от электросети есть.";
         client
             .execute(
                 "INSERT INTO журнал_работы_приложения (событие) VALUES ($1)",
                 &[&event],
             )
-            .unwrap();
+            ?;
 
         for row in client
             .query(
                 "SELECT событие, время_и_дата FROM журнал_работы_приложения ORDER BY время_и_дата DESC limit 1",
                 &[],
             )
-            .unwrap()
+            ?
         {
             let event: &str = row.get(0);
 
@@ -274,23 +266,23 @@ pub mod power_supply {
     }
 
     /// Records log "Подтверждение отсутствия питания от электросети." in the sql table "журнал_работы_приложения".
-    pub fn log_power_failure_confirmed() -> Result<()> {
+    pub fn log_power_failure_confirmed() -> Result<(), Error> {
         let mut client =
-            Client::connect("postgresql://postgres:postgres@localhost/postgres", NoTls).unwrap();
+            Client::connect("postgresql://postgres:postgres@localhost/postgres", NoTls)?;
         let event = "Подтверждение отсутствия питания от электросети.";
         client
             .execute(
                 "INSERT INTO журнал_работы_приложения (событие) VALUES ($1)",
                 &[&event],
             )
-            .unwrap();
+            ?;
 
         for row in client
             .query(
                 "SELECT событие, время_и_дата FROM журнал_работы_приложения ORDER BY время_и_дата DESC limit 1",
                 &[],
             )
-            .unwrap()
+            ?
         {
             let event: &str = row.get(0);
 
@@ -300,23 +292,23 @@ pub mod power_supply {
     }
 
     /// Records log "Успешный старт генератора." in the sql table "журнал_работы_приложения".
-    pub fn log_start_generator_ok() -> Result<()> {
+    pub fn log_start_generator_ok() -> Result<(), Error> {
         let mut client =
-            Client::connect("postgresql://postgres:postgres@localhost/postgres", NoTls).unwrap();
+            Client::connect("postgresql://postgres:postgres@localhost/postgres", NoTls)?;
         let event = "Успешный старт генератора.";
         client
             .execute(
                 "INSERT INTO журнал_работы_приложения (событие) VALUES ($1)",
                 &[&event],
             )
-            .unwrap();
+            ?;
 
         for row in client
             .query(
                 "SELECT событие, время_и_дата FROM журнал_работы_приложения ORDER BY время_и_дата DESC limit 1",
                 &[],
             )
-            .unwrap()
+            ?
         {
             let event: &str = row.get(0);
 
@@ -326,23 +318,23 @@ pub mod power_supply {
     }
 
     /// Records log "Сбой старта генератора!" in the sql table "журнал_работы_приложения".
-    pub fn log_start_generator_err() -> Result<()> {
+    pub fn log_start_generator_err() -> Result<(), Error> {
         let mut client =
-            Client::connect("postgresql://postgres:postgres@localhost/postgres", NoTls).unwrap();
+            Client::connect("postgresql://postgres:postgres@localhost/postgres", NoTls)?;
         let event = "Сбой старта генератора!";
         client
             .execute(
                 "INSERT INTO журнал_работы_приложения (событие) VALUES ($1)",
                 &[&event],
             )
-            .unwrap();
+            ?;
 
         for row in client
             .query(
                 "SELECT событие, время_и_дата FROM журнал_работы_приложения ORDER BY время_и_дата DESC limit 1",
                 &[],
             )
-            .unwrap()
+            ?
         {
             let event: &str = row.get(0);
 
@@ -352,23 +344,23 @@ pub mod power_supply {
     }
 
     /// Records log "Питание от электросети восстановлено." in the sql table "журнал_работы_приложения".
-    pub fn log_power_restored() -> Result<()> {
+    pub fn log_power_restored() -> Result<(), Error> {
         let mut client =
-            Client::connect("postgresql://postgres:postgres@localhost/postgres", NoTls).unwrap();
+            Client::connect("postgresql://postgres:postgres@localhost/postgres", NoTls)?;
         let event = "Питание от электросети восстановлено.";
         client
             .execute(
                 "INSERT INTO журнал_работы_приложения (событие) VALUES ($1)",
                 &[&event],
             )
-            .unwrap();
+            ?;
 
         for row in client
             .query(
                 "SELECT событие, время_и_дата FROM журнал_работы_приложения ORDER BY время_и_дата DESC limit 1",
                 &[],
             )
-            .unwrap()
+            ?
         {
             let event: &str = row.get(0);
 
@@ -378,23 +370,23 @@ pub mod power_supply {
     }
 
     /// Records log "Генератор исправен. Генератор работает." in the sql table "журнал_работы_приложения".
-    pub fn log_power_restored_generator_ok() -> Result<()> {
+    pub fn log_power_restored_generator_ok() -> Result<(), Error> {
         let mut client =
-            Client::connect("postgresql://postgres:postgres@localhost/postgres", NoTls).unwrap();
+            Client::connect("postgresql://postgres:postgres@localhost/postgres", NoTls)?;
         let event = "Генератор исправен. Генератор работает.";
         client
             .execute(
                 "INSERT INTO журнал_работы_приложения (событие) VALUES ($1)",
                 &[&event],
             )
-            .unwrap();
+            ?;
 
         for row in client
             .query(
                 "SELECT событие, время_и_дата FROM журнал_работы_приложения ORDER BY время_и_дата DESC limit 1",
                 &[],
             )
-            .unwrap()
+            ?
         {
             let event: &str = row.get(0);
 
@@ -404,23 +396,23 @@ pub mod power_supply {
     }
 
     /// Records log "Генератор неисправен. Генератор не работает." in the sql table "журнал_работы_приложения".
-    pub fn log_power_restored_generator_err() -> Result<()> {
+    pub fn log_power_restored_generator_err() -> Result<(), Error> {
         let mut client =
-            Client::connect("postgresql://postgres:postgres@localhost/postgres", NoTls).unwrap();
+            Client::connect("postgresql://postgres:postgres@localhost/postgres", NoTls)?;
         let event = "Генератор неисправен. Генератор не работает.";
         client
             .execute(
                 "INSERT INTO журнал_работы_приложения (событие) VALUES ($1)",
                 &[&event],
             )
-            .unwrap();
+            ?;
 
         for row in client
             .query(
                 "SELECT событие, время_и_дата FROM журнал_работы_приложения ORDER BY время_и_дата DESC limit 1",
                 &[],
             )
-            .unwrap()
+            ?
         {
             let event: &str = row.get(0);
 
@@ -430,23 +422,23 @@ pub mod power_supply {
     }
 
     /// Records log "Питание от электросети еще не было восстановлено, после отключения." in the sql table "журнал_работы_приложения".
-    pub fn log_power_dont_restored() -> Result<()> {
+    pub fn log_power_dont_restored() -> Result<(), Error> {
         let mut client =
-            Client::connect("postgresql://postgres:postgres@localhost/postgres", NoTls).unwrap();
+            Client::connect("postgresql://postgres:postgres@localhost/postgres", NoTls)?;
         let event = "Питание от электросети еще не было восстановлено, после отключения.";
         client
             .execute(
                 "INSERT INTO журнал_работы_приложения (событие) VALUES ($1)",
                 &[&event],
             )
-            .unwrap();
+            ?;
 
         for row in client
             .query(
                 "SELECT событие, время_и_дата FROM журнал_работы_приложения ORDER BY время_и_дата DESC limit 1",
                 &[],
             )
-            .unwrap()
+            ?
         {
             let event: &str = row.get(0);
 
@@ -456,23 +448,23 @@ pub mod power_supply {
     }
 
     /// Records log "Отправлено SMS сообщение: /Сбой питания от электросети. Успешный старт генератора./ на номер +79139402913" in the sql table "журнал_работы_приложения".
-    pub fn log_send_sms_start_generator_ok() -> Result<()> {
+    pub fn log_send_sms_start_generator_ok() -> Result<(), Error> {
         let mut client =
-            Client::connect("postgresql://postgres:postgres@localhost/postgres", NoTls).unwrap();
+            Client::connect("postgresql://postgres:postgres@localhost/postgres", NoTls)?;
         let event = "Отправлено SMS сообщение: /Сбой питания от электросети. Успешный старт генератора./ на номер +79139402913";
         client
             .execute(
                 "INSERT INTO журнал_работы_приложения (событие) VALUES ($1)",
                 &[&event],
             )
-            .unwrap();
+            ?;
 
         for row in client
             .query(
                 "SELECT событие, время_и_дата FROM журнал_работы_приложения ORDER BY время_и_дата DESC limit 1",
                 &[],
             )
-            .unwrap()
+            ?
         {
             let event: &str = row.get(0);
 
@@ -482,23 +474,23 @@ pub mod power_supply {
     }
 
     /// Records log "Отправлено SMS сообщение: /Сбой питания от электросети. Сбой старта генератора./ на номер +79139402913" in the sql table "журнал_работы_приложения".
-    pub fn log_send_sms_start_generator_err() -> Result<()> {
+    pub fn log_send_sms_start_generator_err() -> Result<(), Error> {
         let mut client =
-            Client::connect("postgresql://postgres:postgres@localhost/postgres", NoTls).unwrap();
+            Client::connect("postgresql://postgres:postgres@localhost/postgres", NoTls)?;
         let event = "Отправлено SMS сообщение: /Сбой питания от электросети. Сбой старта генератора./ на номер +79139402913";
         client
             .execute(
                 "INSERT INTO журнал_работы_приложения (событие) VALUES ($1)",
                 &[&event],
             )
-            .unwrap();
+            ?;
 
         for row in client
             .query(
                 "SELECT событие, время_и_дата FROM журнал_работы_приложения ORDER BY время_и_дата DESC limit 1",
                 &[],
             )
-            .unwrap()
+            ?
         {
             let event: &str = row.get(0);
 
@@ -508,23 +500,23 @@ pub mod power_supply {
     }
 
     /// Records log "Отправлено SMS сообщение: /Питание от электросети восстановлено. Генератор исправен. Генератор работает./ на номер +79139402913" in the sql table "журнал_работы_приложения".
-    pub fn log_send_sms_power_restored_generator_ok() -> Result<()> {
+    pub fn log_send_sms_power_restored_generator_ok() -> Result<(), Error> {
         let mut client =
-            Client::connect("postgresql://postgres:postgres@localhost/postgres", NoTls).unwrap();
+            Client::connect("postgresql://postgres:postgres@localhost/postgres", NoTls)?;
         let event = "Отправлено SMS сообщение: /Питание от электросети восстановлено. Генератор исправен. Генератор работает./ на номер +79139402913";
         client
             .execute(
                 "INSERT INTO журнал_работы_приложения (событие) VALUES ($1)",
                 &[&event],
             )
-            .unwrap();
+            ?;
 
         for row in client
             .query(
                 "SELECT событие, время_и_дата FROM журнал_работы_приложения ORDER BY время_и_дата DESC limit 1",
                 &[],
             )
-            .unwrap()
+            ?
         {
             let event: &str = row.get(0);
 
@@ -534,23 +526,23 @@ pub mod power_supply {
     }
 
     /// Records log "Отправлено SMS сообщение: /Питание от электросети восстановлено. Генератор неисправен. Генератор не работает./ на номер +79139402913" in the sql table "журнал_работы_приложения".
-    pub fn log_send_sms_power_restored_generator_err() -> Result<()> {
+    pub fn log_send_sms_power_restored_generator_err() -> Result<(), Error> {
         let mut client =
-            Client::connect("postgresql://postgres:postgres@localhost/postgres", NoTls).unwrap();
+            Client::connect("postgresql://postgres:postgres@localhost/postgres", NoTls)?;
         let event = "Отправлено SMS сообщение: /Питание от электросети восстановлено. Генератор неисправен. Генератор не работает./ на номер +79139402913";
         client
             .execute(
                 "INSERT INTO журнал_работы_приложения (событие) VALUES ($1)",
                 &[&event],
             )
-            .unwrap();
+            ?;
 
         for row in client
             .query(
                 "SELECT событие, время_и_дата FROM журнал_работы_приложения ORDER BY время_и_дата DESC limit 1",
                 &[],
             )
-            .unwrap()
+            ?
         {
             let event: &str = row.get(0);
 
@@ -560,23 +552,23 @@ pub mod power_supply {
     }
 
     /// Records log "Server error! Ошибка! SMS уведомление не было отправлено!" in the sql table "журнал_работы_приложения".
-    pub fn log_server_err() -> Result<()> {
+    pub fn log_server_err() -> Result<(), Error> {
         let mut client =
-            Client::connect("postgresql://postgres:postgres@localhost/postgres", NoTls).unwrap();
+            Client::connect("postgresql://postgres:postgres@localhost/postgres", NoTls)?;
         let event = "Server error! Ошибка! SMS уведомление не было отправлено!";
         client
             .execute(
                 "INSERT INTO журнал_работы_приложения (событие) VALUES ($1)",
                 &[&event],
             )
-            .unwrap();
+            ?;
 
         for row in client
             .query(
                 "SELECT событие, время_и_дата FROM журнал_работы_приложения ORDER BY время_и_дата DESC limit 1",
                 &[],
             )
-            .unwrap()
+            ?
         {
             let event: &str = row.get(0);
 
@@ -586,23 +578,23 @@ pub mod power_supply {
     }
 
     /// Records log "Http request status error! Ошибка! SMS уведомление не было отправлено!" in the sql table "журнал_работы_приложения".
-    pub fn log_request_status_err() -> Result<()> {
+    pub fn log_request_status_err() -> Result<(), Error> {
         let mut client =
-            Client::connect("postgresql://postgres:postgres@localhost/postgres", NoTls).unwrap();
+            Client::connect("postgresql://postgres:postgres@localhost/postgres", NoTls)?;
         let event = "Http request status error! Ошибка! SMS уведомление не было отправлено!";
         client
             .execute(
                 "INSERT INTO журнал_работы_приложения (событие) VALUES ($1)",
                 &[&event],
             )
-            .unwrap();
+            ?;
 
         for row in client
             .query(
                 "SELECT событие, время_и_дата FROM журнал_работы_приложения ORDER BY время_и_дата DESC limit 1",
                 &[],
             )
-            .unwrap()
+            ?
         {
             let event: &str = row.get(0);
 
@@ -612,23 +604,23 @@ pub mod power_supply {
     }
 
     /// Records log "Ошибка! Доступ к интернету отсутствует! Http запрос не был выполнен! SMS уведомление не было отправлено!" in the sql table "журнал_работы_приложения".
-    pub fn log_internet_err() -> Result<()> {
+    pub fn log_internet_err() -> Result<(), Error> {
         let mut client =
-            Client::connect("postgresql://postgres:postgres@localhost/postgres", NoTls).unwrap();
+            Client::connect("postgresql://postgres:postgres@localhost/postgres", NoTls)?;
         let event = "Ошибка! Доступ к интернету отсутствует! Http запрос не был выполнен! SMS уведомление не было отправлено!";
         client
             .execute(
                 "INSERT INTO журнал_работы_приложения (событие) VALUES ($1)",
                 &[&event],
             )
-            .unwrap();
+            ?;
 
         for row in client
             .query(
                 "SELECT событие, время_и_дата FROM журнал_работы_приложения ORDER BY время_и_дата DESC limit 1",
                 &[],
             )
-            .unwrap()
+            ?
         {
             let event: &str = row.get(0);
 
@@ -638,23 +630,23 @@ pub mod power_supply {
     }
 
     /// Records log "Ошибка! Связь OPC сервера с ПЛК отсутствует!" in the sql table "журнал_работы_приложения".
-    pub fn log_plc_err() -> Result<()> {
+    pub fn log_plc_err() -> Result<(), Error> {
         let mut client =
-            Client::connect("postgresql://postgres:postgres@localhost/postgres", NoTls).unwrap();
+            Client::connect("postgresql://postgres:postgres@localhost/postgres", NoTls)?;
         let event = "Ошибка! Связь OPC сервера с ПЛК отсутствует!";
         client
             .execute(
                 "INSERT INTO журнал_работы_приложения (событие) VALUES ($1)",
                 &[&event],
             )
-            .unwrap();
+            ?;
 
         for row in client
             .query(
                 "SELECT событие, время_и_дата FROM журнал_работы_приложения ORDER BY время_и_дата DESC limit 1",
                 &[],
             )
-            .unwrap()
+            ?
         {
             let event: &str = row.get(0);
 
@@ -664,23 +656,23 @@ pub mod power_supply {
     }
 
     /// Records log "Ошибка! Связь СУБД PostgreSQL с OPC сервером отсутствует!" in the sql table "журнал_работы_приложения".
-    pub fn log_opc_err() -> Result<()> {
+    pub fn log_opc_err() -> Result<(), Error> {
         let mut client =
-            Client::connect("postgresql://postgres:postgres@localhost/postgres", NoTls).unwrap();
+            Client::connect("postgresql://postgres:postgres@localhost/postgres", NoTls)?;
         let event = "Ошибка! Связь СУБД PostgreSQL с OPC сервером отсутствует!";
         client
             .execute(
                 "INSERT INTO журнал_работы_приложения (событие) VALUES ($1)",
                 &[&event],
             )
-            .unwrap();
+            ?;
 
         for row in client
             .query(
                 "SELECT событие, время_и_дата FROM журнал_работы_приложения ORDER BY время_и_дата DESC limit 1",
                 &[],
             )
-            .unwrap()
+            ?
         {
             let event: &str = row.get(0);
 
@@ -720,16 +712,16 @@ pub mod power_supply {
     /// successful start of the generator, failure of the generator start, and notifications about these events.
     /// Additional spawn - the function of determining the serviceability/malfunction of the generator
     /// and notifying about it by SMS using the gateway API.
-    pub fn ats_state() -> Result<()> {
+    pub fn ats_state() -> Result<(), Error> {
         let mut client =
-            Client::connect("postgresql://postgres:postgres@localhost/postgres", NoTls).unwrap();
+            Client::connect("postgresql://postgres:postgres@localhost/postgres", NoTls)?;
         // Checking the connection of the PostgreSQL DBMS with the OPC server.
         for row in client
             .query(
                 "SELECT EXTRACT(epoch FROM mark) FROM avr_control_insert ORDER BY mark DESC limit 1",
                 &[],
             )
-            .unwrap()
+            ?
         {
             let unix_from_sql = UnixFromSql {
                 time: row.get(0),
@@ -739,7 +731,7 @@ pub mod power_supply {
                     "SELECT EXTRACT(epoch FROM now()) FROM avr_control_insert ORDER BY now() DESC limit 1",
                     &[],
                 )
-                .unwrap()
+                ?
             {
                 let unix_from_sql_now = UnixFromSqlNow {
                     time: row.get(0),
@@ -749,7 +741,7 @@ pub mod power_supply {
                     // Сhecking the connection of the OPC server with the plc.
                     for row in client
                         .query("SELECT mark, connection FROM avr_control_insert ORDER BY mark DESC limit 1", &[])
-                        .unwrap()
+                        ?
                     {
                         let plc_connect = PlcConnect {
                             connection: row.get(1),
@@ -758,7 +750,7 @@ pub mod power_supply {
                             // Request for the presence of a power failure from the power grid.
                             for row in client
                                 .query("SELECT mains_power_supply, start_generator, generator_work, mark FROM avr_control_insert ORDER BY mark DESC limit 1", &[])
-                                .unwrap()
+                                ?
                             {
                                 let powersupply = PowerSupply {
                                     mains_power_supply: row.get(0),
@@ -780,7 +772,7 @@ pub mod power_supply {
                                             "SELECT EXTRACT(epoch FROM mark) FROM avr_control_insert ORDER BY mark DESC limit 1",
                                             &[],
                                         )
-                                        .unwrap()
+                                        ?
                                     {
                                         let unix_from_sql = UnixFromSql {
                                             time: row.get(0),
@@ -790,7 +782,7 @@ pub mod power_supply {
                                                 "SELECT EXTRACT(epoch FROM now()) FROM avr_control_insert ORDER BY now() DESC limit 1",
                                                 &[],
                                             )
-                                            .unwrap()
+                                            ?
                                         {
                                             let unix_from_sql_now = UnixFromSqlNow {
                                                 time: row.get(0),
@@ -800,7 +792,7 @@ pub mod power_supply {
                                                 // Сhecking the connection of the OPC server with the plc.
                                                 for row in client
                                                     .query("SELECT mark, connection FROM avr_control_insert ORDER BY mark DESC limit 1", &[])
-                                                    .unwrap()
+                                                    ?
                                                 {
                                                     let plc_connect = PlcConnect {
                                                         connection: row.get(1),
@@ -809,7 +801,7 @@ pub mod power_supply {
                                                         // Request for the availability of power from the mains and request the start status of the generator.
                                                         for row in client
                                                             .query("SELECT mains_power_supply, start_generator, generator_work, mark FROM avr_control_insert ORDER BY mark DESC limit 1", &[])
-                                                            .unwrap()
+                                                            ?
                                                         {
                                                             let powersupply = PowerSupply {
                                                                 mains_power_supply: row.get(0),
@@ -829,7 +821,7 @@ pub mod power_supply {
                                                                         event_power_failure_start_generator_ok();
                                                                         log_start_generator_ok();
                                                                         // Executing an http get request to the SMS gateway provider.
-                                                                        let resp = reqwest::blocking::get("https://api-mapper.clicksend.com/http/v2/send.php?method=http&username=development-service@yandex.ru&key=1E82A334-89D8-985C-526B-712DB70A713D&to=+79139402913&message=Сбой+питания+от+электросети.+Успешный+старт+генератора.")?;
+                                                                        let resp = reqwest::blocking::get("https://api-mapper.clicksend.com/http/v2/send.php?method=http&username=development-service@yandex.ru&key=1E82A334-89D8-985C-526B-712DB70A713D&to=+79139402913&message=Сбой+питания+от+электросети.+Успешный+старт+генератора.").unwrap();
                                                                         if resp.status().is_success() {
                                                                             println!("Http запрос выполнен успешно");
                                                                             println!("Отправлено SMS сообщение: /Сбой питания от электросети. Успешный старт генератора./ на номер +79139402913");
@@ -848,7 +840,7 @@ pub mod power_supply {
                                                                         event_power_failure_start_generator_err();
                                                                         log_start_generator_err();
                                                                         // Executing an http get request to the SMS gateway provider.
-                                                                        let resp = reqwest::blocking::get("https://api-mapper.clicksend.com/http/v2/send.php?method=http&username=development-service@yandex.ru&key=1E82A334-89D8-985C-526B-712DB70A713D&to=+79139402913&message=Сбой+питания+от+электросети.+Сбой+старта+генератора.")?;
+                                                                        let resp = reqwest::blocking::get("https://api-mapper.clicksend.com/http/v2/send.php?method=http&username=development-service@yandex.ru&key=1E82A334-89D8-985C-526B-712DB70A713D&to=+79139402913&message=Сбой+питания+от+электросети.+Сбой+старта+генератора.").unwrap();
                                                                         if resp.status().is_success() {
                                                                             println!("Http запрос выполнен успешно");
                                                                             println!("Отправлено SMS сообщение: /Сбой питания от электросети. Сбой старта генератора./ на номер +79139402913");
@@ -870,7 +862,7 @@ pub mod power_supply {
                                                                                 "SELECT EXTRACT(epoch FROM mark) FROM avr_control_insert ORDER BY mark DESC limit 1",
                                                                                 &[],
                                                                             )
-                                                                            .unwrap()
+                                                                            ?
                                                                         {
                                                                             let unix_from_sql = UnixFromSql {
                                                                                 time: row.get(0),
@@ -880,7 +872,7 @@ pub mod power_supply {
                                                                                     "SELECT EXTRACT(epoch FROM now()) FROM avr_control_insert ORDER BY now() DESC limit 1",
                                                                                     &[],
                                                                                 )
-                                                                                .unwrap()
+                                                                                ?
                                                                             {
                                                                                 let unix_from_sql_now = UnixFromSqlNow {
                                                                                     time: row.get(0),
@@ -890,7 +882,7 @@ pub mod power_supply {
                                                                                     // Сhecking the connection of the OPC server with the plc.
                                                                                     for row in client
                                                                                         .query("SELECT mark, connection FROM avr_control_insert ORDER BY mark DESC limit 1", &[])
-                                                                                        .unwrap()
+                                                                                        ?
                                                                                     {
                                                                                         let plc_connect = PlcConnect {
                                                                                             connection: row.get(1),
@@ -902,7 +894,7 @@ pub mod power_supply {
                                                                                                     "SELECT mains_power_supply, start_generator, generator_work, mark FROM avr_control_insert ORDER BY mark DESC limit 1",
                                                                                                     &[],
                                                                                                 )
-                                                                                                .unwrap()
+                                                                                                ?
                                                                                             {
                                                                                                 let powersupply = PowerSupply {
                                                                                                     mains_power_supply: row.get(0),
@@ -922,7 +914,7 @@ pub mod power_supply {
                                                                                                             event_power_restored_generator_work_ok();
                                                                                                             log_power_restored_generator_ok();
                                                                                                             // Executing an http get request to the SMS gateway provider.
-                                                                                                            let resp = reqwest::blocking::get("https://api-mapper.clicksend.com/http/v2/send.php?method=http&username=development-service@yandex.ru&key=1E82A334-89D8-985C-526B-712DB70A713D&to=+79139402913&message=Питание+от+электросети+восстановлено.+Генератор+исправен.+Генератор+работает.")?;
+                                                                                                            let resp = reqwest::blocking::get("https://api-mapper.clicksend.com/http/v2/send.php?method=http&username=development-service@yandex.ru&key=1E82A334-89D8-985C-526B-712DB70A713D&to=+79139402913&message=Питание+от+электросети+восстановлено.+Генератор+исправен.+Генератор+работает.").unwrap();
                                                                                                             if resp.status().is_success() {
                                                                                                                 println!("Http запрос выполнен успешно");
                                                                                                                 println!("Отправлено SMS сообщение: /Питание от электросети восстановлено. Генератор исправен. Генератор работает./ на номер +79139402913");
@@ -941,7 +933,7 @@ pub mod power_supply {
                                                                                                             event_power_restored_generator_work_err();
                                                                                                             log_power_restored_generator_err();
                                                                                                             // Executing an http get request to the SMS gateway provider.
-                                                                                                            let resp = reqwest::blocking::get("https://api-mapper.clicksend.com/http/v2/send.php?method=http&username=development-service@yandex.ru&key=1E82A334-89D8-985C-526B-712DB70A713D&to=+79139402913&message=Питание+от+электросети+восстановлено.+Генератор+неисправен.+Генератор+не+работает.")?;
+                                                                                                            let resp = reqwest::blocking::get("https://api-mapper.clicksend.com/http/v2/send.php?method=http&username=development-service@yandex.ru&key=1E82A334-89D8-985C-526B-712DB70A713D&to=+79139402913&message=Питание+от+электросети+восстановлено.+Генератор+неисправен.+Генератор+не+работает.").unwrap();
                                                                                                             if resp.status().is_success() {
                                                                                                                 println!("Http запрос выполнен успешно");
                                                                                                                 println!("Отправлено SMS сообщение: /Питание от электросети восстановлено. Генератор неисправен. Генератор не работает./ на номер +79139402913");
