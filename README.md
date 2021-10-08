@@ -6,7 +6,11 @@ An application for sending notifications via the SMS gateway API and recording e
 ```
 $ cargo install ats-monitoring
 ```
-If you want to use the SMS notification function, clone the repository, edit the http get requests
+If you want to use the SMS notification function, clone the repository, edit the http get requests and
+compile local packages and all their dependencies
+```
+$ cargo build --release
+```
 ## Setting up the environment
 * Install PostgreSQL
 * Install OLEDB for ODBC driver for PostgreSQL
