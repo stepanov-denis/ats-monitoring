@@ -50,7 +50,11 @@ CREATE TABLE события_авр (
 ```
 * Install [Lectus Modbus OPC/DDE server](http://www.lectussoft.com/) or another OPC server
 * In OPC server settings connect an external PostgreSQL DBMS
-* Open configuration file "modbus map for ats-monitoring" in Lectus Modbus OPC/DDE server and edit network addresses. When using another OPC server, configure the modbus variables yourself
+* Open configuration file "modbus map for ats-monitoring" in Lectus Modbus OPC/DDE server and edit network addresses. When using another OPC server, configure the modbus variables yourself and create a script for recording the values of modbus variables in PostgreSQL
+```
+INSERT INTO avr_control_insert (mains_power_supply, start_generator, generator_faulty, generator_work, connection)
+    VALUES (Item(trim5.mains_power_supply), Item(trim5.start_generator), Item(trim5.generator_faulty), Item(trim5.generator_work), Item(trim5.connection));
+```
 * Install [SMLogix](https://segnetics.com/ru/smlogix)
 * Upload into PLC Pixel file "pixel.psl" and edit network addresses
 * Upload into PLC Trim5 file "trim5.psl" and edit network addresses
