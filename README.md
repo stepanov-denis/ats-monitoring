@@ -8,8 +8,17 @@ An application for sending notifications via the SMS gateway API and recording e
 $ curl --proto '=https' --tlsv1.2 https://sh.rustup.rs -sSf | sh
 ```
 For Windows, visit [this page](https://www.rust-lang.org/tools/install)
-* Clone the repository, edit the http get requests, edit network addresses and
-compile local packages and all their dependencies
+* Clone the repository
+* Edit the http get requests
+```
+let resp = reqwest::blocking::get("https://api-mapper.clicksend.com/http/v2/send.php?method=http&username=development-service@yandex.ru&key=1E82A334-89D8-985C-526B-712DB70A713D&to=+79139402913&message=Сбой+питания+от+электросети.+Успешный+старт+генератора.").unwrap();
+```
+* Edit the connection configuration strings to PostgreSQL
+```
+let mut client =
+    Client::connect("postgresql://postgres:postgres@localhost/postgres", NoTls)?;
+```
+* Compile local packages and all their dependencies
 ```
 $ cargo build --release
 ```
