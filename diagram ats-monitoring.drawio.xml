@@ -1,6 +1,6 @@
-<mxfile host="app.diagrams.net" modified="2021-10-10T10:40:19.433Z" agent="5.0 (Windows)" etag="U9gFt7SL8Iw7Q7_u4LCm" version="15.5.0" type="github">
+<mxfile host="app.diagrams.net" modified="2021-10-13T05:35:29.212Z" agent="5.0 (Windows)" etag="2D18jweHt8C2xeMYyhKC" version="15.5.2" type="github">
   <diagram name="Page-1" id="5f0bae14-7c28-e335-631c-24af17079c00">
-    <mxGraphModel dx="782" dy="724" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1100" pageHeight="850" background="none" math="0" shadow="0">
+    <mxGraphModel dx="1203" dy="1114" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1100" pageHeight="850" background="none" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
@@ -28,6 +28,9 @@
         <mxCell id="siuggzDFzh7bBmBrgCQJ-17" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontSize=16;" parent="1" source="siuggzDFzh7bBmBrgCQJ-11" target="siuggzDFzh7bBmBrgCQJ-15" edge="1">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
+        <mxCell id="MCRDn0i0lBj24lKQlmYH-7" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=1;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="1" source="siuggzDFzh7bBmBrgCQJ-11" target="MCRDn0i0lBj24lKQlmYH-1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
         <mxCell id="siuggzDFzh7bBmBrgCQJ-11" value="&lt;font style=&quot;font-size: 20px&quot;&gt;Server room&lt;/font&gt;" style="verticalAlign=top;align=center;spacingTop=8;spacingLeft=2;spacingRight=12;shape=cube;size=10;direction=south;fontStyle=4;html=1;rounded=0;shadow=0;comic=0;labelBackgroundColor=none;strokeWidth=1;fontFamily=Verdana;fontSize=12" parent="1" vertex="1">
           <mxGeometry x="120" y="650" width="330" height="220" as="geometry" />
         </mxCell>
@@ -45,6 +48,27 @@
         </mxCell>
         <mxCell id="siuggzDFzh7bBmBrgCQJ-18" value="TCP/IP" style="text;align=center;fontStyle=0;verticalAlign=middle;spacingLeft=3;spacingRight=3;strokeColor=none;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=16;" parent="1" vertex="1">
           <mxGeometry x="290" y="890" width="60" height="26" as="geometry" />
+        </mxCell>
+        <mxCell id="MCRDn0i0lBj24lKQlmYH-14" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontSize=20;" edge="1" parent="1" source="MCRDn0i0lBj24lKQlmYH-1" target="MCRDn0i0lBj24lKQlmYH-11">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="MCRDn0i0lBj24lKQlmYH-1" value="&lt;font style=&quot;font-size: 20px&quot;&gt;API SMS gateway&lt;/font&gt;" style="verticalAlign=top;align=center;spacingTop=8;spacingLeft=2;spacingRight=12;shape=cube;size=10;direction=south;fontStyle=4;html=1;rounded=0;shadow=0;comic=0;labelBackgroundColor=none;strokeWidth=1;fontFamily=Verdana;fontSize=12" vertex="1" parent="1">
+          <mxGeometry x="520" y="650" width="330" height="220" as="geometry" />
+        </mxCell>
+        <mxCell id="MCRDn0i0lBj24lKQlmYH-2" value="&lt;p style=&quot;margin: 0px ; margin-top: 6px ; text-align: center&quot;&gt;&lt;b&gt;&lt;font size=&quot;1&quot;&gt;&lt;span style=&quot;font-size: 16px&quot;&gt;ClickSend&lt;br&gt;&lt;/span&gt;&lt;/font&gt;&lt;/b&gt;&lt;/p&gt;&lt;hr&gt;&lt;ul style=&quot;font-size: 16px&quot;&gt;&lt;li&gt;&lt;font style=&quot;font-size: 16px&quot;&gt;Account&lt;br&gt;&lt;/font&gt;&lt;/li&gt;&lt;/ul&gt;" style="align=left;overflow=fill;html=1;dropTarget=0;" vertex="1" parent="1">
+          <mxGeometry x="567.5" y="710" width="235" height="130" as="geometry" />
+        </mxCell>
+        <mxCell id="MCRDn0i0lBj24lKQlmYH-11" value="&lt;font style=&quot;font-size: 20px&quot;&gt;Phone&lt;/font&gt;" style="verticalAlign=top;align=center;spacingTop=8;spacingLeft=2;spacingRight=12;shape=cube;size=10;direction=south;fontStyle=4;html=1;rounded=0;shadow=0;comic=0;labelBackgroundColor=none;strokeWidth=1;fontFamily=Verdana;fontSize=12" vertex="1" parent="1">
+          <mxGeometry x="520" y="940" width="330" height="220" as="geometry" />
+        </mxCell>
+        <mxCell id="MCRDn0i0lBj24lKQlmYH-12" value="&lt;p style=&quot;margin: 0px ; margin-top: 6px ; text-align: center&quot;&gt;&lt;b&gt;&lt;font size=&quot;1&quot;&gt;&lt;span style=&quot;font-size: 16px&quot;&gt;Phone number&lt;br&gt;&lt;/span&gt;&lt;/font&gt;&lt;/b&gt;&lt;/p&gt;&lt;hr&gt;&lt;ul style=&quot;font-size: 16px&quot;&gt;&lt;li&gt;&lt;font style=&quot;font-size: 16px&quot;&gt;Sms message&lt;br&gt;&lt;/font&gt;&lt;/li&gt;&lt;/ul&gt;" style="align=left;overflow=fill;html=1;dropTarget=0;" vertex="1" parent="1">
+          <mxGeometry x="567.5" y="1000" width="235" height="130" as="geometry" />
+        </mxCell>
+        <mxCell id="MCRDn0i0lBj24lKQlmYH-13" value="TCP/IP" style="text;align=center;fontStyle=0;verticalAlign=middle;spacingLeft=3;spacingRight=3;strokeColor=none;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=16;" vertex="1" parent="1">
+          <mxGeometry x="450" y="730" width="70" height="26" as="geometry" />
+        </mxCell>
+        <mxCell id="MCRDn0i0lBj24lKQlmYH-15" value="GSM" style="text;align=center;fontStyle=0;verticalAlign=middle;spacingLeft=3;spacingRight=3;strokeColor=none;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=16;" vertex="1" parent="1">
+          <mxGeometry x="690" y="890" width="60" height="26" as="geometry" />
         </mxCell>
       </root>
     </mxGraphModel>
