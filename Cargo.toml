@@ -7,7 +7,7 @@ description = "An application for sending notifications via the SMS gateway API 
 license = "Apache-2.0"
 repository = "https://github.com/stepanov-denis/ats-monitoring/"
 keywords = ["scada", "notifications", "smart", "ats"]
-documentation = "https://docs.rs/bitflags"
+documentation = "https://docs.rs/ats-monitoring"
 readme = "README.md"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
