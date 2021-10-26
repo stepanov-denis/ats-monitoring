@@ -30,10 +30,11 @@ dependencies = [
 
 [[package]]
 name = "ats-monitoring"
-version = "0.1.1"
+version = "0.2.0"
 dependencies = [
  "chrono",
  "error-chain",
+ "modbus-iiot",
  "online",
  "postgres",
  "reqwest",
@@ -602,6 +603,12 @@ checksum = "b9f1c5b025cda876f66ef43a113f91ebc9f4ccef34843000e0adf6ebbab84e21"
 dependencies = [
  "winapi",
 ]
+
+[[package]]
+name = "modbus-iiot"
+version = "0.2.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "1f69c6f152de527d8cf16b602811b8119ff46a9d57e55cb0d73f4709eb9b35da"
 
 [[package]]
 name = "native-tls"
