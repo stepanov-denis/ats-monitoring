@@ -2,7 +2,7 @@ pub mod power_supply {
     extern crate chrono;
     extern crate timer;
     use online::sync::check;
-    use postgres::{Client, NoTls, Error};
+    use postgres::{Client, Error, NoTls};
     use std::sync::mpsc::channel;
 
     /// The structure of power supply from the power grid.
@@ -32,17 +32,12 @@ pub mod power_supply {
         let mut client =
             Client::connect("postgresql://stepanov:postgres@localhost/postgres", NoTls)?;
         let event = "Питание от электросети есть.";
-        client
-            .execute("INSERT INTO события_авр (событие) VALUES ($1)", &[&event])
-            ?;
+        client.execute("INSERT INTO события_авр (событие) VALUES ($1)", &[&event])?;
 
-        for row in client
-            .query(
-                "SELECT событие, время_и_дата FROM события_авр ORDER BY время_и_дата DESC limit 1",
-                &[],
-            )
-            ?
-        {
+        for row in client.query(
+            "SELECT событие, время_и_дата FROM события_авр ORDER BY время_и_дата DESC limit 1",
+            &[],
+        )? {
             let event: &str = row.get(0);
 
             println!("Запись в табл. события_авр: {}", event);
@@ -55,17 +50,12 @@ pub mod power_supply {
         let mut client =
             Client::connect("postgresql://stepanov:postgres@localhost/postgres", NoTls)?;
         let event = "Сбой питания от электросети. Успешный старт генератора.";
-        client
-            .execute("INSERT INTO события_авр (событие) VALUES ($1)", &[&event])
-            ?;
+        client.execute("INSERT INTO события_авр (событие) VALUES ($1)", &[&event])?;
 
-        for row in client
-            .query(
-                "SELECT событие, время_и_дата FROM события_авр ORDER BY время_и_дата DESC limit 1",
-                &[],
-            )
-            ?
-        {
+        for row in client.query(
+            "SELECT событие, время_и_дата FROM события_авр ORDER BY время_и_дата DESC limit 1",
+            &[],
+        )? {
             let event: &str = row.get(0);
 
             println!("Запись в табл. события_авр: {}", event);
@@ -78,17 +68,12 @@ pub mod power_supply {
         let mut client =
             Client::connect("postgresql://stepanov:postgres@localhost/postgres", NoTls).unwrap();
         let event = "Сбой питания от электросети. Сбой старта генератора.";
-        client
-            .execute("INSERT INTO события_авр (событие) VALUES ($1)", &[&event])
-            ?;
+        client.execute("INSERT INTO события_авр (событие) VALUES ($1)", &[&event])?;
 
-        for row in client
-            .query(
-                "SELECT событие, время_и_дата FROM события_авр ORDER BY время_и_дата DESC limit 1",
-                &[],
-            )
-            ?
-        {
+        for row in client.query(
+            "SELECT событие, время_и_дата FROM события_авр ORDER BY время_и_дата DESC limit 1",
+            &[],
+        )? {
             let event: &str = row.get(0);
 
             println!("Запись в табл. события_авр: {}", event);
@@ -101,17 +86,12 @@ pub mod power_supply {
         let mut client =
             Client::connect("postgresql://stepanov:postgres@localhost/postgres", NoTls)?;
         let event = "Питание от электросети восстановлено. Генератор исправен. Генератор работает.";
-        client
-            .execute("INSERT INTO события_авр (событие) VALUES ($1)", &[&event])
-            ?;
+        client.execute("INSERT INTO события_авр (событие) VALUES ($1)", &[&event])?;
 
-        for row in client
-            .query(
-                "SELECT событие, время_и_дата FROM события_авр ORDER BY время_и_дата DESC limit 1",
-                &[],
-            )
-            ?
-        {
+        for row in client.query(
+            "SELECT событие, время_и_дата FROM события_авр ORDER BY время_и_дата DESC limit 1",
+            &[],
+        )? {
             let event: &str = row.get(0);
 
             println!("Запись в табл. события_авр: {}", event);
@@ -125,17 +105,12 @@ pub mod power_supply {
             Client::connect("postgresql://stepanov:postgres@localhost/postgres", NoTls)?;
         let event =
             "Питание от электросети восстановлено. Генератор неисправен. Генератор не работает.";
-        client
-            .execute("INSERT INTO события_авр (событие) VALUES ($1)", &[&event])
-            ?;
+        client.execute("INSERT INTO события_авр (событие) VALUES ($1)", &[&event])?;
 
-        for row in client
-            .query(
-                "SELECT событие, время_и_дата FROM события_авр ORDER BY время_и_дата DESC limit 1",
-                &[],
-            )
-            ?
-        {
+        for row in client.query(
+            "SELECT событие, время_и_дата FROM события_авр ORDER BY время_и_дата DESC limit 1",
+            &[],
+        )? {
             let event: &str = row.get(0);
 
             println!("Запись в табл. события_авр: {}", event);
@@ -148,17 +123,12 @@ pub mod power_supply {
         let mut client =
             Client::connect("postgresql://stepanov:postgres@localhost/postgres", NoTls)?;
         let event = "Авария! Генератор неисправен! Срочно произведите сервисные работы!";
-        client
-            .execute("INSERT INTO события_авр (событие) VALUES ($1)", &[&event])
-            ?;
+        client.execute("INSERT INTO события_авр (событие) VALUES ($1)", &[&event])?;
 
-        for row in client
-            .query(
-                "SELECT событие, время_и_дата FROM события_авр ORDER BY время_и_дата DESC limit 1",
-                &[],
-            )
-            ?
-        {
+        for row in client.query(
+            "SELECT событие, время_и_дата FROM события_авр ORDER BY время_и_дата DESC limit 1",
+            &[],
+        )? {
             let event: &str = row.get(0);
 
             println!("Запись в табл. события_авр: {}", event);
@@ -172,17 +142,12 @@ pub mod power_supply {
             Client::connect("postgresql://stepanov:postgres@localhost/postgres", NoTls)?;
         let event =
             "Работоспособность генератора восстановлена. Генератор исправен. Генератор работает.";
-        client
-            .execute("INSERT INTO события_авр (событие) VALUES ($1)", &[&event])
-            ?;
+        client.execute("INSERT INTO события_авр (событие) VALUES ($1)", &[&event])?;
 
-        for row in client
-            .query(
-                "SELECT событие, время_и_дата FROM события_авр ORDER BY время_и_дата DESC limit 1",
-                &[],
-            )
-            ?
-        {
+        for row in client.query(
+            "SELECT событие, время_и_дата FROM события_авр ORDER BY время_и_дата DESC limit 1",
+            &[],
+        )? {
             let event: &str = row.get(0);
 
             println!("Запись в табл. события_авр: {}", event);
@@ -195,17 +160,12 @@ pub mod power_supply {
         let mut client =
             Client::connect("postgresql://stepanov:postgres@localhost/postgres", NoTls)?;
         let event = "Генератор в режиме трансляции питания от электросети работает исправно.";
-        client
-            .execute("INSERT INTO события_авр (событие) VALUES ($1)", &[&event])
-            ?;
+        client.execute("INSERT INTO события_авр (событие) VALUES ($1)", &[&event])?;
 
-        for row in client
-            .query(
-                "SELECT событие, время_и_дата FROM события_авр ORDER BY время_и_дата DESC limit 1",
-                &[],
-            )
-            ?
-        {
+        for row in client.query(
+            "SELECT событие, время_и_дата FROM события_авр ORDER BY время_и_дата DESC limit 1",
+            &[],
+        )? {
             let event: &str = row.get(0);
 
             println!("Запись в табл. события_авр: {}", event);
@@ -218,12 +178,10 @@ pub mod power_supply {
         let mut client =
             Client::connect("postgresql://stepanov:postgres@localhost/postgres", NoTls)?;
         let event = "Произошел сбой питания от электросети! Ожидание (90 секунд) подтверждения отсутствия питания от электросети.";
-        client
-            .execute(
-                "INSERT INTO журнал_работы_приложения (событие) VALUES ($1)",
-                &[&event],
-            )
-            ?;
+        client.execute(
+            "INSERT INTO журнал_работы_приложения (событие) VALUES ($1)",
+            &[&event],
+        )?;
 
         for row in client
             .query(
@@ -244,12 +202,10 @@ pub mod power_supply {
         let mut client =
             Client::connect("postgresql://stepanov:postgres@localhost/postgres", NoTls)?;
         let event = "Питание от электросети есть.";
-        client
-            .execute(
-                "INSERT INTO журнал_работы_приложения (событие) VALUES ($1)",
-                &[&event],
-            )
-            ?;
+        client.execute(
+            "INSERT INTO журнал_работы_приложения (событие) VALUES ($1)",
+            &[&event],
+        )?;
 
         for row in client
             .query(
@@ -270,12 +226,10 @@ pub mod power_supply {
         let mut client =
             Client::connect("postgresql://stepanov:postgres@localhost/postgres", NoTls)?;
         let event = "Подтверждение отсутствия питания от электросети.";
-        client
-            .execute(
-                "INSERT INTO журнал_работы_приложения (событие) VALUES ($1)",
-                &[&event],
-            )
-            ?;
+        client.execute(
+            "INSERT INTO журнал_работы_приложения (событие) VALUES ($1)",
+            &[&event],
+        )?;
 
         for row in client
             .query(
@@ -296,12 +250,10 @@ pub mod power_supply {
         let mut client =
             Client::connect("postgresql://stepanov:postgres@localhost/postgres", NoTls)?;
         let event = "Успешный старт генератора.";
-        client
-            .execute(
-                "INSERT INTO журнал_работы_приложения (событие) VALUES ($1)",
-                &[&event],
-            )
-            ?;
+        client.execute(
+            "INSERT INTO журнал_работы_приложения (событие) VALUES ($1)",
+            &[&event],
+        )?;
 
         for row in client
             .query(
@@ -322,12 +274,10 @@ pub mod power_supply {
         let mut client =
             Client::connect("postgresql://stepanov:postgres@localhost/postgres", NoTls)?;
         let event = "Сбой старта генератора!";
-        client
-            .execute(
-                "INSERT INTO журнал_работы_приложения (событие) VALUES ($1)",
-                &[&event],
-            )
-            ?;
+        client.execute(
+            "INSERT INTO журнал_работы_приложения (событие) VALUES ($1)",
+            &[&event],
+        )?;
 
         for row in client
             .query(
@@ -348,12 +298,10 @@ pub mod power_supply {
         let mut client =
             Client::connect("postgresql://stepanov:postgres@localhost/postgres", NoTls)?;
         let event = "Питание от электросети восстановлено.";
-        client
-            .execute(
-                "INSERT INTO журнал_работы_приложения (событие) VALUES ($1)",
-                &[&event],
-            )
-            ?;
+        client.execute(
+            "INSERT INTO журнал_работы_приложения (событие) VALUES ($1)",
+            &[&event],
+        )?;
 
         for row in client
             .query(
@@ -374,12 +322,10 @@ pub mod power_supply {
         let mut client =
             Client::connect("postgresql://stepanov:postgres@localhost/postgres", NoTls)?;
         let event = "Генератор исправен. Генератор работает.";
-        client
-            .execute(
-                "INSERT INTO журнал_работы_приложения (событие) VALUES ($1)",
-                &[&event],
-            )
-            ?;
+        client.execute(
+            "INSERT INTO журнал_работы_приложения (событие) VALUES ($1)",
+            &[&event],
+        )?;
 
         for row in client
             .query(
@@ -400,12 +346,10 @@ pub mod power_supply {
         let mut client =
             Client::connect("postgresql://stepanov:postgres@localhost/postgres", NoTls)?;
         let event = "Генератор неисправен. Генератор не работает.";
-        client
-            .execute(
-                "INSERT INTO журнал_работы_приложения (событие) VALUES ($1)",
-                &[&event],
-            )
-            ?;
+        client.execute(
+            "INSERT INTO журнал_работы_приложения (событие) VALUES ($1)",
+            &[&event],
+        )?;
 
         for row in client
             .query(
@@ -426,12 +370,10 @@ pub mod power_supply {
         let mut client =
             Client::connect("postgresql://stepanov:postgres@localhost/postgres", NoTls)?;
         let event = "Питание от электросети еще не было восстановлено, после отключения.";
-        client
-            .execute(
-                "INSERT INTO журнал_работы_приложения (событие) VALUES ($1)",
-                &[&event],
-            )
-            ?;
+        client.execute(
+            "INSERT INTO журнал_работы_приложения (событие) VALUES ($1)",
+            &[&event],
+        )?;
 
         for row in client
             .query(
@@ -452,12 +394,10 @@ pub mod power_supply {
         let mut client =
             Client::connect("postgresql://stepanov:postgres@localhost/postgres", NoTls)?;
         let event = "Отправлено SMS сообщение: /Сбой питания от электросети. Успешный старт генератора./ на номер +79139402913";
-        client
-            .execute(
-                "INSERT INTO журнал_работы_приложения (событие) VALUES ($1)",
-                &[&event],
-            )
-            ?;
+        client.execute(
+            "INSERT INTO журнал_работы_приложения (событие) VALUES ($1)",
+            &[&event],
+        )?;
 
         for row in client
             .query(
@@ -478,12 +418,10 @@ pub mod power_supply {
         let mut client =
             Client::connect("postgresql://stepanov:postgres@localhost/postgres", NoTls)?;
         let event = "Отправлено SMS сообщение: /Сбой питания от электросети. Сбой старта генератора./ на номер +79139402913";
-        client
-            .execute(
-                "INSERT INTO журнал_работы_приложения (событие) VALUES ($1)",
-                &[&event],
-            )
-            ?;
+        client.execute(
+            "INSERT INTO журнал_работы_приложения (событие) VALUES ($1)",
+            &[&event],
+        )?;
 
         for row in client
             .query(
@@ -504,12 +442,10 @@ pub mod power_supply {
         let mut client =
             Client::connect("postgresql://stepanov:postgres@localhost/postgres", NoTls)?;
         let event = "Отправлено SMS сообщение: /Питание от электросети восстановлено. Генератор исправен. Генератор работает./ на номер +79139402913";
-        client
-            .execute(
-                "INSERT INTO журнал_работы_приложения (событие) VALUES ($1)",
-                &[&event],
-            )
-            ?;
+        client.execute(
+            "INSERT INTO журнал_работы_приложения (событие) VALUES ($1)",
+            &[&event],
+        )?;
 
         for row in client
             .query(
@@ -530,12 +466,10 @@ pub mod power_supply {
         let mut client =
             Client::connect("postgresql://stepanov:postgres@localhost/postgres", NoTls)?;
         let event = "Отправлено SMS сообщение: /Питание от электросети восстановлено. Генератор неисправен. Генератор не работает./ на номер +79139402913";
-        client
-            .execute(
-                "INSERT INTO журнал_работы_приложения (событие) VALUES ($1)",
-                &[&event],
-            )
-            ?;
+        client.execute(
+            "INSERT INTO журнал_работы_приложения (событие) VALUES ($1)",
+            &[&event],
+        )?;
 
         for row in client
             .query(
@@ -556,12 +490,10 @@ pub mod power_supply {
         let mut client =
             Client::connect("postgresql://stepanov:postgres@localhost/postgres", NoTls)?;
         let event = "Server error! Ошибка! SMS уведомление не было отправлено!";
-        client
-            .execute(
-                "INSERT INTO журнал_работы_приложения (событие) VALUES ($1)",
-                &[&event],
-            )
-            ?;
+        client.execute(
+            "INSERT INTO журнал_работы_приложения (событие) VALUES ($1)",
+            &[&event],
+        )?;
 
         for row in client
             .query(
@@ -582,12 +514,10 @@ pub mod power_supply {
         let mut client =
             Client::connect("postgresql://stepanov:postgres@localhost/postgres", NoTls)?;
         let event = "Http request status error! Ошибка! SMS уведомление не было отправлено!";
-        client
-            .execute(
-                "INSERT INTO журнал_работы_приложения (событие) VALUES ($1)",
-                &[&event],
-            )
-            ?;
+        client.execute(
+            "INSERT INTO журнал_работы_приложения (событие) VALUES ($1)",
+            &[&event],
+        )?;
 
         for row in client
             .query(
@@ -608,12 +538,10 @@ pub mod power_supply {
         let mut client =
             Client::connect("postgresql://stepanov:postgres@localhost/postgres", NoTls)?;
         let event = "Ошибка! Доступ к интернету отсутствует! Http запрос не был выполнен! SMS уведомление не было отправлено!";
-        client
-            .execute(
-                "INSERT INTO журнал_работы_приложения (событие) VALUES ($1)",
-                &[&event],
-            )
-            ?;
+        client.execute(
+            "INSERT INTO журнал_работы_приложения (событие) VALUES ($1)",
+            &[&event],
+        )?;
 
         for row in client
             .query(
@@ -634,12 +562,10 @@ pub mod power_supply {
         let mut client =
             Client::connect("postgresql://stepanov:postgres@localhost/postgres", NoTls)?;
         let event = "Ошибка! Связь OPC сервера с ПЛК отсутствует!";
-        client
-            .execute(
-                "INSERT INTO журнал_работы_приложения (событие) VALUES ($1)",
-                &[&event],
-            )
-            ?;
+        client.execute(
+            "INSERT INTO журнал_работы_приложения (событие) VALUES ($1)",
+            &[&event],
+        )?;
 
         for row in client
             .query(
@@ -660,12 +586,10 @@ pub mod power_supply {
         let mut client =
             Client::connect("postgresql://stepanov:postgres@localhost/postgres", NoTls)?;
         let event = "Ошибка! Связь СУБД PostgreSQL с OPC сервером отсутствует!";
-        client
-            .execute(
-                "INSERT INTO журнал_работы_приложения (событие) VALUES ($1)",
-                &[&event],
-            )
-            ?;
+        client.execute(
+            "INSERT INTO журнал_работы_приложения (событие) VALUES ($1)",
+            &[&event],
+        )?;
 
         for row in client
             .query(
@@ -716,16 +640,11 @@ pub mod power_supply {
         let mut client =
             Client::connect("postgresql://stepanov:postgres@localhost/postgres", NoTls)?;
         // Checking the connection of the PostgreSQL DBMS with the OPC server.
-        for row in client
-            .query(
-                "SELECT EXTRACT(epoch FROM mark) FROM avr_control_insert ORDER BY mark DESC limit 1",
-                &[],
-            )
-            ?
-        {
-            let unix_from_sql = UnixFromSql {
-                time: row.get(0),
-            };
+        for row in client.query(
+            "SELECT EXTRACT(epoch FROM mark) FROM avr_control_insert ORDER BY mark DESC limit 1",
+            &[],
+        )? {
+            let unix_from_sql = UnixFromSql { time: row.get(0) };
             for row in client
                 .query(
                     "SELECT EXTRACT(epoch FROM now()) FROM avr_control_insert ORDER BY now() DESC limit 1",

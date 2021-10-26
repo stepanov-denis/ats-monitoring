@@ -4,9 +4,9 @@ use std::sync::mpsc::channel;
 use std::thread;
 use std::time::Duration;
 mod generator_monitoring;
-mod power_supply_monitoring;
 mod modbus_ats;
 mod modbus_winter_garden;
+mod power_supply_monitoring;
 
 /// Timer for "modbus_ats_spawn" and "modbus_winter_garden_spawn".
 fn timer_1sec() {
@@ -21,7 +21,7 @@ fn timer_1sec() {
     rx.recv().unwrap();
 }
 
-/// Timer for "generator_monitoring_spawn" and "power_supply_monitoring_spawn". 
+/// Timer for "generator_monitoring_spawn" and "power_supply_monitoring_spawn".
 fn timer_3sec() {
     let timer = timer::Timer::new();
     let (tx, rx) = channel();
