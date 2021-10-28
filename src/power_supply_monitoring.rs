@@ -561,7 +561,7 @@ pub mod power_supply {
     pub fn log_plc_err() -> Result<(), Error> {
         let mut client =
             Client::connect("postgresql://stepanov:postgres@localhost/postgres", NoTls)?;
-        let event = "Ошибка! Связь OPC сервера с ПЛК отсутствует!";
+        let event = "Ошибка! Связь Modbus клиента с ПЛК отсутствует!";
         client.execute(
             "INSERT INTO журнал_работы_приложения (событие) VALUES ($1)",
             &[&event],
@@ -585,7 +585,7 @@ pub mod power_supply {
     pub fn log_opc_err() -> Result<(), Error> {
         let mut client =
             Client::connect("postgresql://stepanov:postgres@localhost/postgres", NoTls)?;
-        let event = "Ошибка! Связь СУБД PostgreSQL с OPC сервером отсутствует!";
+        let event = "Ошибка! Связь СУБД PostgreSQL с Modbus клиентом отсутствует!";
         client.execute(
             "INSERT INTO журнал_работы_приложения (событие) VALUES ($1)",
             &[&event],
@@ -881,12 +881,12 @@ pub mod power_supply {
                                                                                                 }
                                                                                             }
                                                                                         } else {
-                                                                                            println!("Ошибка! Связь OPC сервера с ПЛК отсутствует!");
+                                                                                            println!("Ошибка! Связь Modbus клиента с ПЛК отсутствует!");
                                                                                             log_plc_err();
                                                                                         }
                                                                                     }
                                                                                 } else {
-                                                                                    println!("Ошибка! Связь СУБД PostgreSQL с OPC сервером отсутствует!");
+                                                                                    println!("Ошибка! Связь СУБД PostgreSQL с Modbus клиентом отсутствует!");
                                                                                     log_opc_err();
                                                                                 }
                                                                             }
@@ -904,12 +904,12 @@ pub mod power_supply {
                                                             }
                                                         }
                                                     } else {
-                                                        println!("Ошибка! Связь OPC сервера с ПЛК отсутствует!");
+                                                        println!("Ошибка! Связь Modbus клиента с ПЛК отсутствует!");
                                                         log_plc_err();
                                                     }
                                                 }
                                             } else {
-                                                println!("Ошибка! Связь СУБД PostgreSQL с OPC сервером отсутствует!");
+                                                println!("Ошибка! Связь СУБД PostgreSQL с Modbus клиентом отсутствует!");
                                                 log_opc_err();
                                             }
                                         }
@@ -921,12 +921,12 @@ pub mod power_supply {
                                 }
                             }
                         } else {
-                            println!("Ошибка! Связь OPC сервера с ПЛК отсутствует!");
+                            println!("Ошибка! Связь Modbus клиента с ПЛК отсутствует!");
                             log_plc_err();
                         }
                     }
                 } else {
-                    println!("Ошибка! Связь СУБД PostgreSQL с OPC сервером отсутствует!");
+                    println!("Ошибка! Связь СУБД PostgreSQL с Modbus клиентом отсутствует!");
                     log_opc_err();
                 }
             }
