@@ -53,7 +53,7 @@ pub mod avr_control {
             let generator_work: i32 = row.get(3);
             let connection: i32 = row.get(4);
             println!(
-                "Считываны из ПЛК и записаны в табл. avr_control_insert следующие значения: mains_power_supply: {}, start_generator: {}, generator_faulty: {}, generator_work: {}, connection: {}",
+                "Считаны из ПЛК и записаны в табл. avr_control_insert следующие значения: mains_power_supply: {}, start_generator: {}, generator_faulty: {}, generator_work: {}, connection: {}",
                 mains_power_supply, start_generator, generator_faulty, generator_work, connection);
         }
 

@@ -9,11 +9,11 @@ mod modbus_winter_garden;
 mod power_supply_monitoring;
 
 /// Timer for "modbus_ats_spawn" and "modbus_winter_garden_spawn".
-fn timer_1sec() {
+fn timer_60sec() {
     let timer = timer::Timer::new();
     let (tx, rx) = channel();
 
-    let _guard = timer.schedule_with_delay(chrono::Duration::seconds(1), move || {
+    let _guard = timer.schedule_with_delay(chrono::Duration::seconds(60), move || {
         tx.send(()).unwrap();
         let _ignored = tx.send(());
     });
@@ -39,13 +39,13 @@ fn main() {
     let _modbus_ats_spawn = thread::spawn(|| loop {
         modbus_ats::avr_control::avr_control_insert();
         thread::sleep(Duration::from_millis(1));
-        timer_1sec();
+        timer_3sec();
     });
 
     let _modbus_winter_garden_spawn = thread::spawn(|| loop {
         modbus_winter_garden::winter_garden::winter_garden_insert();
         thread::sleep(Duration::from_millis(1));
-        timer_1sec();
+        timer_3sec();
     });
 
     let _generator_monitoring_spawn = thread::spawn(|| loop {
