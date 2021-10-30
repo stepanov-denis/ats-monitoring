@@ -506,11 +506,13 @@ pub mod generator {
                         } else {
                             println!("Ошибка! Связь Modbus клиента с ПЛК отсутствует!");
                             log_plc_err();
+                            timer_3sec();
                         }
                     }
                 } else {
                     println!("Ошибка! Связь СУБД PostgreSQL с Modbus клиентом отсутствует!");
                     log_opc_err();
+                    timer_3sec();
                 }
             }
         }

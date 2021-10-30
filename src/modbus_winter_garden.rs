@@ -75,42 +75,59 @@ pub mod winter_garden {
             illumination_outdoor_response
         );
 
-        let mut client =
-            Client::connect("postgresql://stepanov:postgres@localhost/postgres", NoTls).unwrap();
+        if phyto_lighting_1_response.len() == 1
+            && phyto_lighting_2_response.len() == 1
+            && phyto_lighting_3_response.len() == 1
+            && phyto_lighting_4_response.len() == 1
+            && fan_response.len() == 1
+            && automatic_watering_1_response.len() == 1
+            && automatic_watering_2_response.len() == 1
+            && automatic_watering_3_response.len() == 1
+            && temperature_indoor_response.len() == 1
+            && humidity_indoor_response.len() == 1
+            && illumination_indoor_response.len() == 1
+            && illumination_outdoor_response.len() == 1
+        {
+            let mut client =
+                Client::connect("postgresql://stepanov:postgres@localhost/postgres", NoTls)
+                    .unwrap();
 
-        let phyto_lighting_1: i32 = phyto_lighting_1_response[0] as i32;
-        let phyto_lighting_2: i32 = phyto_lighting_2_response[0] as i32;
-        let phyto_lighting_3: i32 = phyto_lighting_3_response[0] as i32;
-        let phyto_lighting_4: i32 = phyto_lighting_4_response[0] as i32;
-        let fan: i32 = fan_response[0] as i32;
-        let automatic_watering_1: i32 = automatic_watering_1_response[0] as i32;
-        let automatic_watering_2: i32 = automatic_watering_2_response[0] as i32;
-        let automatic_watering_3: i32 = automatic_watering_3_response[0] as i32;
-        let temperature_indoor: i32 = temperature_indoor_response[0] as i32;
-        let humidity_indoor: i32 = humidity_indoor_response[0] as i32;
-        let illumination_indoor: i32 = illumination_indoor_response[0] as i32;
-        let illumination_outdoor: i32 = illumination_outdoor_response[0] as i32;
-        client.execute(
-            "INSERT INTO зимний_сад (фитоосвещение_1, фитоосвещение_2, фитоосвещение_3, фитоосвещение_4, вентилятор, автополив_1, автополив_2, автополив_3, температура, влажность, освещенность_в_помещении, освещенность_на_улице) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12)",
-            &[&phyto_lighting_1, &phyto_lighting_2, &phyto_lighting_3, &phyto_lighting_4, &fan, &automatic_watering_1, &automatic_watering_2, &automatic_watering_3, &temperature_indoor, &humidity_indoor, &illumination_indoor, &illumination_outdoor],
-        ).unwrap();
+            let phyto_lighting_1: i32 = phyto_lighting_1_response[0] as i32;
+            let phyto_lighting_2: i32 = phyto_lighting_2_response[0] as i32;
+            let phyto_lighting_3: i32 = phyto_lighting_3_response[0] as i32;
+            let phyto_lighting_4: i32 = phyto_lighting_4_response[0] as i32;
+            let fan: i32 = fan_response[0] as i32;
+            let automatic_watering_1: i32 = automatic_watering_1_response[0] as i32;
+            let automatic_watering_2: i32 = automatic_watering_2_response[0] as i32;
+            let automatic_watering_3: i32 = automatic_watering_3_response[0] as i32;
+            let temperature_indoor: i32 = temperature_indoor_response[0] as i32;
+            let humidity_indoor: i32 = humidity_indoor_response[0] as i32;
+            let illumination_indoor: i32 = illumination_indoor_response[0] as i32;
+            let illumination_outdoor: i32 = illumination_outdoor_response[0] as i32;
+            client.execute(
+                "INSERT INTO зимний_сад (фитоосвещение_1, фитоосвещение_2, фитоосвещение_3, фитоосвещение_4, вентилятор, автополив_1, автополив_2, автополив_3, температура, влажность, освещенность_в_помещении, освещенность_на_улице) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12)",
+                &[&phyto_lighting_1, &phyto_lighting_2, &phyto_lighting_3, &phyto_lighting_4, &fan, &automatic_watering_1, &automatic_watering_2, &automatic_watering_3, &temperature_indoor, &humidity_indoor, &illumination_indoor, &illumination_outdoor],
+            ).unwrap();
 
-        for row in client.query("SELECT фитоосвещение_1, фитоосвещение_2, фитоосвещение_3, фитоосвещение_4, вентилятор, автополив_1, автополив_2, автополив_3, температура, влажность, освещенность_в_помещении, освещенность_на_улице FROM зимний_сад ORDER BY время_и_дата DESC limit 1", &[]).unwrap() {
-            let phyto_lighting_1: i32 = row.get(0);
-            let phyto_lighting_2: i32 = row.get(1);
-            let phyto_lighting_3: i32 = row.get(2);
-            let phyto_lighting_4: i32 = row.get(3);
-            let fan: i32 = row.get(4);
-            let automatic_watering_1: i32 = row.get(5);
-            let automatic_watering_2: i32 = row.get(6);
-            let automatic_watering_3: i32 = row.get(7);
-            let temperature_indoor: i32 = row.get(8);
-            let humidity_indoor: i32 = row.get(9);
-            let illumination_indoor: i32 = row.get(10);
-            let illumination_outdoor: i32 = row.get(11);
-            println!(
-                "Считаны из ПЛК и записаны в табл. зимний_сад следующие значения: phyto_lighting_1: {}, phyto_lighting_2: {}, phyto_lighting_3: {}, phyto_lighting_4: {}, fan: {}, automatic_watering_1: {}, automatic_watering_2: {}, automatic_watering_3: {}, temperature_indoor: {}, humidity_indoor: {}, illumination_indoor: {}, illumination_outdoor: {}",
-                phyto_lighting_1, phyto_lighting_2, phyto_lighting_3, phyto_lighting_4, fan, automatic_watering_1, automatic_watering_2, automatic_watering_3, temperature_indoor, humidity_indoor, illumination_indoor, illumination_outdoor);
+            for row in client.query("SELECT фитоосвещение_1, фитоосвещение_2, фитоосвещение_3, фитоосвещение_4, вентилятор, автополив_1, автополив_2, автополив_3, температура, влажность, освещенность_в_помещении, освещенность_на_улице FROM зимний_сад ORDER BY время_и_дата DESC limit 1", &[]).unwrap() {
+                let phyto_lighting_1: i32 = row.get(0);
+                let phyto_lighting_2: i32 = row.get(1);
+                let phyto_lighting_3: i32 = row.get(2);
+                let phyto_lighting_4: i32 = row.get(3);
+                let fan: i32 = row.get(4);
+                let automatic_watering_1: i32 = row.get(5);
+                let automatic_watering_2: i32 = row.get(6);
+                let automatic_watering_3: i32 = row.get(7);
+                let temperature_indoor: i32 = row.get(8);
+                let humidity_indoor: i32 = row.get(9);
+                let illumination_indoor: i32 = row.get(10);
+                let illumination_outdoor: i32 = row.get(11);
+                println!(
+                    "Считаны из ПЛК и записаны в табл. зимний_сад следующие значения: phyto_lighting_1: {}, phyto_lighting_2: {}, phyto_lighting_3: {}, phyto_lighting_4: {}, fan: {}, automatic_watering_1: {}, automatic_watering_2: {}, automatic_watering_3: {}, temperature_indoor: {}, humidity_indoor: {}, illumination_indoor: {}, illumination_outdoor: {}",
+                    phyto_lighting_1, phyto_lighting_2, phyto_lighting_3, phyto_lighting_4, fan, automatic_watering_1, automatic_watering_2, automatic_watering_3, temperature_indoor, humidity_indoor, illumination_indoor, illumination_outdoor);
+            }
+        } else {
+            println!("Ошибка! Не все значения пререданы модулю modbus_winter_garden от ПЛК!")
         }
     }
 

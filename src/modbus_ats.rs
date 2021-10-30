@@ -33,49 +33,60 @@ pub mod avr_control {
         let load_response = client.read_input_registers(00004, 1);
         println!("Response IR load: {:?}", load_response);
 
-        let mut client =
-            Client::connect("postgresql://stepanov:postgres@localhost/postgres", NoTls).unwrap();
-
-        let mains_power_supply: i32 = mains_power_supply_response[0] as i32;
-        let start_generator: i32 = start_generator_response[0] as i32;
-        let generator_faulty: i32 = generator_faulty_response[0] as i32;
-        let generator_work: i32 = generator_work_response[0] as i32;
-        let connection: i32 = connection_response[0] as i32;
-        client.execute(
-            "INSERT INTO avr_control_insert (mains_power_supply, start_generator, generator_faulty, generator_work, connection) VALUES ($1, $2, $3, $4, $5)",
-            &[&mains_power_supply, &start_generator, &generator_faulty, &generator_work, &connection],
-        ).unwrap();
-
-        for row in client.query("SELECT mains_power_supply, start_generator, generator_faulty, generator_work, connection FROM avr_control_insert ORDER BY mark DESC limit 1", &[]).unwrap() {
-            let mains_power_supply: i32 = row.get(0);
-            let start_generator: i32 = row.get(1);
-            let generator_faulty: i32 = row.get(2);
-            let generator_work: i32 = row.get(3);
-            let connection: i32 = row.get(4);
-            println!(
-                "Считаны из ПЛК и записаны в табл. avr_control_insert следующие значения: mains_power_supply: {}, start_generator: {}, generator_faulty: {}, generator_work: {}, connection: {}",
-                mains_power_supply, start_generator, generator_faulty, generator_work, connection);
-        }
-
-        let load: i32 = load_response[0] as i32;
-        client
-            .execute(
-                "INSERT INTO нагрузка_на_генератор (нагрузка) VALUES ($1)",
-                &[&load],
-            )
-            .unwrap();
-
-        for row in client
-            .query(
-                "SELECT нагрузка FROM нагрузка_на_генератор ORDER BY время_и_дата DESC limit 1",
-                &[],
-            )
-            .unwrap()
+        if mains_power_supply_response.len() == 1
+            && start_generator_response.len() == 1
+            && generator_faulty_response.len() == 1
+            && generator_work_response.len() == 1
+            && connection_response.len() == 1
+            && load_response.len() == 1
         {
-            let load: i32 = row.get(0);
-            println!(
-                "Считываны из ПЛК и записаны в табл. нагрузка_на_генератор следующие значения: load: {}",
-                load);
+            let mut client =
+                Client::connect("postgresql://stepanov:postgres@localhost/postgres", NoTls)
+                    .unwrap();
+
+            let mains_power_supply: i32 = mains_power_supply_response[0] as i32;
+            let start_generator: i32 = start_generator_response[0] as i32;
+            let generator_faulty: i32 = generator_faulty_response[0] as i32;
+            let generator_work: i32 = generator_work_response[0] as i32;
+            let connection: i32 = connection_response[0] as i32;
+            client.execute(
+                "INSERT INTO avr_control_insert (mains_power_supply, start_generator, generator_faulty, generator_work, connection) VALUES ($1, $2, $3, $4, $5)",
+                &[&mains_power_supply, &start_generator, &generator_faulty, &generator_work, &connection],
+            ).unwrap();
+
+            for row in client.query("SELECT mains_power_supply, start_generator, generator_faulty, generator_work, connection FROM avr_control_insert ORDER BY mark DESC limit 1", &[]).unwrap() {
+                let mains_power_supply: i32 = row.get(0);
+                let start_generator: i32 = row.get(1);
+                let generator_faulty: i32 = row.get(2);
+                let generator_work: i32 = row.get(3);
+                let connection: i32 = row.get(4);
+                println!(
+                    "Считаны из ПЛК и записаны в табл. avr_control_insert следующие значения: mains_power_supply: {}, start_generator: {}, generator_faulty: {}, generator_work: {}, connection: {}",
+                    mains_power_supply, start_generator, generator_faulty, generator_work, connection);
+            }
+
+            let load: i32 = load_response[0] as i32;
+            client
+                .execute(
+                    "INSERT INTO нагрузка_на_генератор (нагрузка) VALUES ($1)",
+                    &[&load],
+                )
+                .unwrap();
+
+            for row in client
+                .query(
+                    "SELECT нагрузка FROM нагрузка_на_генератор ORDER BY время_и_дата DESC limit 1",
+                    &[],
+                )
+                .unwrap()
+            {
+                let load: i32 = row.get(0);
+                println!(
+                    "Считаны из ПЛК и записаны в табл. нагрузка_на_генератор следующие значения: load: {}",
+                    load);
+            }
+        } else {
+            println!("Ошибка! Не все значения переданы модулю modbus_ats от ПЛК!");
         }
     }
 
