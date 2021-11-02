@@ -1,0 +1,17 @@
+[Request0]
+Direction=read
+Type=bit
+Baudrate=115200
+Address=5
+Period=100
+var0=3800#bool#mains_power_supply
+var1=3801#bool#start_generator
+var2=3802#bool#generator_faulty
+var3=3803#bool#generator_work
+[Request2]
+Direction=read
+Type=reg
+Baudrate=115200
+Address=5
+Period=100
+var0=a000#int#load
