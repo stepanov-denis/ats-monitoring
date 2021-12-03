@@ -12,6 +12,11 @@ Application for collecting data from controllers, recording values and events in
 $ curl --proto '=https' --tlsv1.2 https://sh.rustup.rs -sSf | sh
 ```
 For Windows, visit [this page](https://www.rust-lang.org/tools/install)
+* Install OpenSSL
+```
+sudo apt-get install libssl-dev
+```
+For MacOS or Windows visit [this page](https://www.openssl.org/)
 * Clone the repository
 * Edit the http get requests
 ```
