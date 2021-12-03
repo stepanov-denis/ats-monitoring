@@ -16,7 +16,7 @@ For Windows, visit [this page](https://www.rust-lang.org/tools/install)
 ```
 sudo apt-get install libssl-dev
 ```
-For MacOS or Windows visit [this page](https://www.openssl.org/)
+For macOS or Windows visit [this page](https://www.openssl.org/)
 * Clone the repository
 * Edit the http get requests
 ```
