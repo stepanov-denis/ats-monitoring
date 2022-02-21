@@ -6,9 +6,15 @@ mod generator_monitoring;
 mod modbus_ats;
 mod modbus_winter_garden;
 mod power_supply_monitoring;
+mod psql;
 
 /// Application workflows.
 fn main() {
+    psql::postgresql::create_avr_control_insert_table();
+    psql::postgresql::create_log_of_work_app_table();
+    psql::postgresql::create_winter_garden_table();
+    psql::postgresql::create_generator_load_table();
+    psql::postgresql::create_avr_events_table();
     let _modbus_ats_spawn = thread::spawn(|| loop {
         modbus_ats::avr_control::avr_control_insert();
         thread::sleep(Duration::from_millis(3000));

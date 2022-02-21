@@ -2,10 +2,10 @@ pub mod avr_control {
     extern crate modbus_iiot;
     use modbus_iiot::tcp::master::TcpClient;
     use modbus_iiot::tcp::masteraccess::MasterAccess;
-    use postgres::{Client, NoTls};
+    use postgres::{Client, Error, NoTls};
 
     /// Reading variable values from the PLC "trim5" via Modbus TCP and writing the obtained values to the PostgreSQL DBMS.
-    pub fn reading_input_registers(client: &mut TcpClient) {
+    pub fn reading_input_registers(client: &mut TcpClient) -> Result<(), Error> {
         let mains_power_supply_response = client.read_input_registers(00002, 1);
         println!(
             "Response IR mains_power_supply: {:?}",
@@ -41,8 +41,8 @@ pub mod avr_control {
             && load_response.len() == 1
         {
             let mut client =
-                Client::connect("postgresql://stepanov:postgres@localhost/postgres", NoTls)
-                    .unwrap();
+                Client::connect(&crate::psql::postgresql::db_connect(), NoTls)
+                    ?;
 
             let mains_power_supply: i32 = mains_power_supply_response[0] as i32;
             let start_generator: i32 = start_generator_response[0] as i32;
@@ -52,9 +52,9 @@ pub mod avr_control {
             client.execute(
                 "INSERT INTO avr_control_insert (mains_power_supply, start_generator, generator_faulty, generator_work, connection) VALUES ($1, $2, $3, $4, $5)",
                 &[&mains_power_supply, &start_generator, &generator_faulty, &generator_work, &connection],
-            ).unwrap();
+            )?;
 
-            for row in client.query("SELECT mains_power_supply, start_generator, generator_faulty, generator_work, connection FROM avr_control_insert ORDER BY mark DESC limit 1", &[]).unwrap() {
+            for row in client.query("SELECT mains_power_supply, start_generator, generator_faulty, generator_work, connection FROM avr_control_insert ORDER BY mark DESC limit 1", &[])? {
                 let mains_power_supply: i32 = row.get(0);
                 let start_generator: i32 = row.get(1);
                 let generator_faulty: i32 = row.get(2);
@@ -71,14 +71,14 @@ pub mod avr_control {
                     "INSERT INTO нагрузка_на_генератор (нагрузка) VALUES ($1)",
                     &[&load],
                 )
-                .unwrap();
+                ?;
 
             for row in client
                 .query(
                     "SELECT нагрузка FROM нагрузка_на_генератор ORDER BY время_и_дата DESC limit 1",
                     &[],
                 )
-                .unwrap()
+                ?
             {
                 let load: i32 = row.get(0);
                 println!(
@@ -88,6 +88,7 @@ pub mod avr_control {
         } else {
             println!("Ошибка! Не все значения переданы модулю modbus_ats от ПЛК!");
         }
+        Ok(())
     }
 
     /// Communication session with the PLC via Modbus TCP.

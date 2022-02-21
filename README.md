@@ -6,80 +6,38 @@ Application for collecting data from controllers, recording values and events in
 [Documentation](https://docs.rs/crate/ats-monitoring/0.2.0)
 
 [Manual](https://github.com/stepanov-denis/ats-monitoring/blob/master/ATS%20Monitoring%20manual.pdf)
-## Setup
+## Prerequisites
 * Install Rust for Linux or macOS
 ```
 $ curl --proto '=https' --tlsv1.2 https://sh.rustup.rs -sSf | sh
 ```
 For Windows, visit [this page](https://www.rust-lang.org/tools/install)
-* Install OpenSSL
+* Install dependencies
 ```
-sudo apt-get install libssl-dev
+$ sudo apt-get install libssl-dev build-essential
 ```
-For macOS or Windows visit [this page](https://www.openssl.org/)
+## Initial setup
 * Clone the repository
+```
+$ git clone git@github.com:stepanov-denis/ats-monitoring.git
+```
 * Edit the http get requests
 ```
 let resp = reqwest::blocking::get("https://api-mapper.clicksend.com/http/v2/send.php?method=http&username=development-service@yandex.ru&key=1E82A334-89D8-985C-526B-712DB70A713D&to=+79139402913&message=Сбой+питания+от+электросети.+Успешный+старт+генератора.").unwrap();
 ```
-* Edit the connection configuration strings to PostgreSQL
+* Edit the connection configuration strings to PostgreSQL in module psql (psql.rs)
 ```
-let mut client =
-    Client::connect("postgresql://postgres:postgres@localhost/postgres", NoTls)?;
+pub fn db_connect() -> String {
+    let string_connection = String::from("postgresql://stepanov:postgres@localhost/postgres");
+    return string_connection
+}
 ```
 * Compile local packages and all their dependencies
 ```
 $ cargo build --release
 ```
 ## Setting up the environment
-* Install PostgreSQL
-* Create the following tables in PostgreSQL:
-```
-CREATE TABLE avr_control_insert (
-    mains_power_supply int NOT NULL,
-    start_generator int NOT NULL,
-    generator_faulty int NOT NULL,
-    generator_work int NOT NULL,
-    connection int NOT NULL,
-    mark timestamptz default current_timestamp
-);
-```
-```
-CREATE TABLE журнал_работы_приложения (
-    событие text NOT NULL,
-    время_и_дата timestamp default current_timestamp
-);
-```
-```
-CREATE TABLE зимний_сад (
-    фитоосвещение_1 int NOT NULL,
-    фитоосвещение_2 int NOT NULL,
-    фитоосвещение_3 int NOT NULL,
-    фитоосвещение_4 int NOT NULL,
-    вентилятор int NOT NULL,
-    автополив_1 int NOT NULL,
-    автополив_2 int NOT NULL,
-    автополив_3 int NOT NULL,
-    температура int NOT NULL,
-    влажность int NOT NULL,
-    освещенность_в_помещении int NOT NULL,
-    освещенность_на_улице int NOT NULL,
-    время_и_дата timestamp default current_timestamp
-);
-```
-```
-CREATE TABLE нагрузка_на_генератор (
-    нагрузка int NOT NULL,
-    время_и_дата timestamp default current_timestamp
-
-);
-```
-```
-CREATE TABLE события_авр (
-    событие text NOT NULL,
-    время_и_дата timestamp default current_timestamp
-);
-```
+* Install [PostgreSQL](https://www.postgresql.org/download/)
 * Install [SMLogix](https://segnetics.com/ru/smlogix)
 * Upload into PLC Pixel file "ats control.psl" and edit network addresses
 * Upload into PLC Trim5 file "winter garden.psl" and edit network addresses
