@@ -1,6 +1,6 @@
 [package]
 name = "ats-monitoring"
-version = "0.4.0"
+version = "0.5.0"
 edition = "2021"
 authors = ["Stepanov Denis <stepanov.d.m@yandex.ru>"]
 description = "An application for sending notifications via the SMS gateway API and recording events in the PostgreSQL DBMS about the status of the ATS (city power grid, generator, UPS)."
