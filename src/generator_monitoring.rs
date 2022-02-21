@@ -40,8 +40,7 @@ pub mod generator {
 
     /// The function of determining the serviceability/malfunction of the generator and notifying about it by SMS using the gateway API.
     pub fn generator_state() -> Result<(), Error> {
-        let mut client =
-            Client::connect(&crate::psql::postgresql::db_connect(), NoTls)?;
+        let mut client = Client::connect(&crate::psql::postgresql::db_connect(), NoTls)?;
         // Checking the connection of the PostgreSQL DBMS with the OPC server.
         for row in client.query(
             "SELECT EXTRACT(epoch FROM mark) FROM avr_control_insert ORDER BY mark DESC limit 1",

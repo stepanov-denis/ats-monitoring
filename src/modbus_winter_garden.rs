@@ -89,8 +89,7 @@ pub mod winter_garden {
             && illumination_outdoor_response.len() == 1
         {
             let mut client =
-                Client::connect("postgresql://stepanov:postgres@localhost/postgres", NoTls)
-                    ?;
+                Client::connect("postgresql://stepanov:postgres@localhost/postgres", NoTls)?;
 
             let phyto_lighting_1: i32 = phyto_lighting_1_response[0] as i32;
             let phyto_lighting_2: i32 = phyto_lighting_2_response[0] as i32;

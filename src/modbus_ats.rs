@@ -40,9 +40,7 @@ pub mod avr_control {
             && connection_response.len() == 1
             && load_response.len() == 1
         {
-            let mut client =
-                Client::connect(&crate::psql::postgresql::db_connect(), NoTls)
-                    ?;
+            let mut client = Client::connect(&crate::psql::postgresql::db_connect(), NoTls)?;
 
             let mains_power_supply: i32 = mains_power_supply_response[0] as i32;
             let start_generator: i32 = start_generator_response[0] as i32;
@@ -66,20 +64,15 @@ pub mod avr_control {
             }
 
             let load: i32 = load_response[0] as i32;
-            client
-                .execute(
-                    "INSERT INTO нагрузка_на_генератор (нагрузка) VALUES ($1)",
-                    &[&load],
-                )
-                ?;
+            client.execute(
+                "INSERT INTO нагрузка_на_генератор (нагрузка) VALUES ($1)",
+                &[&load],
+            )?;
 
-            for row in client
-                .query(
-                    "SELECT нагрузка FROM нагрузка_на_генератор ORDER BY время_и_дата DESC limit 1",
-                    &[],
-                )
-                ?
-            {
+            for row in client.query(
+                "SELECT нагрузка FROM нагрузка_на_генератор ORDER BY время_и_дата DESC limit 1",
+                &[],
+            )? {
                 let load: i32 = row.get(0);
                 println!(
                     "Считаны из ПЛК и записаны в табл. нагрузка_на_генератор следующие значения: load: {}",
