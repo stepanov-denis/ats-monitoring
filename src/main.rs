@@ -15,17 +15,17 @@ fn main() {
     psql::postgresql::create_winter_garden_table();
     psql::postgresql::create_generator_load_table();
     psql::postgresql::create_avr_events_table();
-    let _modbus_ats_spawn = thread::spawn(|| loop {
+    let modbus_ats_spawn = thread::spawn(|| loop {
         modbus_ats::avr_control::avr_control_insert();
         thread::sleep(Duration::from_millis(3000));
     });
 
-    let _modbus_winter_garden_spawn = thread::spawn(|| loop {
+    let modbus_winter_garden_spawn = thread::spawn(|| loop {
         modbus_winter_garden::winter_garden::winter_garden_insert();
         thread::sleep(Duration::from_millis(3000));
     });
 
-    let _generator_monitoring_spawn = thread::spawn(|| loop {
+    let generator_monitoring_spawn = thread::spawn(|| loop {
         generator_monitoring::generator::generator_state();
         thread::sleep(Duration::from_millis(3000));
     });
