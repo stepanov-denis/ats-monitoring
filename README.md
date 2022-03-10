@@ -6,10 +6,10 @@ Application for collecting data from controllers, recording values and events in
 [Documentation](https://docs.rs/crate/ats-monitoring/0.2.0)
 
 [Manual](https://github.com/stepanov-denis/ats-monitoring/blob/master/ATS%20Monitoring%20manual.pdf)
-## Docker
+## Run docker image
 * Image contains ATS Monitoring application and PosgreSQL 13
 ```
-$ docker pull stepanovdenis/ats-monitoring:latest
+$ docker pull stepanovdenis/ats-monitoring
 $ docker run -ti stepanovdenis/ats-monitoring
 ```
 ## Prerequisites outside docker
