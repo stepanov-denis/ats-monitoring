@@ -11,6 +11,8 @@ Application for collecting data from controllers, recording values and events in
 ```
 $ docker pull stepanovdenis/ats-monitoring
 $ docker run -ti stepanovdenis/ats-monitoring
+$ service postgresql start
+$ ats-monitoring
 ```
 ## Prerequisites outside docker
 * Install Rust for Linux or macOS
