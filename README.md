@@ -6,7 +6,13 @@ Application for collecting data from controllers, recording values and events in
 [Documentation](https://docs.rs/crate/ats-monitoring/0.2.0)
 
 [Manual](https://github.com/stepanov-denis/ats-monitoring/blob/master/ATS%20Monitoring%20manual.pdf)
-## Prerequisites
+## Docker
+* Image contains ATS Monitoring application and PosgreSQL 13
+```
+$ docker pull stepanovdenis/ats-monitoring:latest
+$ docker run -ti stepanovdenis/ats-monitoring
+```
+## Prerequisites outside docker
 * Install Rust for Linux or macOS
 ```
 $ curl --proto '=https' --tlsv1.2 https://sh.rustup.rs -sSf | sh
@@ -16,7 +22,7 @@ For Windows, visit [this page](https://www.rust-lang.org/tools/install)
 ```
 $ sudo apt-get install libssl-dev build-essential
 ```
-## Initial setup
+## Initial setup outside docker
 * Clone the repository
 ```
 $ git clone git@github.com:stepanov-denis/ats-monitoring.git
@@ -36,8 +42,8 @@ pub fn db_connect() -> String {
 ```
 $ cargo build --release
 ```
-## Setting up the environment
 * Install [PostgreSQL](https://www.postgresql.org/download/)
+## Setting up the environment
 * Install [SMLogix](https://segnetics.com/ru/smlogix)
 * Upload into PLC Pixel file "ats control.psl" and edit network addresses
 * Upload into PLC Trim5 file "winter garden.psl" and edit network addresses
