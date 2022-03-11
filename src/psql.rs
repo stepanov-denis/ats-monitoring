@@ -6,6 +6,15 @@ pub mod postgresql {
         return string_connection;
     }
 
+    /// Set default transaction isolation level for database
+    pub fn set_transaction_isolation() -> Result<(), Error> {
+        let mut client = Client::connect(&db_connect(), NoTls)?;
+        client.batch_execute(
+            "alter database postgres set default_transaction_isolation to serializable",
+        )?;
+        Ok(())
+    }
+
     /// Create SQL table "avr_control_insert"
     pub fn create_avr_control_insert_table() -> Result<(), Error> {
         let mut client = Client::connect(&db_connect(), NoTls)?;

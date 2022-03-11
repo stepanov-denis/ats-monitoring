@@ -7,12 +7,21 @@ Application for collecting data from controllers, recording values and events in
 
 [Manual](https://github.com/stepanov-denis/ats-monitoring/blob/master/ATS%20Monitoring%20manual.pdf)
 ## Run docker image
-* Image contains ATS Monitoring application and PosgreSQL 13
+Image contains ATS Monitoring application and PosgreSQL 13
+* For build image from Dockerfile
+```
+$ git clone git@github.com:stepanov-denis/ats-monitoring.git
+$ cd ats-monitoring
+$ docker build stepanovdenis/ats-monitoring .
+$ docker run -ti -e TZ=Asia/Novosibirsk stepanovdenis/ats-monitoring
+```
+* For pull image from Docker Hub
 ```
 $ docker pull stepanovdenis/ats-monitoring
-$ docker run -ti stepanovdenis/ats-monitoring
-$ service postgresql start
-$ ats-monitoring
+```
+* For run docker image
+```
+$ docker run -ti -e TZ=Asia/Novosibirsk stepanovdenis/ats-monitoring
 ```
 ## Prerequisites outside docker
 * Install Rust for Linux or macOS
