@@ -7,7 +7,7 @@ Application for collecting data from controllers, recording values and events in
 
 [Manual](https://github.com/stepanov-denis/ats-monitoring/blob/master/ATS%20Monitoring%20manual.pdf)
 ## Run docker image
-Image contains ATS Monitoring application and PosgreSQL 13
+Image contains ATS Monitoring application and PostgreSQL 13
 * For build image from Dockerfile
 ```
 $ git clone git@github.com:stepanov-denis/ats-monitoring.git
