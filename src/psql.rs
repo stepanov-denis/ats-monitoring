@@ -1,9 +1,29 @@
 pub mod postgresql {
     use postgres::{Client, Error, NoTls};
 
+    /// The structure of the generator failure.
+    pub struct Faulty {
+        generator_faulty: i32,
+    }
+
+    /// The structure of a UNIX timestamp with the time zone of the last value entry in the table.
+    pub struct UnixFromSql {
+        time: f64,
+    }
+
+    /// The structure of a UNIX timestamp with the time zone now.
+    pub struct UnixFromSqlNow {
+        time: f64,
+    }
+
+    /// The structure of the signal of the presence of the opc server connection with the plc.
+    pub struct PlcConnect {
+        connection: i32,
+    }
+
     pub fn db_connect() -> String {
-        let string_connection = String::from("postgresql://stepanov:postgres@localhost/postgres");
-        return string_connection;
+        let string_connection = String::from("postgresql://stepanov:postgres@localhost:5433/postgres");
+        string_connection
     }
 
     /// Set default transaction isolation level for database
@@ -149,6 +169,52 @@ pub mod postgresql {
             let event: &str = row.get(0);
 
             println!("Запись в табл. события_авр: {}", event);
+        }
+        Ok(())
+    }
+
+    /// Records log "Ошибка! Связь ПЛК с модулем modbus_ats отсутствует!" in the sql table "журнал_работы_приложения".
+    pub fn log_timeout_or_host_unreachable_modbus_ats() -> Result<(), Error> {
+        let mut client = Client::connect(&db_connect(), NoTls)?;
+        let event = "Ошибка! Связь ПЛК с модулем modbus_ats отсутствует!";
+        client.execute(
+            "INSERT INTO журнал_работы_приложения (событие) VALUES ($1)",
+            &[&event],
+        )?;
+
+        for row in client
+            .query(
+                "SELECT событие, время_и_дата FROM журнал_работы_приложения ORDER BY время_и_дата DESC limit 1",
+                &[],
+            )
+            ?
+        {
+            let event: &str = row.get(0);
+
+            println!("Запись в табл. журнал_работы_приложения: {}", event);
+        }
+        Ok(())
+    }
+
+    /// Records log "Ошибка! Связь ПЛК с модулем modbus_winter_garden отсутствует!" in the sql table "журнал_работы_приложения".
+    pub fn log_timeout_or_host_unreachable_modbus_winter_garden() -> Result<(), Error> {
+        let mut client = Client::connect(&db_connect(), NoTls)?;
+        let event = "Ошибка! Связь ПЛК с модулем modbus_winter_garden отсутствует!";
+        client.execute(
+            "INSERT INTO журнал_работы_приложения (событие) VALUES ($1)",
+            &[&event],
+        )?;
+
+        for row in client
+            .query(
+                "SELECT событие, время_и_дата FROM журнал_работы_приложения ORDER BY время_и_дата DESC limit 1",
+                &[],
+            )
+            ?
+        {
+            let event: &str = row.get(0);
+
+            println!("Запись в табл. журнал_работы_приложения: {}", event);
         }
         Ok(())
     }
@@ -766,6 +832,94 @@ pub mod postgresql {
             let event: &str = row.get(0);
 
             println!("Запись в табл. журнал_работы_приложения: {}", event);
+        }
+        Ok(())
+    }
+
+    pub fn unix_from_sql() -> Result<(), Error> {
+        let mut client = Client::connect(&db_connect(), NoTls)?;
+        for row in client
+            .query(
+                "SELECT EXTRACT(epoch FROM mark) FROM avr_control_insert ORDER BY mark DESC limit 1",
+                &[],
+            )
+            ?
+        {
+            let unix_from_sql = UnixFromSql {
+                time: row.get(0),
+            };
+            #[macro_export]
+            macro_rules! unix_from_sql {
+                () => {
+                    unix_from_sql.time + 5.00
+                };
+            }
+        }
+        Ok(())
+    }
+
+    pub fn unix_from_sql_now() -> Result<(), Error> {
+        let mut client = Client::connect(&db_connect(), NoTls)?;
+        for row in client
+            .query(
+                "SELECT EXTRACT(epoch FROM now()) FROM avr_control_insert ORDER BY now() DESC limit 1",
+                &[],
+            )
+            ?
+        {
+            let unix_from_sql_now = UnixFromSqlNow {
+                time: row.get(0),
+            };
+            #[macro_export]
+            macro_rules! unix_from_sql_now {
+                () => {
+                    unix_from_sql_now.time
+                };
+            }
+        }
+        Ok(())
+    }
+
+    pub fn plc_connect() -> Result<(), Error> {
+        let mut client = Client::connect(&db_connect(), NoTls)?;
+        for row in client
+            .query(
+                "SELECT mark, connection FROM avr_control_insert ORDER BY mark DESC limit 1",
+                &[],
+            )
+            ?
+        {
+            let plc_connect = PlcConnect {
+                connection: row.get(1),
+            };
+            #[macro_export]
+            macro_rules! plc_connect {
+                () => {
+                    plc_connect.connection
+                };
+            }
+        }
+        Ok(())
+    }
+
+    pub fn generator_faulty() -> Result<(), Error> {
+        let mut client = Client::connect(&db_connect(), NoTls)?;
+        for row in client
+            .query(
+                "SELECT mark, generator_faulty FROM avr_control_insert ORDER BY mark DESC limit 1",
+                &[],
+            )
+            ?
+        {
+            let faulty = Faulty {
+                generator_faulty: row.get(1),
+            };
+            #[macro_export]
+            macro_rules! generator_faulty {
+                () => {
+                    faulty.generator_faulty
+                };
+            }
         }
         Ok(())
     }

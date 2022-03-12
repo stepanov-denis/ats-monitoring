@@ -7,6 +7,7 @@ mod modbus_ats;
 mod modbus_winter_garden;
 mod power_supply_monitoring;
 mod psql;
+mod cycle;
 
 /// Application workflows.
 fn main() {

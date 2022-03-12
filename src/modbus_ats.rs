@@ -89,10 +89,13 @@ pub mod avr_control {
         let mut client = TcpClient::new("10.54.52.201:502");
         let result = client.connect();
         match result {
-            Err(message) => println!(
-                "Ошибка! Связь ПЛК с модулем modbus_ats отсутствует! {}",
-                message
-            ),
+            Err(message) => {
+                println!(
+                    "Ошибка! Связь ПЛК с модулем modbus_ats отсутствует! {}",
+                    message
+                );
+                crate::psql::postgresql::log_timeout_or_host_unreachable_modbus_ats();
+            }
             Ok(_) => {
                 println!("Связь ПЛК с модулем modbus_ats: Ok");
                 reading_input_registers(&mut client);

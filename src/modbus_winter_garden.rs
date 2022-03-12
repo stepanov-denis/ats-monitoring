@@ -136,10 +136,13 @@ pub mod winter_garden {
         let mut client = TcpClient::new("10.54.52.201:502");
         let result = client.connect();
         match result {
-            Err(message) => println!(
-                "Ошибка! Связь ПЛК с модулем modbus_winter_garden отсутствует! {}",
-                message
-            ),
+            Err(message) => {
+                println!(
+                    "Ошибка! Связь ПЛК с модулем modbus_winter_garden отсутствует! {}",
+                    message
+                );
+                crate::psql::postgresql::log_timeout_or_host_unreachable_modbus_winter_garden();
+            }
             Ok(_) => {
                 println!("Связь ПЛК с модулем modbus_winter_garden: Ok");
                 reading_input_registers(&mut client);
