@@ -1,6 +1,6 @@
 [package]
 name = "ats-monitoring"
-version = "1.0.0"
+version = "1.1.0"
 edition = "2021"
 authors = ["Stepanov Denis <stepanov.d.m@yandex.ru>"]
 description = "An application for sending notifications via the SMS gateway API and recording events in the PostgreSQL DBMS about the status of the ATS (city power grid, generator, UPS)."
@@ -20,3 +20,4 @@ reqwest = { version = "0.11.4", features = ["blocking"] }
 error-chain = "0.12.4"
 online = { version = "3.0.1",  default-features = false, features = ["sync"] }
 modbus-iiot = "0.2.0"
+skytable = "0.6.2"

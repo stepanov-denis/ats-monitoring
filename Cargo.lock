@@ -30,7 +30,7 @@ dependencies = [
 
 [[package]]
 name = "ats-monitoring"
-version = "1.0.0"
+version = "1.1.0"
 dependencies = [
  "chrono",
  "error-chain",
@@ -38,6 +38,7 @@ dependencies = [
  "online",
  "postgres",
  "reqwest",
+ "skytable",
  "timer",
 ]
 
@@ -1062,6 +1063,12 @@ name = "siphasher"
 version = "0.3.7"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "533494a8f9b724d33625ab53c6c4800f7cc445895924a8ef649222dcb76e938b"
+
+[[package]]
+name = "skytable"
+version = "0.6.2"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "a41cfc537b70528dc7435e290a0f82913fc06a9fdbb7db4adfa44a34a031073b"
 
 [[package]]
 name = "slab"

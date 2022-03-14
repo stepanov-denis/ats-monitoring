@@ -2,12 +2,14 @@ extern crate chrono;
 extern crate timer;
 use std::thread;
 use std::time::Duration;
+mod cycle;
 mod generator_monitoring;
 mod modbus_ats;
 mod modbus_winter_garden;
 mod power_supply_monitoring;
 mod psql;
-mod cycle;
+mod skydb;
+mod sms;
 
 /// Application workflows.
 fn main() {
