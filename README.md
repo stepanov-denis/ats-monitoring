@@ -6,23 +6,6 @@ Application for collecting data from controllers, recording values and events in
 [Documentation](https://docs.rs/crate/ats-monitoring/0.2.0)
 
 [Manual](https://github.com/stepanov-denis/ats-monitoring/blob/master/ATS%20Monitoring%20manual.pdf)
-## Run docker image
-Image contains ATS Monitoring application and PostgreSQL 13
-* For build image from Dockerfile
-```
-$ git clone git@github.com:stepanov-denis/ats-monitoring.git
-$ cd ats-monitoring
-$ docker build stepanovdenis/ats-monitoring .
-$ docker run -ti -e TZ=Asia/Novosibirsk stepanovdenis/ats-monitoring
-```
-* For pull image from Docker Hub
-```
-$ docker pull stepanovdenis/ats-monitoring
-```
-* For run docker image
-```
-$ docker run -ti -e TZ=Asia/Novosibirsk stepanovdenis/ats-monitoring
-```
 ## Prerequisites outside docker
 * Install Rust for Linux or macOS
 ```
@@ -33,6 +16,11 @@ For Windows, visit [this page](https://www.rust-lang.org/tools/install)
 ```
 $ sudo apt-get install libssl-dev build-essential
 ```
+* Install Skytable
+```
+$ git clone --depth 1 --branch v0.7.3 https://github.com/skytable/skytable.git
+$ cd skytable && cargo build --release
+```
 ## Initial setup outside docker
 * Clone the repository
 ```
@@ -42,7 +30,7 @@ $ git clone git@github.com:stepanov-denis/ats-monitoring.git
 ```
 let resp = reqwest::blocking::get("https://api-mapper.clicksend.com/http/v2/send.php?method=http&username=development-service@yandex.ru&key=1E82A334-89D8-985C-526B-712DB70A713D&to=+79139402913&message=Сбой+питания+от+электросети.+Успешный+старт+генератора.").unwrap();
 ```
-* Edit the connection configuration strings to PostgreSQL in module psql (psql.rs)
+* Edit the connection configuration strings to PostgreSQL in module psql
 ```
 pub fn db_connect() -> String {
     let string_connection = String::from("postgresql://stepanov:postgres@localhost/postgres");
@@ -64,6 +52,7 @@ $ cargo build --release
 * Run PLC Pixel
 * Run PLC Trim5
 * Run PostgreSQL
+* Run Skytable
 * Run ATS Monitoring
 ## Use
 * Сreate and save the report in the form you need in Orange Data Mining

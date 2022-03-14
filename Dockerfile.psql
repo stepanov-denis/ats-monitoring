@@ -8,6 +8,6 @@ RUN apt-get update -y
 
 EXPOSE 5432
 
-CMD bash
+# CMD service postgresql start
 
-# CMD service postgresql start && su postgres bash -c "psql -c \"CREATE USER stepanov WITH CREATEDB PASSWORD 'postgres';\"" && bash
+CMD service postgresql start && bash
