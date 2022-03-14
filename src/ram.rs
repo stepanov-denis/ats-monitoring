@@ -1,7 +1,7 @@
 pub mod db {
     use postgres::{Client, Error, NoTls};
     use skytable::actions::Actions;
-    use skytable::sync::Connection;
+    
 
     /// The structure of the generator failure.
     pub struct Faulty {

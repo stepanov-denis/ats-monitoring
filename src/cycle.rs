@@ -1,7 +1,7 @@
 pub mod http {
     use error_chain::error_chain;
     use online::sync::check;
-    use std::io::Read;
+    
     error_chain! {
         foreign_links {
             Io(std::io::Error);

@@ -2,7 +2,7 @@ pub mod generator {
     extern crate chrono;
     extern crate timer;
     use online::sync::check;
-    use postgres::{Client, Error, NoTls};
+    
     use std::sync::mpsc::channel;
 
     /// The structure of the generator failure.
