@@ -62,4 +62,25 @@ pub mod skytable {
         let generator_faulty_i32 = generator_faulty_str.parse::<i32>().unwrap();
         generator_faulty_i32
     }
+
+    pub fn mains_power_supply() -> i32 {
+        let mut mains_power_supply = crate::skydb::skytable::get_i32_skydb("mains_power_supply");
+        let mains_power_supply_str = mains_power_supply.get_or_insert("3".to_string());
+        let mains_power_supply_i32 = mains_power_supply_str.parse::<i32>().unwrap();
+        mains_power_supply_i32
+    }
+
+    pub fn start_generator() -> i32 {
+        let mut start_generator = crate::skydb::skytable::get_i32_skydb("start_generator");
+        let start_generator_str = start_generator.get_or_insert("3".to_string());
+        let start_generator_i32 = start_generator_str.parse::<i32>().unwrap();
+        start_generator_i32
+    }
+
+    pub fn generator_work() -> i32 {
+        let mut generator_work = crate::skydb::skytable::get_i32_skydb("generator_work");
+        let generator_work_str = generator_work.get_or_insert("3".to_string());
+        let generator_work_i32 = generator_work_str.parse::<i32>().unwrap();
+        generator_work_i32
+    }
 }

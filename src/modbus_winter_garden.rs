@@ -7,70 +7,70 @@ pub mod winter_garden {
     /// Reading variable values from the PLC "trim5" via Modbus TCP and writing the obtained values to the PostgreSQL DBMS.
     pub fn reading_input_registers(client: &mut TcpClient) -> Result<(), Error> {
         let phyto_lighting_1_response = client.read_input_registers(00007, 1);
-        println!(
+        info!(
             "Response IR phyto_lighting_1: {:?}",
             phyto_lighting_1_response
         );
 
         let phyto_lighting_2_response = client.read_input_registers(00008, 1);
-        println!(
+        info!(
             "Response IR phyto_lighting_2: {:?}",
             phyto_lighting_2_response
         );
 
         let phyto_lighting_3_response = client.read_input_registers(00009, 1);
-        println!(
+        info!(
             "Response IR phyto_lighting_3: {:?}",
             phyto_lighting_3_response
         );
 
         let phyto_lighting_4_response = client.read_input_registers(00010, 1);
-        println!(
+        info!(
             "Response IR phyto_lighting_4: {:?}",
             phyto_lighting_4_response
         );
 
         let fan_response = client.read_input_registers(00011, 1);
-        println!("Response IR fan: {:?}", fan_response);
+        info!("Response IR fan: {:?}", fan_response);
 
         let automatic_watering_1_response = client.read_input_registers(00012, 1);
-        println!(
+        info!(
             "Response IR automatic_watering_1: {:?}",
             automatic_watering_1_response
         );
 
         let automatic_watering_2_response = client.read_input_registers(00013, 1);
-        println!(
+        info!(
             "Response IR automatic_watering_2: {:?}",
             automatic_watering_2_response
         );
 
         let automatic_watering_3_response = client.read_input_registers(00014, 1);
-        println!(
+        info!(
             "Response IR automatic_watering_3: {:?}",
             automatic_watering_3_response
         );
 
         let temperature_indoor_response = client.read_input_registers(00015, 1);
-        println!(
+        info!(
             "Response IR temperature_indoor: {:?}",
             temperature_indoor_response
         );
 
         let humidity_indoor_response = client.read_input_registers(00016, 1);
-        println!(
+        info!(
             "Response IR humidity_indoor: {:?}",
             humidity_indoor_response
         );
 
         let illumination_indoor_response = client.read_input_registers(00017, 1);
-        println!(
+        info!(
             "Response IR illumination_indoor: {:?}",
             illumination_indoor_response
         );
 
         let illumination_outdoor_response = client.read_input_registers(00018, 1);
-        println!(
+        info!(
             "Response IR illumination_outdoor: {:?}",
             illumination_outdoor_response
         );
@@ -121,12 +121,12 @@ pub mod winter_garden {
                 let humidity_indoor: i32 = row.get(9);
                 let illumination_indoor: i32 = row.get(10);
                 let illumination_outdoor: i32 = row.get(11);
-                println!(
+                info!(
                     "Считаны из ПЛК и записаны в табл. зимний_сад следующие значения: phyto_lighting_1: {}, phyto_lighting_2: {}, phyto_lighting_3: {}, phyto_lighting_4: {}, fan: {}, automatic_watering_1: {}, automatic_watering_2: {}, automatic_watering_3: {}, temperature_indoor: {}, humidity_indoor: {}, illumination_indoor: {}, illumination_outdoor: {}",
                     phyto_lighting_1, phyto_lighting_2, phyto_lighting_3, phyto_lighting_4, fan, automatic_watering_1, automatic_watering_2, automatic_watering_3, temperature_indoor, humidity_indoor, illumination_indoor, illumination_outdoor);
             }
         } else {
-            println!("Ошибка! Не все значения пререданы модулю modbus_winter_garden от ПЛК!")
+            info!("Ошибка! Не все значения пререданы модулю modbus_winter_garden от ПЛК!")
         }
         Ok(())
     }
@@ -137,14 +137,14 @@ pub mod winter_garden {
         let result = client.connect();
         match result {
             Err(message) => {
-                println!(
+                info!(
                     "Ошибка! Связь ПЛК с модулем modbus_winter_garden отсутствует! {}",
                     message
                 );
                 crate::psql::postgresql::log_timeout_or_host_unreachable_modbus_winter_garden();
             }
             Ok(_) => {
-                println!("Связь ПЛК с модулем modbus_winter_garden: Ok");
+                info!("Связь ПЛК с модулем modbus_winter_garden: Ok");
                 reading_input_registers(&mut client);
 
                 client.disconnect();

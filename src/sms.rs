@@ -16,4 +16,32 @@ pub mod gateway {
         string_connection.push_str("Работоспособность+генератора+в+режиме+трансляции+питания+от+электросети+восстановлена.+Генератор+исправен.+Генератор+работает.");
         string_connection
     }
+
+    pub fn sms_start_generator_ok() -> String {
+        let mut string_connection = String::from(sms_gateway_string_connection());
+        string_connection.push_str("Сбой+питания+от+электросети.+Успешный+старт+генератора.");
+        string_connection
+    }
+
+    pub fn sms_start_generator_err() -> String {
+        let mut string_connection = String::from(sms_gateway_string_connection());
+        string_connection.push_str("Сбой+питания+от+электросети.+Сбой+старта+генератора.");
+        string_connection
+    }
+
+    pub fn sms_power_restored_generator_ok() -> String {
+        let mut string_connection = String::from(sms_gateway_string_connection());
+        string_connection.push_str(
+            "Питание+от+электросети+восстановлено.+Генератор+исправен.+Генератор+работает.",
+        );
+        string_connection
+    }
+
+    pub fn sms_power_restored_generator_err() -> String {
+        let mut string_connection = String::from(sms_gateway_string_connection());
+        string_connection.push_str(
+            "Питание+от+электросети+восстановлено.+Генератор+неисправен.+Генератор+не+работает.",
+        );
+        string_connection
+    }
 }

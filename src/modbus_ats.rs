@@ -7,31 +7,31 @@ pub mod avr_control {
     /// Reading variable values from the PLC "trim5" via Modbus TCP and writing the obtained values to the PostgreSQL DBMS.
     pub fn reading_input_registers(client: &mut TcpClient) -> Result<(), Error> {
         let mains_power_supply_response = client.read_input_registers(00002, 1);
-        println!(
+        info!(
             "Response IR mains_power_supply: {:?}",
             mains_power_supply_response
         );
 
         let start_generator_response = client.read_input_registers(00003, 1);
-        println!(
+        info!(
             "Response IR start_generator: {:?}",
             start_generator_response
         );
 
         let generator_faulty_response = client.read_input_registers(00005, 1);
-        println!(
+        info!(
             "Response IR generator_faulty: {:?}",
             generator_faulty_response
         );
 
         let generator_work_response = client.read_input_registers(00006, 1);
-        println!("Response IR generator_work: {:?}", generator_work_response);
+        info!("Response IR generator_work: {:?}", generator_work_response);
 
         let connection_response = client.read_input_registers(00019, 1);
-        println!("Response IR connection: {:?}", connection_response);
+        info!("Response IR connection: {:?}", connection_response);
 
         let load_response = client.read_input_registers(00004, 1);
-        println!("Response IR load: {:?}", load_response);
+        info!("Response IR load: {:?}", load_response);
 
         if mains_power_supply_response.len() == 1
             && start_generator_response.len() == 1
@@ -58,7 +58,7 @@ pub mod avr_control {
                 let generator_faulty: i32 = row.get(2);
                 let generator_work: i32 = row.get(3);
                 let connection: i32 = row.get(4);
-                println!(
+                info!(
                     "Считаны из ПЛК и записаны в табл. avr_control_insert следующие значения: mains_power_supply: {}, start_generator: {}, generator_faulty: {}, generator_work: {}, connection: {}",
                     mains_power_supply, start_generator, generator_faulty, generator_work, connection);
             }
@@ -74,12 +74,12 @@ pub mod avr_control {
                 &[],
             )? {
                 let load: i32 = row.get(0);
-                println!(
+                info!(
                     "Считаны из ПЛК и записаны в табл. нагрузка_на_генератор следующие значения: load: {}",
                     load);
             }
         } else {
-            println!("Ошибка! Не все значения переданы модулю modbus_ats от ПЛК!");
+            info!("Ошибка! Не все значения переданы модулю modbus_ats от ПЛК!");
         }
         Ok(())
     }
@@ -90,14 +90,14 @@ pub mod avr_control {
         let result = client.connect();
         match result {
             Err(message) => {
-                println!(
+                info!(
                     "Ошибка! Связь ПЛК с модулем modbus_ats отсутствует! {}",
                     message
                 );
                 crate::psql::postgresql::log_timeout_or_host_unreachable_modbus_ats();
             }
             Ok(_) => {
-                println!("Связь ПЛК с модулем modbus_ats: Ok");
+                info!("Связь ПЛК с модулем modbus_ats: Ok");
                 reading_input_registers(&mut client);
 
                 client.disconnect();

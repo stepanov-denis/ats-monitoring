@@ -53,7 +53,21 @@ $ cargo build --release
 * Run PLC Trim5
 * Run PostgreSQL
 * Run Skytable
+```
+$ cd skytable && cargo run --bin skyd --release
+```
 * Run ATS Monitoring
+```
+$ cd ats-monitoring && cargo run --release
+```
+* For run ATS Monitoring with env_logger
+```
+$ RUST_LOG=error cargo run --release
+$ RUST_LOG=warn cargo run --release
+$ RUST_LOG=info cargo run --release
+$ RUST_LOG=debug cargo run --release
+$ RUST_LOG=trace cargo run --release
+```
 ## Use
 * Сreate and save the report in the form you need in Orange Data Mining
 * Check your phone for SMS messages from ClickSend
