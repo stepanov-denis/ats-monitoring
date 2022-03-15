@@ -1,0 +1,401 @@
+{
+    "Configuration": {
+        "cs": "eecf15487dd6155d6b5a10a5f597b480",
+        "data": {
+            "Devices": [
+                {
+                    "bus": 0,
+                    "class": "fmr",
+                    "key": "FMR-1010-10-0",
+                    "type": 185207306
+                }
+            ],
+            "Resources": [
+                {
+                    "info": {
+                        "id": "AIN1",
+                        "owner": "FMR-1010-10-0",
+                        "type": 0
+                    },
+                    "settings": {
+                        "freq60": false,
+                        "median": 0,
+                        "onePole": 0,
+                        "range": 1,
+                        "sc-max": 500,
+                        "sc-min": 0,
+                        "sc-offset": 0,
+                        "ts-type": 0
+                    }
+                },
+                {
+                    "info": {
+                        "id": "AIN2",
+                        "owner": "FMR-1010-10-0",
+                        "type": 0
+                    },
+                    "settings": {
+                        "freq60": false,
+                        "median": 0,
+                        "onePole": 0,
+                        "range": 1,
+                        "sc-max": 500,
+                        "sc-min": 0,
+                        "sc-offset": 0,
+                        "ts-type": 0
+                    }
+                },
+                {
+                    "info": {
+                        "id": "AIN3",
+                        "owner": "FMR-1010-10-0",
+                        "type": 0
+                    },
+                    "settings": {
+                        "freq60": false,
+                        "median": 0,
+                        "onePole": 0,
+                        "range": 1,
+                        "sc-max": 50,
+                        "sc-min": -40,
+                        "sc-offset": 0,
+                        "ts-type": 0
+                    }
+                },
+                {
+                    "info": {
+                        "id": "AIN4",
+                        "owner": "FMR-1010-10-0",
+                        "type": 0
+                    },
+                    "settings": {
+                        "freq60": false,
+                        "median": 0,
+                        "onePole": 0,
+                        "range": 1,
+                        "sc-max": 100,
+                        "sc-min": 0,
+                        "sc-offset": 0,
+                        "ts-type": 0
+                    }
+                },
+                {
+                    "info": {
+                        "id": "AIN5",
+                        "owner": "FMR-1010-10-0",
+                        "type": 0
+                    },
+                    "settings": {
+                        "freq60": false,
+                        "median": 0,
+                        "onePole": 0,
+                        "range": 0,
+                        "sc-max": 10,
+                        "sc-min": 0,
+                        "sc-offset": 0,
+                        "ts-type": 0
+                    }
+                },
+                {
+                    "info": {
+                        "id": "AIN6",
+                        "owner": "FMR-1010-10-0",
+                        "type": 0
+                    },
+                    "settings": {
+                        "freq60": false,
+                        "median": 0,
+                        "onePole": 0,
+                        "range": 0,
+                        "sc-max": 10,
+                        "sc-min": 0,
+                        "sc-offset": 0,
+                        "ts-type": 0
+                    }
+                },
+                {
+                    "info": {
+                        "id": "AIN7",
+                        "owner": "FMR-1010-10-0",
+                        "type": 0
+                    },
+                    "settings": {
+                        "freq60": false,
+                        "median": 0,
+                        "onePole": 0,
+                        "range": 0,
+                        "sc-max": 10,
+                        "sc-min": 0,
+                        "sc-offset": 0,
+                        "ts-type": 0
+                    }
+                },
+                {
+                    "info": {
+                        "id": "AIN8",
+                        "owner": "FMR-1010-10-0",
+                        "type": 0
+                    },
+                    "settings": {
+                        "freq60": false,
+                        "median": 0,
+                        "onePole": 0,
+                        "range": 0,
+                        "sc-max": 10,
+                        "sc-min": 0,
+                        "sc-offset": 0,
+                        "ts-type": 0
+                    }
+                },
+                {
+                    "info": {
+                        "id": "AIN9",
+                        "owner": "FMR-1010-10-0",
+                        "type": 0
+                    },
+                    "settings": {
+                        "freq60": false,
+                        "median": 0,
+                        "onePole": 0,
+                        "range": 0,
+                        "sc-max": 10,
+                        "sc-min": 0,
+                        "sc-offset": 0,
+                        "ts-type": 0
+                    }
+                },
+                {
+                    "info": {
+                        "id": "AIN10",
+                        "owner": "FMR-1010-10-0",
+                        "type": 0
+                    },
+                    "settings": {
+                        "freq60": false,
+                        "median": 0,
+                        "onePole": 0,
+                        "range": 0,
+                        "sc-max": 10,
+                        "sc-min": 0,
+                        "sc-offset": 0,
+                        "ts-type": 0
+                    }
+                },
+                {
+                    "info": {
+                        "id": "AIN11",
+                        "owner": "FMR-1010-10-0",
+                        "type": 0
+                    },
+                    "settings": {
+                        "freq60": false,
+                        "median": 0,
+                        "onePole": 0,
+                        "range": 0,
+                        "sc-max": 10,
+                        "sc-min": 0,
+                        "sc-offset": 0,
+                        "ts-type": 0
+                    }
+                },
+                {
+                    "info": {
+                        "id": "AIN12",
+                        "owner": "FMR-1010-10-0",
+                        "type": 0
+                    },
+                    "settings": {
+                        "freq60": false,
+                        "median": 0,
+                        "onePole": 0,
+                        "range": 0,
+                        "sc-max": 10,
+                        "sc-min": 0,
+                        "sc-offset": 0,
+                        "ts-type": 0
+                    }
+                },
+                {
+                    "info": {
+                        "id": "AIN13",
+                        "owner": "FMR-1010-10-0",
+                        "type": 0
+                    },
+                    "settings": {
+                        "freq60": false,
+                        "median": 0,
+                        "onePole": 0,
+                        "range": 0,
+                        "sc-max": 10,
+                        "sc-min": 0,
+                        "sc-offset": 0,
+                        "ts-type": 0
+                    }
+                },
+                {
+                    "info": {
+                        "id": "AIN14",
+                        "owner": "FMR-1010-10-0",
+                        "type": 0
+                    },
+                    "settings": {
+                        "freq60": false,
+                        "median": 0,
+                        "onePole": 0,
+                        "range": 0,
+                        "sc-max": 10,
+                        "sc-min": 0,
+                        "sc-offset": 0,
+                        "ts-type": 0
+                    }
+                },
+                {
+                    "info": {
+                        "id": "AIN15",
+                        "owner": "FMR-1010-10-0",
+                        "type": 0
+                    },
+                    "settings": {
+                        "freq60": false,
+                        "median": 0,
+                        "onePole": 0,
+                        "range": 0,
+                        "sc-max": 10,
+                        "sc-min": 0,
+                        "sc-offset": 0,
+                        "ts-type": 0
+                    }
+                },
+                {
+                    "info": {
+                        "id": "AIN16",
+                        "owner": "FMR-1010-10-0",
+                        "type": 0
+                    },
+                    "settings": {
+                        "freq60": false,
+                        "median": 0,
+                        "onePole": 0,
+                        "range": 0,
+                        "sc-max": 10,
+                        "sc-min": 0,
+                        "sc-offset": 0,
+                        "ts-type": 0
+                    }
+                },
+                {
+                    "info": {
+                        "id": "DOUT1",
+                        "owner": "FMR-1010-10-0",
+                        "type": 3
+                    },
+                    "settings": {
+                        "save": 0
+                    }
+                },
+                {
+                    "info": {
+                        "id": "DOUT2",
+                        "owner": "FMR-1010-10-0",
+                        "type": 3
+                    },
+                    "settings": {
+                        "save": 0
+                    }
+                },
+                {
+                    "info": {
+                        "id": "DOUT3",
+                        "owner": "FMR-1010-10-0",
+                        "type": 3
+                    },
+                    "settings": {
+                        "save": 0
+                    }
+                },
+                {
+                    "info": {
+                        "id": "DOUT4",
+                        "owner": "FMR-1010-10-0",
+                        "type": 3
+                    },
+                    "settings": {
+                        "save": 0
+                    }
+                },
+                {
+                    "info": {
+                        "id": "DOUT5",
+                        "owner": "FMR-1010-10-0",
+                        "type": 3
+                    },
+                    "settings": {
+                        "save": 0
+                    }
+                },
+                {
+                    "info": {
+                        "id": "DOUT6",
+                        "owner": "FMR-1010-10-0",
+                        "type": 3
+                    },
+                    "settings": {
+                        "save": 0
+                    }
+                },
+                {
+                    "info": {
+                        "id": "DOUT7",
+                        "owner": "FMR-1010-10-0",
+                        "type": 3
+                    },
+                    "settings": {
+                        "save": 0
+                    }
+                },
+                {
+                    "info": {
+                        "id": "DOUT8",
+                        "owner": "FMR-1010-10-0",
+                        "type": 3
+                    },
+                    "settings": {
+                        "save": 0
+                    }
+                },
+                {
+                    "info": {
+                        "id": "Serial port1",
+                        "owner": "FMR-1010-10-0",
+                        "type": 4
+                    },
+                    "settings": {
+                        "address": 1,
+                        "baud": 4800,
+                        "delay": 10,
+                        "mode": 0,
+                        "parity": 0,
+                        "safeTime": 100,
+                        "sbits": 2
+                    }
+                },
+                {
+                    "info": {
+                        "id": "Serial port2",
+                        "owner": "FMR-1010-10-0",
+                        "type": 4
+                    },
+                    "settings": {
+                        "address": 155,
+                        "baud": 115200,
+                        "delay": 0,
+                        "mode": 0,
+                        "parity": 0,
+                        "safeTime": 100,
+                        "sbits": 2
+                    }
+                }
+            ]
+        }
+    }
+}
