@@ -1,5 +1,4 @@
 pub mod db {
-    #[macro_use]
     use postgres::{Client, Error as PostgresError, NoTls};
 
     /// The structure of the generator failure.
@@ -59,8 +58,8 @@ pub mod db {
                 &unix_from_sql_now.time.to_string(),
             );
             info!(
-                "Time (unix) now from PostgreSQL = {}",
-                unix_from_sql_now.time
+                "Time (unix) now: PostgreSQL = {}, Skytable = {}",
+                unix_from_sql_now.time, crate::skydb::skytable::unix_sql_now()
             );
         }
         Ok(())
@@ -81,8 +80,8 @@ pub mod db {
                 &plc_connect.connection.to_string(),
             );
             info!(
-                "Latest value of plc_connect from PostgreSQL = {}",
-                plc_connect.connection
+                "Latest value of plc_connect: PostgreSQL = {}, Skytable = {}",
+                plc_connect.connection, crate::skydb::skytable::plc_connect()
             );
         }
         Ok(())
@@ -103,8 +102,8 @@ pub mod db {
                 &faulty.generator_faulty.to_string(),
             );
             info!(
-                "Latest value of generator_faulty from PostgreSQL = {}",
-                faulty.generator_faulty
+                "Latest value of generator_faulty: PostgreSQL = {}, Skytable = {}",
+                faulty.generator_faulty, crate::skydb::skytable::generator_faulty()
             );
         }
         Ok(())
@@ -128,24 +127,24 @@ pub mod db {
                     &powersupply.mains_power_supply.to_string(),
                 );
                 info!(
-                    "Latest value of mains_power_supply from PostgreSQL = {}",
-                    powersupply.mains_power_supply
+                    "Latest value of mains_power_supply: PostgreSQL = {}, Skytable = {}",
+                    powersupply.mains_power_supply, crate::skydb::skytable::mains_power_supply()
                 );
                 crate::skydb::skytable::set_i32_skydb(
                     "start_generator",
                     &powersupply.start_generator.to_string(),
                 );
                 info!(
-                    "Latest value of start_generator from PostgreSQL = {}",
-                    powersupply.start_generator
+                    "Latest value of start_generator: PostgreSQL = {}, Skytable = {}",
+                    powersupply.start_generator, crate::skydb::skytable::start_generator()
                 );
                 crate::skydb::skytable::set_i32_skydb(
                     "generator_work",
                     &powersupply.generator_work.to_string(),
                 );
                 info!(
-                    "Latest value of generator_work from PostgreSQL = {}",
-                    powersupply.generator_work
+                    "Latest value of generator_work:PostgreSQL = {}, Skytable = {}",
+                    powersupply.generator_work, crate::skydb::skytable::generator_work()
                 );
             }
         Ok(())
