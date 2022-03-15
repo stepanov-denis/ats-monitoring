@@ -26,9 +26,21 @@ $ cd skytable && cargo build --release
 ```
 $ git clone git@github.com:stepanov-denis/ats-monitoring.git
 ```
-* Edit the http get requests
+* Edit your authentication string in sms_gateway_string_connection
 ```
-let resp = reqwest::blocking::get("https://api-mapper.clicksend.com/http/v2/send.php?method=http&username=development-service@yandex.ru&key=1E82A334-89D8-985C-526B-712DB70A713D&to=+79139402913&message=Сбой+питания+от+электросети.+Успешный+старт+генератора.").unwrap();
+pub fn sms_gateway_string_connection() -> String {
+    let string_connection = String::from("https://api-mapper.clicksend.com/http/v2/send.php?method=http&username=development-service@yandex.ru&key=1E82A334-89D8-985C-526B-712DB70A713D&to=+79139402913&message=");
+    string_connection
+}
+```
+* Edit your SMS messages text in module sms
+```
+pub fn sms_generator_work_err() -> String {
+    let mut string_connection = String::from(sms_gateway_string_connection());
+    string_connection
+        .push_str("Авария!+Генератор+неисправен!+Срочно+произведите+сервисные+работы!");
+    string_connection
+}
 ```
 * Edit the connection configuration strings to PostgreSQL in module psql
 ```
@@ -40,6 +52,10 @@ pub fn db_connect() -> String {
 * Compile local packages and all their dependencies
 ```
 $ cargo build --release
+```
+* Build documentation and open in browser 
+```
+$ cargo doc --open
 ```
 * Install [PostgreSQL](https://www.postgresql.org/download/)
 ## Setting up the environment

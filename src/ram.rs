@@ -111,7 +111,8 @@ pub mod db {
     }
 
     /// Get latest values of main_power_supply, start_generator, generator_work from PostgreSQL and write to the db "skydb" in RAM
-    pub fn write_to_ram_mains_power_supply_start_generator_generator_work() -> Result<(), PostgresError> {
+    pub fn write_to_ram_mains_power_supply_start_generator_generator_work(
+    ) -> Result<(), PostgresError> {
         let mut client = Client::connect(&crate::psql::postgresql::db_connect(), NoTls)?;
         for row in client
                 .query("SELECT mains_power_supply, start_generator, generator_work, mark FROM avr_control_insert ORDER BY mark DESC limit 1", &[])

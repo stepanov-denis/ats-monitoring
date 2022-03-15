@@ -27,9 +27,7 @@ pub mod power_supply {
                 );
                 if crate::skydb::skytable::mains_power_supply() == 0 {
                     info!("Произошел сбой питания от электросети");
-                    info!(
-                        "Ожидание (90 секунд) подтверждения отсутствия питания от электросети"
-                    );
+                    info!("Ожидание (90 секунд) подтверждения отсутствия питания от электросети");
                     crate::psql::postgresql::log_power_failure();
                     crate::generator_monitoring::generator::timer_for_delay(90);
                     // Checking the connection of the PostgreSQL DBMS with the OPC server.
@@ -107,9 +105,7 @@ pub mod power_supply {
                                                 info!("response from PostgreSQL: mains_power_supply = {}", crate::skydb::skytable::mains_power_supply());
                                                 if crate::skydb::skytable::mains_power_supply() == 1
                                                 {
-                                                    info!(
-                                                        "Питание от электросети восстановлено"
-                                                    );
+                                                    info!("Питание от электросети восстановлено");
                                                     crate::psql::postgresql::log_power_restored();
                                                     // Checking internet access.
                                                     if check(None).is_ok() {

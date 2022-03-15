@@ -84,10 +84,7 @@ pub mod generator {
                                                     info!("Ошибка! SMS уведомление не было отправлено!");
                                                     crate::psql::postgresql::log_server_err();
                                                 } else {
-                                                    info!(
-                                                        "Status http request: {}",
-                                                        resp.status()
-                                                    );
+                                                    info!("Status http request: {}", resp.status());
                                                     info!("Ошибка! SMS уведомление не было отправлено!");
                                                     crate::psql::postgresql::log_request_status_err(
                                                     );
@@ -135,9 +132,7 @@ pub mod generator {
                         crate::psql::postgresql::log_internet_err();
                     }
                 } else {
-                    info!(
-                        "Генератор в режиме трансляции питания от электросети работает исправно"
-                    );
+                    info!("Генератор в режиме трансляции питания от электросети работает исправно");
                     crate::psql::postgresql::event_generator_work_ok();
                     crate::psql::postgresql::log_generator_work_ok();
                 }
