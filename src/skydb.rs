@@ -3,38 +3,43 @@ pub mod skytable {
     use skytable::error;
     use skytable::sync::Connection;
 
+    /// Record f64 to skyd
     pub fn set_f64_skydb(key: &str, value: &str) -> Result<(), error::Error> {
         let mut con = Connection::new("127.0.0.1", 2003)?;
         con.set(key, value)?;
         Ok(())
     }
 
+    /// Write f64 from skyd
     pub fn get_f64_skydb(key: &str) -> Option<String> {
         let mut con = Connection::new("127.0.0.1", 2003).ok()?;
         let x: String = con.get(key).ok()?;
-        if x.parse::<f64>().unwrap() > 1.00 {
+        if x.parse::<f64>().is_ok() {
             Some(x)
         } else {
             None
         }
     }
 
+    /// Record i32 to skyd
     pub fn set_i32_skydb(key: &str, value: &str) -> Result<(), error::Error> {
         let mut con = Connection::new("127.0.0.1", 2003)?;
         con.set(key, value)?;
         Ok(())
     }
 
+    /// Write i32 from skyd
     pub fn get_i32_skydb(key: &str) -> Option<String> {
         let mut con = Connection::new("127.0.0.1", 2003).ok()?;
         let x: String = con.get(key).ok()?;
-        if x.parse::<i32>().unwrap() >= 0 {
+        if x.parse::<i32>().is_ok() {
             Some(x)
         } else {
             None
         }
     }
 
+    /// Value unix time of the lastest record in table avr_control_insert
     pub fn unix_sql() -> f64 {
         let mut unix_from_sql = crate::skydb::skytable::get_f64_skydb("unix_from_sql");
         let unix_from_sql_str = unix_from_sql.get_or_insert("0".to_string());
@@ -42,44 +47,50 @@ pub mod skytable {
         unix_from_sql_f64
     }
 
+    /// Value of unix time now
     pub fn unix_sql_now() -> f64 {
         let mut unix_from_sql_now = crate::skydb::skytable::get_f64_skydb("unix_from_sql_now");
-        let unix_from_sql_now_str = unix_from_sql_now.get_or_insert("0".to_string());
+        let unix_from_sql_now_str = unix_from_sql_now.get_or_insert("1000".to_string());
         let unix_from_sql_now_f64 = unix_from_sql_now_str.parse::<f64>().unwrap();
         unix_from_sql_now_f64
     }
 
+    /// PLC connection status
     pub fn plc_connect() -> i32 {
         let mut plc_connect = crate::skydb::skytable::get_i32_skydb("plc_connect");
-        let plc_connect_str = plc_connect.get_or_insert("3".to_string());
+        let plc_connect_str = plc_connect.get_or_insert("2".to_string());
         let plc_connect_i32 = plc_connect_str.parse::<i32>().unwrap();
         plc_connect_i32
     }
 
+    /// Generator fault status
     pub fn generator_faulty() -> i32 {
         let mut generator_faulty = crate::skydb::skytable::get_i32_skydb("generator_faulty");
-        let generator_faulty_str = generator_faulty.get_or_insert("3".to_string());
+        let generator_faulty_str = generator_faulty.get_or_insert("2".to_string());
         let generator_faulty_i32 = generator_faulty_str.parse::<i32>().unwrap();
         generator_faulty_i32
     }
 
+    /// Mains power status
     pub fn mains_power_supply() -> i32 {
         let mut mains_power_supply = crate::skydb::skytable::get_i32_skydb("mains_power_supply");
-        let mains_power_supply_str = mains_power_supply.get_or_insert("3".to_string());
+        let mains_power_supply_str = mains_power_supply.get_or_insert("2".to_string());
         let mains_power_supply_i32 = mains_power_supply_str.parse::<i32>().unwrap();
         mains_power_supply_i32
     }
 
+    /// Start generator status
     pub fn start_generator() -> i32 {
         let mut start_generator = crate::skydb::skytable::get_i32_skydb("start_generator");
-        let start_generator_str = start_generator.get_or_insert("3".to_string());
+        let start_generator_str = start_generator.get_or_insert("2".to_string());
         let start_generator_i32 = start_generator_str.parse::<i32>().unwrap();
         start_generator_i32
     }
 
+    /// Generator work status
     pub fn generator_work() -> i32 {
         let mut generator_work = crate::skydb::skytable::get_i32_skydb("generator_work");
-        let generator_work_str = generator_work.get_or_insert("3".to_string());
+        let generator_work_str = generator_work.get_or_insert("2".to_string());
         let generator_work_i32 = generator_work_str.parse::<i32>().unwrap();
         generator_work_i32
     }
