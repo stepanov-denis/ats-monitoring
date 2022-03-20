@@ -59,7 +59,8 @@ pub mod db {
             );
             info!(
                 "Time (unix) now: PostgreSQL = {}, Skytable = {}",
-                unix_from_sql_now.time, crate::skydb::skytable::unix_sql_now()
+                unix_from_sql_now.time,
+                crate::skydb::skytable::unix_sql_now()
             );
         }
         Ok(())
@@ -81,7 +82,8 @@ pub mod db {
             );
             info!(
                 "Latest value of plc_connect: PostgreSQL = {}, Skytable = {}",
-                plc_connect.connection, crate::skydb::skytable::plc_connect()
+                plc_connect.connection,
+                crate::skydb::skytable::plc_connect()
             );
         }
         Ok(())
@@ -103,7 +105,8 @@ pub mod db {
             );
             info!(
                 "Latest value of generator_faulty: PostgreSQL = {}, Skytable = {}",
-                faulty.generator_faulty, crate::skydb::skytable::generator_faulty()
+                faulty.generator_faulty,
+                crate::skydb::skytable::generator_faulty()
             );
         }
         Ok(())

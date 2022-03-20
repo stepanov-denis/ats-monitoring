@@ -1,16 +1,12 @@
 #[macro_use]
 extern crate log;
-extern crate env_logger;
 extern crate chrono;
+extern crate env_logger;
 extern crate timer;
+use env_logger::{Builder, Target};
+use std::io::Error;
 use std::thread;
 use std::time::Duration;
-use std::env;
-use env_logger::{Builder, Target};
-use std::fs::File;
-use std::io::{Write, BufReader, BufRead, Error};
-use log::LevelFilter;
-use std::io;
 mod generator_monitoring;
 mod modbus_ats;
 mod modbus_winter_garden;
