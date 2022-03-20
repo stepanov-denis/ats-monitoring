@@ -80,6 +80,10 @@ $ RUST_LOG=info cargo run --release
 $ RUST_LOG=debug cargo run --release
 $ RUST_LOG=trace cargo run --release
 ```
+* For write log's to file
+```
+$ RUST_LOG=debug cargo run --release > log.txt
+```
 ## Use
 * Сreate and save the report in the form you need in Orange Data Mining
 * Check your phone for SMS messages from ClickSend

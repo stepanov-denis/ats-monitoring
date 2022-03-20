@@ -1,9 +1,16 @@
 #[macro_use]
 extern crate log;
+extern crate env_logger;
 extern crate chrono;
 extern crate timer;
 use std::thread;
 use std::time::Duration;
+use std::env;
+use env_logger::{Builder, Target};
+use std::fs::File;
+use std::io::{Write, BufReader, BufRead, Error};
+use log::LevelFilter;
+use std::io;
 mod generator_monitoring;
 mod modbus_ats;
 mod modbus_winter_garden;
@@ -14,8 +21,11 @@ mod skydb;
 mod sms;
 
 /// Application workflows.
-fn main() {
-    env_logger::init();
+fn main() -> Result<(), Error> {
+    let mut builder = Builder::from_default_env();
+    builder.target(Target::Stdout);
+    builder.init();
+
     info!("starting up ats-monitoring app");
     info!("please wait for connecting to plc");
     psql::postgresql::set_transaction_isolation();
@@ -57,4 +67,5 @@ fn main() {
         power_supply_monitoring::power_supply::ats_state();
         thread::sleep(Duration::from_millis(3000));
     }
+    Ok(())
 }
