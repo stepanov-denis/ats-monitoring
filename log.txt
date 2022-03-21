@@ -1,7 +1,7 @@
-[2022-03-21T21:06:58Z INFO  ats_monitoring] starting up ats-monitoring app
-[2022-03-21T21:06:58Z INFO  ats_monitoring] please wait for connecting to plc
-[2022-03-21T21:06:58Z DEBUG tokio_postgres::simple_query] executing statement batch: alter database postgres set default_transaction_isolation to serializable
-[2022-03-21T21:06:58Z DEBUG tokio_postgres::simple_query] executing statement batch: 
+[2022-03-21T21:08:29Z INFO  ats_monitoring] starting up ats-monitoring app
+[2022-03-21T21:08:29Z INFO  ats_monitoring] please wait for connecting to plc
+[2022-03-21T21:08:29Z DEBUG tokio_postgres::simple_query] executing statement batch: alter database postgres set default_transaction_isolation to serializable
+[2022-03-21T21:08:29Z DEBUG tokio_postgres::simple_query] executing statement batch: 
                     CREATE TABLE IF NOT EXISTS avr_control_insert (
                         mains_power_supply int NOT NULL,
                         start_generator int NOT NULL,
@@ -11,15 +11,15 @@
                         mark timestamptz default current_timestamp
                     )
                 
-[2022-03-21T21:06:58Z INFO  postgres::config] NOTICE: relation "avr_control_insert" already exists, skipping
-[2022-03-21T21:06:58Z DEBUG tokio_postgres::simple_query] executing statement batch: 
+[2022-03-21T21:08:29Z INFO  postgres::config] NOTICE: relation "avr_control_insert" already exists, skipping
+[2022-03-21T21:08:29Z DEBUG tokio_postgres::simple_query] executing statement batch: 
                     CREATE TABLE IF NOT EXISTS журнал_работы_приложения (
                         событие text NOT NULL,
                         время_и_дата timestamp default current_timestamp
                     )
                 
-[2022-03-21T21:06:58Z INFO  postgres::config] NOTICE: relation "журнал_работы_приложения" already exists, skipping
-[2022-03-21T21:06:58Z DEBUG tokio_postgres::simple_query] executing statement batch: 
+[2022-03-21T21:08:29Z INFO  postgres::config] NOTICE: relation "журнал_работы_приложения" already exists, skipping
+[2022-03-21T21:08:29Z DEBUG tokio_postgres::simple_query] executing statement batch: 
                     CREATE TABLE IF NOT EXISTS зимний_сад (
                         фитоосвещение_1 int NOT NULL,
                         фитоосвещение_2 int NOT NULL,
@@ -36,412 +36,279 @@
                         время_и_дата timestamp default current_timestamp
                     )
                 
-[2022-03-21T21:06:58Z INFO  postgres::config] NOTICE: relation "зимний_сад" already exists, skipping
-[2022-03-21T21:06:58Z DEBUG tokio_postgres::simple_query] executing statement batch: 
+[2022-03-21T21:08:29Z INFO  postgres::config] NOTICE: relation "зимний_сад" already exists, skipping
+[2022-03-21T21:08:29Z DEBUG tokio_postgres::simple_query] executing statement batch: 
                     CREATE TABLE IF NOT EXISTS нагрузка_на_генератор (
                         нагрузка int NOT NULL,
                         время_и_дата timestamp default current_timestamp
                     
                     )
                 
-[2022-03-21T21:06:58Z INFO  postgres::config] NOTICE: relation "нагрузка_на_генератор" already exists, skipping
-[2022-03-21T21:06:58Z DEBUG tokio_postgres::simple_query] executing statement batch: 
+[2022-03-21T21:08:29Z INFO  postgres::config] NOTICE: relation "нагрузка_на_генератор" already exists, skipping
+[2022-03-21T21:08:29Z DEBUG tokio_postgres::simple_query] executing statement batch: 
                     CREATE TABLE IF NOT EXISTS события_авр (
                         событие text NOT NULL,
                         время_и_дата timestamp default current_timestamp
                     )
                 
-[2022-03-21T21:06:58Z INFO  postgres::config] NOTICE: relation "события_авр" already exists, skipping
-[2022-03-21T21:06:58Z INFO  ats_monitoring] starting up write_data_to_ram_spawn
-[2022-03-21T21:06:58Z INFO  ats_monitoring] starting up modbus_ats_spawn
-[2022-03-21T21:06:58Z INFO  ats_monitoring] starting up modbus_winter_garden_spawn
-[2022-03-21T21:06:58Z INFO  ats_monitoring] starting up power_supply_monitoring_spawn
-[2022-03-21T21:06:58Z INFO  ats_monitoring] starting up generator_monitoring_spawn
-[2022-03-21T21:06:58Z INFO  ats_monitoring::power_supply_monitoring::power_supply] Запрос наличия питания от электросети
-[2022-03-21T21:06:58Z INFO  ats_monitoring::generator_monitoring::generator] Запрос работоспособности генератора в режиме трансляции питания от электросети
-[2022-03-21T21:06:58Z INFO  ats_monitoring::power_supply_monitoring::power_supply] response from PostgreSQL: mains_power_supply = 2
-[2022-03-21T21:06:58Z INFO  ats_monitoring::power_supply_monitoring::power_supply] Питание от электросети есть
-[2022-03-21T21:06:58Z INFO  ats_monitoring::generator_monitoring::generator] response from PostgreSQL: generator_faulty = 0
-[2022-03-21T21:06:58Z INFO  ats_monitoring::generator_monitoring::generator] Генератор в режиме трансляции питания от электросети работает исправно
-[2022-03-21T21:06:58Z DEBUG tokio_postgres::prepare] preparing query s0: SELECT EXTRACT(epoch FROM mark) FROM avr_control_insert ORDER BY mark DESC limit 1
-[2022-03-21T21:06:58Z DEBUG tokio_postgres::query] executing statement s0 with parameters: []
-[2022-03-21T21:06:58Z DEBUG tokio_postgres::prepare] preparing query s1: INSERT INTO события_авр (событие) VALUES ($1)
-[2022-03-21T21:06:58Z DEBUG tokio_postgres::prepare] preparing query s2: INSERT INTO события_авр (событие) VALUES ($1)
-[2022-03-21T21:06:58Z INFO  ats_monitoring::ram::db] Time (unix) of the last entry in a table 'avr_control_insert': Postgres = 1647896465.670023, Skytable = 1647273642.663296
-[2022-03-21T21:06:58Z DEBUG tokio_postgres::query] executing statement s1 with parameters: ["Питание от электросети есть."]
-[2022-03-21T21:06:58Z DEBUG tokio_postgres::query] executing statement s2 with parameters: ["Генератор в режиме трансляции питания от электросети работает исправно."]
-[2022-03-21T21:06:58Z DEBUG tokio_postgres::prepare] preparing query s3: SELECT событие, время_и_дата FROM события_авр ORDER BY время_и_дата DESC limit 1
-[2022-03-21T21:06:58Z DEBUG tokio_postgres::query] executing statement s3 with parameters: []
-[2022-03-21T21:06:58Z INFO  ats_monitoring::psql::postgresql] Запись в табл. события_авр: Питание от электросети есть.
-[2022-03-21T21:06:58Z DEBUG tokio_postgres::prepare] preparing query s4: SELECT EXTRACT(epoch FROM now()) FROM avr_control_insert ORDER BY now() DESC limit 1
-[2022-03-21T21:06:58Z DEBUG tokio_postgres::prepare] preparing query s5: SELECT событие, время_и_дата FROM события_авр ORDER BY время_и_дата DESC limit 1
-[2022-03-21T21:06:58Z DEBUG tokio_postgres::query] executing statement s5 with parameters: []
-[2022-03-21T21:06:58Z DEBUG tokio_postgres::query] executing statement s4 with parameters: []
-[2022-03-21T21:06:58Z INFO  ats_monitoring::psql::postgresql] Запись в табл. события_авр: Генератор в режиме трансляции питания от электросети работает исправно.
-[2022-03-21T21:06:58Z INFO  ats_monitoring::ram::db] Time (unix) now: PostgreSQL = 1647896818.305665, Skytable = 1647273645.505613
-[2022-03-21T21:06:58Z DEBUG tokio_postgres::prepare] preparing query s6: INSERT INTO журнал_работы_приложения (событие) VALUES ($1)
-[2022-03-21T21:06:58Z DEBUG tokio_postgres::query] executing statement s6 with parameters: ["Питание от электросети есть."]
-[2022-03-21T21:06:58Z DEBUG tokio_postgres::prepare] preparing query s7: INSERT INTO журнал_работы_приложения (событие) VALUES ($1)
-[2022-03-21T21:06:58Z DEBUG tokio_postgres::query] executing statement s7 with parameters: ["Генератор в режиме трансляции питания от электросети работает исправно."]
-[2022-03-21T21:06:58Z DEBUG tokio_postgres::prepare] preparing query s8: SELECT событие, время_и_дата FROM журнал_работы_приложения ORDER BY время_и_дата DESC limit 1
-[2022-03-21T21:06:58Z DEBUG tokio_postgres::prepare] preparing query s9: SELECT mark, connection FROM avr_control_insert ORDER BY mark DESC limit 1
-[2022-03-21T21:06:58Z DEBUG tokio_postgres::query] executing statement s8 with parameters: []
-[2022-03-21T21:06:58Z DEBUG tokio_postgres::query] executing statement s9 with parameters: []
-[2022-03-21T21:06:58Z INFO  ats_monitoring::psql::postgresql] Запись в табл. журнал_работы_приложения: Питание от электросети есть.
-[2022-03-21T21:06:58Z DEBUG tokio_postgres::prepare] preparing query s10: SELECT событие, время_и_дата FROM журнал_работы_приложения ORDER BY время_и_дата DESC limit 1
-[2022-03-21T21:06:58Z DEBUG tokio_postgres::query] executing statement s10 with parameters: []
-[2022-03-21T21:06:58Z INFO  ats_monitoring::ram::db] Latest value of plc_connect: PostgreSQL = 1, Skytable = 1
-[2022-03-21T21:06:58Z INFO  ats_monitoring::psql::postgresql] Запись в табл. журнал_работы_приложения: Генератор в режиме трансляции питания от электросети работает исправно.
-[2022-03-21T21:06:58Z DEBUG tokio_postgres::prepare] preparing query s11: SELECT mark, generator_faulty FROM avr_control_insert ORDER BY mark DESC limit 1
-[2022-03-21T21:06:58Z DEBUG tokio_postgres::query] executing statement s11 with parameters: []
-[2022-03-21T21:06:58Z INFO  ats_monitoring::ram::db] Latest value of generator_faulty: PostgreSQL = 0, Skytable = 0
-[2022-03-21T21:06:58Z INFO  ats_monitoring::modbus_ats::avr_control] Связь ПЛК с модулем modbus_ats: Ok
-[2022-03-21T21:06:58Z INFO  ats_monitoring::modbus_winter_garden::winter_garden] Связь ПЛК с модулем modbus_winter_garden: Ok
-[2022-03-21T21:06:58Z INFO  ats_monitoring::modbus_ats::avr_control] Response IR mains_power_supply: [0]
-[2022-03-21T21:06:58Z INFO  ats_monitoring::modbus_winter_garden::winter_garden] Response IR phyto_lighting_1: [0]
-[2022-03-21T21:06:58Z INFO  ats_monitoring::modbus_ats::avr_control] Response IR start_generator: [0]
-[2022-03-21T21:06:58Z INFO  ats_monitoring::modbus_winter_garden::winter_garden] Response IR phyto_lighting_2: [0]
-[2022-03-21T21:06:58Z INFO  ats_monitoring::modbus_ats::avr_control] Response IR generator_faulty: [0]
-[2022-03-21T21:06:58Z INFO  ats_monitoring::modbus_winter_garden::winter_garden] Response IR phyto_lighting_3: [0]
-[2022-03-21T21:06:58Z INFO  ats_monitoring::modbus_ats::avr_control] Response IR generator_work: [0]
-[2022-03-21T21:06:58Z INFO  ats_monitoring::modbus_winter_garden::winter_garden] Response IR phyto_lighting_4: [0]
-[2022-03-21T21:06:58Z INFO  ats_monitoring::modbus_ats::avr_control] Response IR connection: [1]
-[2022-03-21T21:06:58Z INFO  ats_monitoring::modbus_winter_garden::winter_garden] Response IR fan: [0]
-[2022-03-21T21:06:58Z INFO  ats_monitoring::modbus_ats::avr_control] Response IR load: [0]
-[2022-03-21T21:06:58Z INFO  ats_monitoring::modbus_winter_garden::winter_garden] Response IR automatic_watering_1: [0]
-[2022-03-21T21:06:58Z DEBUG tokio_postgres::prepare] preparing query s12: INSERT INTO avr_control_insert (mains_power_supply, start_generator, generator_faulty, generator_work, connection) VALUES ($1, $2, $3, $4, $5)
-[2022-03-21T21:06:58Z DEBUG tokio_postgres::query] executing statement s12 with parameters: [0, 0, 0, 0, 1]
-[2022-03-21T21:06:58Z DEBUG tokio_postgres::prepare] preparing query s13: SELECT mains_power_supply, start_generator, generator_faulty, generator_work, connection FROM avr_control_insert ORDER BY mark DESC limit 1
-[2022-03-21T21:06:58Z DEBUG tokio_postgres::query] executing statement s13 with parameters: []
-[2022-03-21T21:06:58Z INFO  ats_monitoring::modbus_ats::avr_control] Считаны из ПЛК и записаны в табл. avr_control_insert следующие значения: mains_power_supply: 0, start_generator: 0, generator_faulty: 0, generator_work: 0, connection: 1
-[2022-03-21T21:06:58Z DEBUG tokio_postgres::prepare] preparing query s14: INSERT INTO нагрузка_на_генератор (нагрузка) VALUES ($1)
-[2022-03-21T21:06:58Z DEBUG tokio_postgres::query] executing statement s14 with parameters: [0]
-[2022-03-21T21:06:58Z DEBUG tokio_postgres::prepare] preparing query s15: SELECT нагрузка FROM нагрузка_на_генератор ORDER BY время_и_дата DESC limit 1
-[2022-03-21T21:06:58Z DEBUG tokio_postgres::query] executing statement s15 with parameters: []
-[2022-03-21T21:06:58Z INFO  ats_monitoring::modbus_ats::avr_control] Считаны из ПЛК и записаны в табл. нагрузка_на_генератор следующие значения: load: 0
-[2022-03-21T21:06:58Z INFO  ats_monitoring::modbus_winter_garden::winter_garden] Response IR automatic_watering_2: [0]
-[2022-03-21T21:06:59Z INFO  ats_monitoring::modbus_winter_garden::winter_garden] Response IR automatic_watering_3: [0]
-[2022-03-21T21:06:59Z INFO  ats_monitoring::modbus_winter_garden::winter_garden] Response IR temperature_indoor: [21]
-[2022-03-21T21:06:59Z INFO  ats_monitoring::modbus_winter_garden::winter_garden] Response IR humidity_indoor: [19]
-[2022-03-21T21:06:59Z INFO  ats_monitoring::modbus_winter_garden::winter_garden] Response IR illumination_indoor: [15]
-[2022-03-21T21:06:59Z INFO  ats_monitoring::modbus_winter_garden::winter_garden] Response IR illumination_outdoor: [65361]
-[2022-03-21T21:07:01Z INFO  ats_monitoring] starting up power_supply_monitoring_spawn
-[2022-03-21T21:07:01Z INFO  ats_monitoring] starting up generator_monitoring_spawn
-[2022-03-21T21:07:01Z INFO  ats_monitoring] starting up write_data_to_ram_spawn
-[2022-03-21T21:07:01Z INFO  ats_monitoring::power_supply_monitoring::power_supply] Запрос наличия питания от электросети
-[2022-03-21T21:07:01Z INFO  ats_monitoring::generator_monitoring::generator] Запрос работоспособности генератора в режиме трансляции питания от электросети
-[2022-03-21T21:07:01Z INFO  ats_monitoring::power_supply_monitoring::power_supply] response from PostgreSQL: mains_power_supply = 2
-[2022-03-21T21:07:01Z INFO  ats_monitoring::generator_monitoring::generator] response from PostgreSQL: generator_faulty = 0
-[2022-03-21T21:07:01Z INFO  ats_monitoring::power_supply_monitoring::power_supply] Питание от электросети есть
-[2022-03-21T21:07:01Z INFO  ats_monitoring::generator_monitoring::generator] Генератор в режиме трансляции питания от электросети работает исправно
-[2022-03-21T21:07:01Z DEBUG tokio_postgres::prepare] preparing query s16: SELECT EXTRACT(epoch FROM mark) FROM avr_control_insert ORDER BY mark DESC limit 1
-[2022-03-21T21:07:01Z DEBUG tokio_postgres::query] executing statement s16 with parameters: []
-[2022-03-21T21:07:01Z DEBUG tokio_postgres::prepare] preparing query s17: INSERT INTO события_авр (событие) VALUES ($1)
-[2022-03-21T21:07:01Z DEBUG tokio_postgres::prepare] preparing query s18: INSERT INTO события_авр (событие) VALUES ($1)
-[2022-03-21T21:07:01Z DEBUG tokio_postgres::query] executing statement s17 with parameters: ["Питание от электросети есть."]
-[2022-03-21T21:07:01Z DEBUG tokio_postgres::query] executing statement s18 with parameters: ["Генератор в режиме трансляции питания от электросети работает исправно."]
-[2022-03-21T21:07:01Z INFO  ats_monitoring::ram::db] Time (unix) of the last entry in a table 'avr_control_insert': Postgres = 1647896818.859557, Skytable = 1647273642.663296
-[2022-03-21T21:07:01Z DEBUG tokio_postgres::prepare] preparing query s19: SELECT событие, время_и_дата FROM события_авр ORDER BY время_и_дата DESC limit 1
-[2022-03-21T21:07:01Z DEBUG tokio_postgres::prepare] preparing query s20: SELECT событие, время_и_дата FROM события_авр ORDER BY время_и_дата DESC limit 1
-[2022-03-21T21:07:01Z DEBUG tokio_postgres::query] executing statement s19 with parameters: []
-[2022-03-21T21:07:01Z DEBUG tokio_postgres::query] executing statement s20 with parameters: []
-[2022-03-21T21:07:01Z INFO  ats_monitoring::psql::postgresql] Запись в табл. события_авр: Генератор в режиме трансляции питания от электросети работает исправно.
-[2022-03-21T21:07:01Z INFO  ats_monitoring::psql::postgresql] Запись в табл. события_авр: Генератор в режиме трансляции питания от электросети работает исправно.
-[2022-03-21T21:07:01Z DEBUG tokio_postgres::prepare] preparing query s21: SELECT EXTRACT(epoch FROM now()) FROM avr_control_insert ORDER BY now() DESC limit 1
-[2022-03-21T21:07:01Z DEBUG tokio_postgres::query] executing statement s21 with parameters: []
-[2022-03-21T21:07:01Z DEBUG tokio_postgres::prepare] preparing query s22: INSERT INTO журнал_работы_приложения (событие) VALUES ($1)
-[2022-03-21T21:07:01Z DEBUG tokio_postgres::prepare] preparing query s23: INSERT INTO журнал_работы_приложения (событие) VALUES ($1)
-[2022-03-21T21:07:01Z DEBUG tokio_postgres::query] executing statement s22 with parameters: ["Питание от электросети есть."]
-[2022-03-21T21:07:01Z DEBUG tokio_postgres::query] executing statement s23 with parameters: ["Генератор в режиме трансляции питания от электросети работает исправно."]
-[2022-03-21T21:07:01Z INFO  ats_monitoring::ram::db] Time (unix) now: PostgreSQL = 1647896821.333765, Skytable = 1647273645.505613
-[2022-03-21T21:07:01Z DEBUG tokio_postgres::prepare] preparing query s24: SELECT событие, время_и_дата FROM журнал_работы_приложения ORDER BY время_и_дата DESC limit 1
-[2022-03-21T21:07:01Z DEBUG tokio_postgres::prepare] preparing query s25: SELECT событие, время_и_дата FROM журнал_работы_приложения ORDER BY время_и_дата DESC limit 1
-[2022-03-21T21:07:01Z DEBUG tokio_postgres::query] executing statement s24 with parameters: []
-[2022-03-21T21:07:01Z DEBUG tokio_postgres::query] executing statement s25 with parameters: []
-[2022-03-21T21:07:01Z INFO  ats_monitoring::psql::postgresql] Запись в табл. журнал_работы_приложения: Генератор в режиме трансляции питания от электросети работает исправно.
-[2022-03-21T21:07:01Z INFO  ats_monitoring::psql::postgresql] Запись в табл. журнал_работы_приложения: Генератор в режиме трансляции питания от электросети работает исправно.
-[2022-03-21T21:07:01Z DEBUG tokio_postgres::prepare] preparing query s26: SELECT mark, connection FROM avr_control_insert ORDER BY mark DESC limit 1
-[2022-03-21T21:07:01Z DEBUG tokio_postgres::query] executing statement s26 with parameters: []
-[2022-03-21T21:07:01Z INFO  ats_monitoring::ram::db] Latest value of plc_connect: PostgreSQL = 1, Skytable = 1
-[2022-03-21T21:07:01Z DEBUG tokio_postgres::prepare] preparing query s27: SELECT mark, generator_faulty FROM avr_control_insert ORDER BY mark DESC limit 1
-[2022-03-21T21:07:01Z DEBUG tokio_postgres::query] executing statement s27 with parameters: []
-[2022-03-21T21:07:01Z INFO  ats_monitoring::ram::db] Latest value of generator_faulty: PostgreSQL = 0, Skytable = 0
-[2022-03-21T21:07:01Z INFO  ats_monitoring] starting up modbus_ats_spawn
-[2022-03-21T21:07:01Z INFO  ats_monitoring::modbus_ats::avr_control] Связь ПЛК с модулем modbus_ats: Ok
-[2022-03-21T21:07:02Z INFO  ats_monitoring::modbus_ats::avr_control] Response IR mains_power_supply: [0]
-[2022-03-21T21:07:02Z INFO  ats_monitoring::modbus_ats::avr_control] Response IR start_generator: [0]
-[2022-03-21T21:07:02Z INFO  ats_monitoring::modbus_ats::avr_control] Response IR generator_faulty: [0]
-[2022-03-21T21:07:02Z INFO  ats_monitoring::modbus_ats::avr_control] Response IR generator_work: [0]
-[2022-03-21T21:07:02Z INFO  ats_monitoring] starting up modbus_winter_garden_spawn
-[2022-03-21T21:07:02Z INFO  ats_monitoring::modbus_ats::avr_control] Response IR connection: [1]
-[2022-03-21T21:07:02Z INFO  ats_monitoring::modbus_winter_garden::winter_garden] Связь ПЛК с модулем modbus_winter_garden: Ok
-[2022-03-21T21:07:02Z INFO  ats_monitoring::modbus_ats::avr_control] Response IR load: [0]
-[2022-03-21T21:07:02Z DEBUG tokio_postgres::prepare] preparing query s28: INSERT INTO avr_control_insert (mains_power_supply, start_generator, generator_faulty, generator_work, connection) VALUES ($1, $2, $3, $4, $5)
-[2022-03-21T21:07:02Z DEBUG tokio_postgres::query] executing statement s28 with parameters: [0, 0, 0, 0, 1]
-[2022-03-21T21:07:02Z DEBUG tokio_postgres::prepare] preparing query s29: SELECT mains_power_supply, start_generator, generator_faulty, generator_work, connection FROM avr_control_insert ORDER BY mark DESC limit 1
-[2022-03-21T21:07:02Z DEBUG tokio_postgres::query] executing statement s29 with parameters: []
-[2022-03-21T21:07:02Z INFO  ats_monitoring::modbus_ats::avr_control] Считаны из ПЛК и записаны в табл. avr_control_insert следующие значения: mains_power_supply: 0, start_generator: 0, generator_faulty: 0, generator_work: 0, connection: 1
-[2022-03-21T21:07:02Z DEBUG tokio_postgres::prepare] preparing query s30: INSERT INTO нагрузка_на_генератор (нагрузка) VALUES ($1)
-[2022-03-21T21:07:02Z DEBUG tokio_postgres::query] executing statement s30 with parameters: [0]
-[2022-03-21T21:07:02Z DEBUG tokio_postgres::prepare] preparing query s31: SELECT нагрузка FROM нагрузка_на_генератор ORDER BY время_и_дата DESC limit 1
-[2022-03-21T21:07:02Z DEBUG tokio_postgres::query] executing statement s31 with parameters: []
-[2022-03-21T21:07:02Z INFO  ats_monitoring::modbus_ats::avr_control] Считаны из ПЛК и записаны в табл. нагрузка_на_генератор следующие значения: load: 0
-[2022-03-21T21:07:02Z INFO  ats_monitoring::modbus_winter_garden::winter_garden] Response IR phyto_lighting_1: [0]
-[2022-03-21T21:07:02Z INFO  ats_monitoring::modbus_winter_garden::winter_garden] Response IR phyto_lighting_2: [0]
-[2022-03-21T21:07:02Z INFO  ats_monitoring::modbus_winter_garden::winter_garden] Response IR phyto_lighting_3: [0]
-[2022-03-21T21:07:02Z INFO  ats_monitoring::modbus_winter_garden::winter_garden] Response IR phyto_lighting_4: [0]
-[2022-03-21T21:07:02Z INFO  ats_monitoring::modbus_winter_garden::winter_garden] Response IR fan: [0]
-[2022-03-21T21:07:02Z INFO  ats_monitoring::modbus_winter_garden::winter_garden] Response IR automatic_watering_1: [0]
-[2022-03-21T21:07:02Z INFO  ats_monitoring::modbus_winter_garden::winter_garden] Response IR automatic_watering_2: [0]
-[2022-03-21T21:07:02Z INFO  ats_monitoring::modbus_winter_garden::winter_garden] Response IR automatic_watering_3: [0]
-[2022-03-21T21:07:03Z INFO  ats_monitoring::modbus_winter_garden::winter_garden] Response IR temperature_indoor: [21]
-[2022-03-21T21:07:03Z INFO  ats_monitoring::modbus_winter_garden::winter_garden] Response IR humidity_indoor: [19]
-[2022-03-21T21:07:03Z INFO  ats_monitoring::modbus_winter_garden::winter_garden] Response IR illumination_indoor: [14]
-[2022-03-21T21:07:03Z INFO  ats_monitoring::modbus_winter_garden::winter_garden] Response IR illumination_outdoor: [65386]
-[2022-03-21T21:07:04Z INFO  ats_monitoring] starting up power_supply_monitoring_spawn
-[2022-03-21T21:07:04Z INFO  ats_monitoring] starting up generator_monitoring_spawn
-[2022-03-21T21:07:04Z INFO  ats_monitoring::power_supply_monitoring::power_supply] Запрос наличия питания от электросети
-[2022-03-21T21:07:04Z INFO  ats_monitoring::generator_monitoring::generator] Запрос работоспособности генератора в режиме трансляции питания от электросети
-[2022-03-21T21:07:04Z INFO  ats_monitoring::power_supply_monitoring::power_supply] response from PostgreSQL: mains_power_supply = 2
-[2022-03-21T21:07:04Z INFO  ats_monitoring::generator_monitoring::generator] response from PostgreSQL: generator_faulty = 0
-[2022-03-21T21:07:04Z INFO  ats_monitoring::generator_monitoring::generator] Генератор в режиме трансляции питания от электросети работает исправно
-[2022-03-21T21:07:04Z INFO  ats_monitoring::power_supply_monitoring::power_supply] Питание от электросети есть
-[2022-03-21T21:07:04Z DEBUG tokio_postgres::prepare] preparing query s32: INSERT INTO события_авр (событие) VALUES ($1)
-[2022-03-21T21:07:04Z DEBUG tokio_postgres::prepare] preparing query s33: INSERT INTO события_авр (событие) VALUES ($1)
-[2022-03-21T21:07:04Z DEBUG tokio_postgres::query] executing statement s32 with parameters: ["Генератор в режиме трансляции питания от электросети работает исправно."]
-[2022-03-21T21:07:04Z DEBUG tokio_postgres::query] executing statement s33 with parameters: ["Питание от электросети есть."]
-[2022-03-21T21:07:04Z DEBUG tokio_postgres::prepare] preparing query s34: SELECT событие, время_и_дата FROM события_авр ORDER BY время_и_дата DESC limit 1
-[2022-03-21T21:07:04Z DEBUG tokio_postgres::prepare] preparing query s35: SELECT событие, время_и_дата FROM события_авр ORDER BY время_и_дата DESC limit 1
-[2022-03-21T21:07:04Z DEBUG tokio_postgres::query] executing statement s34 with parameters: []
-[2022-03-21T21:07:04Z DEBUG tokio_postgres::query] executing statement s35 with parameters: []
-[2022-03-21T21:07:04Z INFO  ats_monitoring] starting up write_data_to_ram_spawn
-[2022-03-21T21:07:04Z INFO  ats_monitoring::psql::postgresql] Запись в табл. события_авр: Питание от электросети есть.
-[2022-03-21T21:07:04Z INFO  ats_monitoring::psql::postgresql] Запись в табл. события_авр: Питание от электросети есть.
-[2022-03-21T21:07:04Z DEBUG tokio_postgres::prepare] preparing query s36: SELECT EXTRACT(epoch FROM mark) FROM avr_control_insert ORDER BY mark DESC limit 1
-[2022-03-21T21:07:04Z DEBUG tokio_postgres::prepare] preparing query s37: INSERT INTO журнал_работы_приложения (событие) VALUES ($1)
-[2022-03-21T21:07:04Z DEBUG tokio_postgres::prepare] preparing query s38: INSERT INTO журнал_работы_приложения (событие) VALUES ($1)
-[2022-03-21T21:07:04Z DEBUG tokio_postgres::query] executing statement s36 with parameters: []
-[2022-03-21T21:07:04Z DEBUG tokio_postgres::query] executing statement s37 with parameters: ["Генератор в режиме трансляции питания от электросети работает исправно."]
-[2022-03-21T21:07:04Z DEBUG tokio_postgres::query] executing statement s38 with parameters: ["Питание от электросети есть."]
-[2022-03-21T21:07:04Z DEBUG tokio_postgres::prepare] preparing query s39: SELECT событие, время_и_дата FROM журнал_работы_приложения ORDER BY время_и_дата DESC limit 1
-[2022-03-21T21:07:04Z DEBUG tokio_postgres::query] executing statement s39 with parameters: []
-[2022-03-21T21:07:04Z DEBUG tokio_postgres::prepare] preparing query s40: SELECT событие, время_и_дата FROM журнал_работы_приложения ORDER BY время_и_дата DESC limit 1
-[2022-03-21T21:07:04Z INFO  ats_monitoring::ram::db] Time (unix) of the last entry in a table 'avr_control_insert': Postgres = 1647896822.421571, Skytable = 1647273642.663296
-[2022-03-21T21:07:04Z DEBUG tokio_postgres::query] executing statement s40 with parameters: []
-[2022-03-21T21:07:04Z INFO  ats_monitoring::psql::postgresql] Запись в табл. журнал_работы_приложения: Питание от электросети есть.
-[2022-03-21T21:07:04Z INFO  ats_monitoring::psql::postgresql] Запись в табл. журнал_работы_приложения: Питание от электросети есть.
-[2022-03-21T21:07:04Z DEBUG tokio_postgres::prepare] preparing query s41: SELECT EXTRACT(epoch FROM now()) FROM avr_control_insert ORDER BY now() DESC limit 1
-[2022-03-21T21:07:04Z DEBUG tokio_postgres::query] executing statement s41 with parameters: []
-[2022-03-21T21:07:04Z INFO  ats_monitoring::ram::db] Time (unix) now: PostgreSQL = 1647896824.382359, Skytable = 1647273645.505613
-[2022-03-21T21:07:04Z DEBUG tokio_postgres::prepare] preparing query s42: SELECT mark, connection FROM avr_control_insert ORDER BY mark DESC limit 1
-[2022-03-21T21:07:04Z DEBUG tokio_postgres::query] executing statement s42 with parameters: []
-[2022-03-21T21:07:04Z INFO  ats_monitoring::ram::db] Latest value of plc_connect: PostgreSQL = 1, Skytable = 1
-[2022-03-21T21:07:04Z DEBUG tokio_postgres::prepare] preparing query s43: SELECT mark, generator_faulty FROM avr_control_insert ORDER BY mark DESC limit 1
-[2022-03-21T21:07:04Z DEBUG tokio_postgres::query] executing statement s43 with parameters: []
-[2022-03-21T21:07:04Z INFO  ats_monitoring::ram::db] Latest value of generator_faulty: PostgreSQL = 0, Skytable = 0
-[2022-03-21T21:07:05Z INFO  ats_monitoring] starting up modbus_ats_spawn
-[2022-03-21T21:07:05Z INFO  ats_monitoring::modbus_ats::avr_control] Связь ПЛК с модулем modbus_ats: Ok
-[2022-03-21T21:07:05Z INFO  ats_monitoring::modbus_ats::avr_control] Response IR mains_power_supply: [0]
-[2022-03-21T21:07:05Z INFO  ats_monitoring::modbus_ats::avr_control] Response IR start_generator: [0]
-[2022-03-21T21:07:05Z INFO  ats_monitoring::modbus_ats::avr_control] Response IR generator_faulty: [0]
-[2022-03-21T21:07:05Z INFO  ats_monitoring::modbus_ats::avr_control] Response IR generator_work: [0]
-[2022-03-21T21:07:05Z INFO  ats_monitoring::modbus_ats::avr_control] Response IR connection: [1]
-[2022-03-21T21:07:05Z INFO  ats_monitoring::modbus_ats::avr_control] Response IR load: [0]
-[2022-03-21T21:07:05Z DEBUG tokio_postgres::prepare] preparing query s44: INSERT INTO avr_control_insert (mains_power_supply, start_generator, generator_faulty, generator_work, connection) VALUES ($1, $2, $3, $4, $5)
-[2022-03-21T21:07:05Z DEBUG tokio_postgres::query] executing statement s44 with parameters: [0, 0, 0, 0, 1]
-[2022-03-21T21:07:05Z DEBUG tokio_postgres::prepare] preparing query s45: SELECT mains_power_supply, start_generator, generator_faulty, generator_work, connection FROM avr_control_insert ORDER BY mark DESC limit 1
-[2022-03-21T21:07:05Z DEBUG tokio_postgres::query] executing statement s45 with parameters: []
-[2022-03-21T21:07:05Z INFO  ats_monitoring::modbus_ats::avr_control] Считаны из ПЛК и записаны в табл. avr_control_insert следующие значения: mains_power_supply: 0, start_generator: 0, generator_faulty: 0, generator_work: 0, connection: 1
-[2022-03-21T21:07:05Z DEBUG tokio_postgres::prepare] preparing query s46: INSERT INTO нагрузка_на_генератор (нагрузка) VALUES ($1)
-[2022-03-21T21:07:05Z DEBUG tokio_postgres::query] executing statement s46 with parameters: [0]
-[2022-03-21T21:07:05Z DEBUG tokio_postgres::prepare] preparing query s47: SELECT нагрузка FROM нагрузка_на_генератор ORDER BY время_и_дата DESC limit 1
-[2022-03-21T21:07:05Z DEBUG tokio_postgres::query] executing statement s47 with parameters: []
-[2022-03-21T21:07:05Z INFO  ats_monitoring::modbus_ats::avr_control] Считаны из ПЛК и записаны в табл. нагрузка_на_генератор следующие значения: load: 0
-[2022-03-21T21:07:06Z INFO  ats_monitoring] starting up modbus_winter_garden_spawn
-[2022-03-21T21:07:06Z INFO  ats_monitoring::modbus_winter_garden::winter_garden] Связь ПЛК с модулем modbus_winter_garden: Ok
-[2022-03-21T21:07:06Z INFO  ats_monitoring::modbus_winter_garden::winter_garden] Response IR phyto_lighting_1: [0]
-[2022-03-21T21:07:06Z INFO  ats_monitoring::modbus_winter_garden::winter_garden] Response IR phyto_lighting_2: [0]
-[2022-03-21T21:07:06Z INFO  ats_monitoring::modbus_winter_garden::winter_garden] Response IR phyto_lighting_3: [0]
-[2022-03-21T21:07:06Z INFO  ats_monitoring::modbus_winter_garden::winter_garden] Response IR phyto_lighting_4: [0]
-[2022-03-21T21:07:06Z INFO  ats_monitoring::modbus_winter_garden::winter_garden] Response IR fan: [0]
-[2022-03-21T21:07:06Z INFO  ats_monitoring::modbus_winter_garden::winter_garden] Response IR automatic_watering_1: [0]
-[2022-03-21T21:07:06Z INFO  ats_monitoring::modbus_winter_garden::winter_garden] Response IR automatic_watering_2: [0]
-[2022-03-21T21:07:06Z INFO  ats_monitoring::modbus_winter_garden::winter_garden] Response IR automatic_watering_3: [0]
-[2022-03-21T21:07:07Z INFO  ats_monitoring::modbus_winter_garden::winter_garden] Response IR temperature_indoor: [21]
-[2022-03-21T21:07:07Z INFO  ats_monitoring::modbus_winter_garden::winter_garden] Response IR humidity_indoor: [19]
-[2022-03-21T21:07:07Z INFO  ats_monitoring::modbus_winter_garden::winter_garden] Response IR illumination_indoor: [12]
-[2022-03-21T21:07:07Z INFO  ats_monitoring::modbus_winter_garden::winter_garden] Response IR illumination_outdoor: [65377]
-[2022-03-21T21:07:07Z INFO  ats_monitoring] starting up generator_monitoring_spawn
-[2022-03-21T21:07:07Z INFO  ats_monitoring] starting up power_supply_monitoring_spawn
-[2022-03-21T21:07:07Z INFO  ats_monitoring::generator_monitoring::generator] Запрос работоспособности генератора в режиме трансляции питания от электросети
-[2022-03-21T21:07:07Z INFO  ats_monitoring::power_supply_monitoring::power_supply] Запрос наличия питания от электросети
-[2022-03-21T21:07:07Z INFO  ats_monitoring::generator_monitoring::generator] response from PostgreSQL: generator_faulty = 0
-[2022-03-21T21:07:07Z INFO  ats_monitoring::power_supply_monitoring::power_supply] response from PostgreSQL: mains_power_supply = 2
-[2022-03-21T21:07:07Z INFO  ats_monitoring::generator_monitoring::generator] Генератор в режиме трансляции питания от электросети работает исправно
-[2022-03-21T21:07:07Z INFO  ats_monitoring::power_supply_monitoring::power_supply] Питание от электросети есть
-[2022-03-21T21:07:07Z DEBUG tokio_postgres::prepare] preparing query s48: INSERT INTO события_авр (событие) VALUES ($1)
-[2022-03-21T21:07:07Z DEBUG tokio_postgres::prepare] preparing query s49: INSERT INTO события_авр (событие) VALUES ($1)
-[2022-03-21T21:07:07Z DEBUG tokio_postgres::query] executing statement s48 with parameters: ["Генератор в режиме трансляции питания от электросети работает исправно."]
-[2022-03-21T21:07:07Z DEBUG tokio_postgres::query] executing statement s49 with parameters: ["Питание от электросети есть."]
-[2022-03-21T21:07:07Z DEBUG tokio_postgres::prepare] preparing query s50: SELECT событие, время_и_дата FROM события_авр ORDER BY время_и_дата DESC limit 1
-[2022-03-21T21:07:07Z DEBUG tokio_postgres::prepare] preparing query s51: SELECT событие, время_и_дата FROM события_авр ORDER BY время_и_дата DESC limit 1
-[2022-03-21T21:07:07Z DEBUG tokio_postgres::query] executing statement s50 with parameters: []
-[2022-03-21T21:07:07Z DEBUG tokio_postgres::query] executing statement s51 with parameters: []
-[2022-03-21T21:07:07Z INFO  ats_monitoring::psql::postgresql] Запись в табл. события_авр: Питание от электросети есть.
-[2022-03-21T21:07:07Z INFO  ats_monitoring::psql::postgresql] Запись в табл. события_авр: Питание от электросети есть.
-[2022-03-21T21:07:07Z DEBUG tokio_postgres::prepare] preparing query s52: INSERT INTO журнал_работы_приложения (событие) VALUES ($1)
-[2022-03-21T21:07:07Z DEBUG tokio_postgres::prepare] preparing query s53: INSERT INTO журнал_работы_приложения (событие) VALUES ($1)
-[2022-03-21T21:07:07Z DEBUG tokio_postgres::query] executing statement s52 with parameters: ["Генератор в режиме трансляции питания от электросети работает исправно."]
-[2022-03-21T21:07:07Z DEBUG tokio_postgres::query] executing statement s53 with parameters: ["Питание от электросети есть."]
-[2022-03-21T21:07:07Z DEBUG tokio_postgres::prepare] preparing query s54: SELECT событие, время_и_дата FROM журнал_работы_приложения ORDER BY время_и_дата DESC limit 1
-[2022-03-21T21:07:07Z DEBUG tokio_postgres::query] executing statement s54 with parameters: []
-[2022-03-21T21:07:07Z DEBUG tokio_postgres::prepare] preparing query s55: SELECT событие, время_и_дата FROM журнал_работы_приложения ORDER BY время_и_дата DESC limit 1
-[2022-03-21T21:07:07Z DEBUG tokio_postgres::query] executing statement s55 with parameters: []
-[2022-03-21T21:07:07Z INFO  ats_monitoring] starting up write_data_to_ram_spawn
-[2022-03-21T21:07:07Z INFO  ats_monitoring::psql::postgresql] Запись в табл. журнал_работы_приложения: Питание от электросети есть.
-[2022-03-21T21:07:07Z INFO  ats_monitoring::psql::postgresql] Запись в табл. журнал_работы_приложения: Питание от электросети есть.
-[2022-03-21T21:07:07Z DEBUG tokio_postgres::prepare] preparing query s56: SELECT EXTRACT(epoch FROM mark) FROM avr_control_insert ORDER BY mark DESC limit 1
-[2022-03-21T21:07:07Z DEBUG tokio_postgres::query] executing statement s56 with parameters: []
-[2022-03-21T21:07:07Z INFO  ats_monitoring::ram::db] Time (unix) of the last entry in a table 'avr_control_insert': Postgres = 1647896825.948775, Skytable = 1647273642.663296
-[2022-03-21T21:07:07Z DEBUG tokio_postgres::prepare] preparing query s57: SELECT EXTRACT(epoch FROM now()) FROM avr_control_insert ORDER BY now() DESC limit 1
-[2022-03-21T21:07:07Z DEBUG tokio_postgres::query] executing statement s57 with parameters: []
-[2022-03-21T21:07:07Z INFO  ats_monitoring::ram::db] Time (unix) now: PostgreSQL = 1647896827.425529, Skytable = 1647273645.505613
-[2022-03-21T21:07:07Z DEBUG tokio_postgres::prepare] preparing query s58: SELECT mark, connection FROM avr_control_insert ORDER BY mark DESC limit 1
-[2022-03-21T21:07:07Z DEBUG tokio_postgres::query] executing statement s58 with parameters: []
-[2022-03-21T21:07:07Z INFO  ats_monitoring::ram::db] Latest value of plc_connect: PostgreSQL = 1, Skytable = 1
-[2022-03-21T21:07:07Z DEBUG tokio_postgres::prepare] preparing query s59: SELECT mark, generator_faulty FROM avr_control_insert ORDER BY mark DESC limit 1
-[2022-03-21T21:07:07Z DEBUG tokio_postgres::query] executing statement s59 with parameters: []
-[2022-03-21T21:07:07Z INFO  ats_monitoring::ram::db] Latest value of generator_faulty: PostgreSQL = 0, Skytable = 0
-[2022-03-21T21:07:08Z INFO  ats_monitoring] starting up modbus_ats_spawn
-[2022-03-21T21:07:09Z INFO  ats_monitoring::modbus_ats::avr_control] Связь ПЛК с модулем modbus_ats: Ok
-[2022-03-21T21:07:09Z INFO  ats_monitoring::modbus_ats::avr_control] Response IR mains_power_supply: [0]
-[2022-03-21T21:07:09Z INFO  ats_monitoring::modbus_ats::avr_control] Response IR start_generator: [0]
-[2022-03-21T21:07:09Z INFO  ats_monitoring::modbus_ats::avr_control] Response IR generator_faulty: [0]
-[2022-03-21T21:07:09Z INFO  ats_monitoring::modbus_ats::avr_control] Response IR generator_work: [0]
-[2022-03-21T21:07:09Z INFO  ats_monitoring::modbus_ats::avr_control] Response IR connection: [1]
-[2022-03-21T21:07:09Z INFO  ats_monitoring::modbus_ats::avr_control] Response IR load: [0]
-[2022-03-21T21:07:09Z DEBUG tokio_postgres::prepare] preparing query s60: INSERT INTO avr_control_insert (mains_power_supply, start_generator, generator_faulty, generator_work, connection) VALUES ($1, $2, $3, $4, $5)
-[2022-03-21T21:07:09Z DEBUG tokio_postgres::query] executing statement s60 with parameters: [0, 0, 0, 0, 1]
-[2022-03-21T21:07:09Z DEBUG tokio_postgres::prepare] preparing query s61: SELECT mains_power_supply, start_generator, generator_faulty, generator_work, connection FROM avr_control_insert ORDER BY mark DESC limit 1
-[2022-03-21T21:07:09Z DEBUG tokio_postgres::query] executing statement s61 with parameters: []
-[2022-03-21T21:07:09Z INFO  ats_monitoring::modbus_ats::avr_control] Считаны из ПЛК и записаны в табл. avr_control_insert следующие значения: mains_power_supply: 0, start_generator: 0, generator_faulty: 0, generator_work: 0, connection: 1
-[2022-03-21T21:07:09Z DEBUG tokio_postgres::prepare] preparing query s62: INSERT INTO нагрузка_на_генератор (нагрузка) VALUES ($1)
-[2022-03-21T21:07:09Z DEBUG tokio_postgres::query] executing statement s62 with parameters: [0]
-[2022-03-21T21:07:09Z DEBUG tokio_postgres::prepare] preparing query s63: SELECT нагрузка FROM нагрузка_на_генератор ORDER BY время_и_дата DESC limit 1
-[2022-03-21T21:07:09Z DEBUG tokio_postgres::query] executing statement s63 with parameters: []
-[2022-03-21T21:07:09Z INFO  ats_monitoring::modbus_ats::avr_control] Считаны из ПЛК и записаны в табл. нагрузка_на_генератор следующие значения: load: 0
-[2022-03-21T21:07:10Z INFO  ats_monitoring] starting up modbus_winter_garden_spawn
-[2022-03-21T21:07:10Z INFO  ats_monitoring::modbus_winter_garden::winter_garden] Связь ПЛК с модулем modbus_winter_garden: Ok
-[2022-03-21T21:07:10Z INFO  ats_monitoring::modbus_winter_garden::winter_garden] Response IR phyto_lighting_1: [0]
-[2022-03-21T21:07:10Z INFO  ats_monitoring] starting up generator_monitoring_spawn
-[2022-03-21T21:07:10Z INFO  ats_monitoring] starting up power_supply_monitoring_spawn
-[2022-03-21T21:07:10Z INFO  ats_monitoring::generator_monitoring::generator] Запрос работоспособности генератора в режиме трансляции питания от электросети
-[2022-03-21T21:07:10Z INFO  ats_monitoring::power_supply_monitoring::power_supply] Запрос наличия питания от электросети
-[2022-03-21T21:07:10Z INFO  ats_monitoring::power_supply_monitoring::power_supply] response from PostgreSQL: mains_power_supply = 2
-[2022-03-21T21:07:10Z INFO  ats_monitoring::generator_monitoring::generator] response from PostgreSQL: generator_faulty = 0
-[2022-03-21T21:07:10Z INFO  ats_monitoring::power_supply_monitoring::power_supply] Питание от электросети есть
-[2022-03-21T21:07:10Z INFO  ats_monitoring::generator_monitoring::generator] Генератор в режиме трансляции питания от электросети работает исправно
-[2022-03-21T21:07:10Z DEBUG tokio_postgres::prepare] preparing query s64: INSERT INTO события_авр (событие) VALUES ($1)
-[2022-03-21T21:07:10Z DEBUG tokio_postgres::prepare] preparing query s65: INSERT INTO события_авр (событие) VALUES ($1)
-[2022-03-21T21:07:10Z DEBUG tokio_postgres::query] executing statement s64 with parameters: ["Питание от электросети есть."]
-[2022-03-21T21:07:10Z DEBUG tokio_postgres::query] executing statement s65 with parameters: ["Генератор в режиме трансляции питания от электросети работает исправно."]
-[2022-03-21T21:07:10Z DEBUG tokio_postgres::prepare] preparing query s66: SELECT событие, время_и_дата FROM события_авр ORDER BY время_и_дата DESC limit 1
-[2022-03-21T21:07:10Z DEBUG tokio_postgres::query] executing statement s66 with parameters: []
-[2022-03-21T21:07:10Z DEBUG tokio_postgres::prepare] preparing query s67: SELECT событие, время_и_дата FROM события_авр ORDER BY время_и_дата DESC limit 1
-[2022-03-21T21:07:10Z DEBUG tokio_postgres::query] executing statement s67 with parameters: []
-[2022-03-21T21:07:10Z INFO  ats_monitoring::psql::postgresql] Запись в табл. события_авр: Генератор в режиме трансляции питания от электросети работает исправно.
-[2022-03-21T21:07:10Z INFO  ats_monitoring::psql::postgresql] Запись в табл. события_авр: Генератор в режиме трансляции питания от электросети работает исправно.
-[2022-03-21T21:07:10Z DEBUG tokio_postgres::prepare] preparing query s68: INSERT INTO журнал_работы_приложения (событие) VALUES ($1)
-[2022-03-21T21:07:10Z DEBUG tokio_postgres::prepare] preparing query s69: INSERT INTO журнал_работы_приложения (событие) VALUES ($1)
-[2022-03-21T21:07:10Z DEBUG tokio_postgres::query] executing statement s68 with parameters: ["Питание от электросети есть."]
-[2022-03-21T21:07:10Z DEBUG tokio_postgres::query] executing statement s69 with parameters: ["Генератор в режиме трансляции питания от электросети работает исправно."]
-[2022-03-21T21:07:10Z DEBUG tokio_postgres::prepare] preparing query s70: SELECT событие, время_и_дата FROM журнал_работы_приложения ORDER BY время_и_дата DESC limit 1
-[2022-03-21T21:07:10Z DEBUG tokio_postgres::query] executing statement s70 with parameters: []
-[2022-03-21T21:07:10Z DEBUG tokio_postgres::prepare] preparing query s71: SELECT событие, время_и_дата FROM журнал_работы_приложения ORDER BY время_и_дата DESC limit 1
-[2022-03-21T21:07:10Z DEBUG tokio_postgres::query] executing statement s71 with parameters: []
-[2022-03-21T21:07:10Z INFO  ats_monitoring::psql::postgresql] Запись в табл. журнал_работы_приложения: Генератор в режиме трансляции питания от электросети работает исправно.
-[2022-03-21T21:07:10Z INFO  ats_monitoring::psql::postgresql] Запись в табл. журнал_работы_приложения: Генератор в режиме трансляции питания от электросети работает исправно.
-[2022-03-21T21:07:10Z INFO  ats_monitoring] starting up write_data_to_ram_spawn
-[2022-03-21T21:07:10Z DEBUG tokio_postgres::prepare] preparing query s72: SELECT EXTRACT(epoch FROM mark) FROM avr_control_insert ORDER BY mark DESC limit 1
-[2022-03-21T21:07:10Z DEBUG tokio_postgres::query] executing statement s72 with parameters: []
-[2022-03-21T21:07:10Z INFO  ats_monitoring::ram::db] Time (unix) of the last entry in a table 'avr_control_insert': Postgres = 1647896829.493018, Skytable = 1647273642.663296
-[2022-03-21T21:07:10Z DEBUG tokio_postgres::prepare] preparing query s73: SELECT EXTRACT(epoch FROM now()) FROM avr_control_insert ORDER BY now() DESC limit 1
-[2022-03-21T21:07:10Z DEBUG tokio_postgres::query] executing statement s73 with parameters: []
-[2022-03-21T21:07:10Z INFO  ats_monitoring::ram::db] Time (unix) now: PostgreSQL = 1647896830.467829, Skytable = 1647273645.505613
-[2022-03-21T21:07:10Z INFO  ats_monitoring::modbus_winter_garden::winter_garden] Response IR phyto_lighting_2: [0]
-[2022-03-21T21:07:10Z DEBUG tokio_postgres::prepare] preparing query s74: SELECT mark, connection FROM avr_control_insert ORDER BY mark DESC limit 1
-[2022-03-21T21:07:10Z DEBUG tokio_postgres::query] executing statement s74 with parameters: []
-[2022-03-21T21:07:10Z INFO  ats_monitoring::ram::db] Latest value of plc_connect: PostgreSQL = 1, Skytable = 1
-[2022-03-21T21:07:10Z DEBUG tokio_postgres::prepare] preparing query s75: SELECT mark, generator_faulty FROM avr_control_insert ORDER BY mark DESC limit 1
-[2022-03-21T21:07:10Z DEBUG tokio_postgres::query] executing statement s75 with parameters: []
-[2022-03-21T21:07:10Z INFO  ats_monitoring::ram::db] Latest value of generator_faulty: PostgreSQL = 0, Skytable = 0
-[2022-03-21T21:07:10Z INFO  ats_monitoring::modbus_winter_garden::winter_garden] Response IR phyto_lighting_3: [0]
-[2022-03-21T21:07:10Z INFO  ats_monitoring::modbus_winter_garden::winter_garden] Response IR phyto_lighting_4: [0]
-[2022-03-21T21:07:10Z INFO  ats_monitoring::modbus_winter_garden::winter_garden] Response IR fan: [0]
-[2022-03-21T21:07:10Z INFO  ats_monitoring::modbus_winter_garden::winter_garden] Response IR automatic_watering_1: [0]
-[2022-03-21T21:07:10Z INFO  ats_monitoring::modbus_winter_garden::winter_garden] Response IR automatic_watering_2: [0]
-[2022-03-21T21:07:10Z INFO  ats_monitoring::modbus_winter_garden::winter_garden] Response IR automatic_watering_3: [0]
-[2022-03-21T21:07:11Z INFO  ats_monitoring::modbus_winter_garden::winter_garden] Response IR temperature_indoor: [21]
-[2022-03-21T21:07:11Z INFO  ats_monitoring::modbus_winter_garden::winter_garden] Response IR humidity_indoor: [19]
-[2022-03-21T21:07:11Z INFO  ats_monitoring::modbus_winter_garden::winter_garden] Response IR illumination_indoor: [13]
-[2022-03-21T21:07:11Z INFO  ats_monitoring::modbus_winter_garden::winter_garden] Response IR illumination_outdoor: [65386]
-[2022-03-21T21:07:12Z INFO  ats_monitoring] starting up modbus_ats_spawn
-[2022-03-21T21:07:12Z INFO  ats_monitoring::modbus_ats::avr_control] Связь ПЛК с модулем modbus_ats: Ok
-[2022-03-21T21:07:12Z INFO  ats_monitoring::modbus_ats::avr_control] Response IR mains_power_supply: [0]
-[2022-03-21T21:07:12Z INFO  ats_monitoring::modbus_ats::avr_control] Response IR start_generator: [0]
-[2022-03-21T21:07:12Z INFO  ats_monitoring::modbus_ats::avr_control] Response IR generator_faulty: [0]
-[2022-03-21T21:07:12Z INFO  ats_monitoring::modbus_ats::avr_control] Response IR generator_work: [0]
-[2022-03-21T21:07:12Z INFO  ats_monitoring::modbus_ats::avr_control] Response IR connection: [1]
-[2022-03-21T21:07:13Z INFO  ats_monitoring::modbus_ats::avr_control] Response IR load: [0]
-[2022-03-21T21:07:13Z DEBUG tokio_postgres::prepare] preparing query s76: INSERT INTO avr_control_insert (mains_power_supply, start_generator, generator_faulty, generator_work, connection) VALUES ($1, $2, $3, $4, $5)
-[2022-03-21T21:07:13Z DEBUG tokio_postgres::query] executing statement s76 with parameters: [0, 0, 0, 0, 1]
-[2022-03-21T21:07:13Z DEBUG tokio_postgres::prepare] preparing query s77: SELECT mains_power_supply, start_generator, generator_faulty, generator_work, connection FROM avr_control_insert ORDER BY mark DESC limit 1
-[2022-03-21T21:07:13Z DEBUG tokio_postgres::query] executing statement s77 with parameters: []
-[2022-03-21T21:07:13Z INFO  ats_monitoring::modbus_ats::avr_control] Считаны из ПЛК и записаны в табл. avr_control_insert следующие значения: mains_power_supply: 0, start_generator: 0, generator_faulty: 0, generator_work: 0, connection: 1
-[2022-03-21T21:07:13Z DEBUG tokio_postgres::prepare] preparing query s78: INSERT INTO нагрузка_на_генератор (нагрузка) VALUES ($1)
-[2022-03-21T21:07:13Z DEBUG tokio_postgres::query] executing statement s78 with parameters: [0]
-[2022-03-21T21:07:13Z DEBUG tokio_postgres::prepare] preparing query s79: SELECT нагрузка FROM нагрузка_на_генератор ORDER BY время_и_дата DESC limit 1
-[2022-03-21T21:07:13Z DEBUG tokio_postgres::query] executing statement s79 with parameters: []
-[2022-03-21T21:07:13Z INFO  ats_monitoring::modbus_ats::avr_control] Считаны из ПЛК и записаны в табл. нагрузка_на_генератор следующие значения: load: 0
-[2022-03-21T21:07:13Z INFO  ats_monitoring] starting up power_supply_monitoring_spawn
-[2022-03-21T21:07:13Z INFO  ats_monitoring] starting up generator_monitoring_spawn
-[2022-03-21T21:07:13Z INFO  ats_monitoring::power_supply_monitoring::power_supply] Запрос наличия питания от электросети
-[2022-03-21T21:07:13Z INFO  ats_monitoring::generator_monitoring::generator] Запрос работоспособности генератора в режиме трансляции питания от электросети
-[2022-03-21T21:07:13Z INFO  ats_monitoring::power_supply_monitoring::power_supply] response from PostgreSQL: mains_power_supply = 2
-[2022-03-21T21:07:13Z INFO  ats_monitoring::generator_monitoring::generator] response from PostgreSQL: generator_faulty = 0
-[2022-03-21T21:07:13Z INFO  ats_monitoring::power_supply_monitoring::power_supply] Питание от электросети есть
-[2022-03-21T21:07:13Z INFO  ats_monitoring::generator_monitoring::generator] Генератор в режиме трансляции питания от электросети работает исправно
-[2022-03-21T21:07:13Z DEBUG tokio_postgres::prepare] preparing query s80: INSERT INTO события_авр (событие) VALUES ($1)
-[2022-03-21T21:07:13Z DEBUG tokio_postgres::prepare] preparing query s81: INSERT INTO события_авр (событие) VALUES ($1)
-[2022-03-21T21:07:13Z DEBUG tokio_postgres::query] executing statement s80 with parameters: ["Питание от электросети есть."]
-[2022-03-21T21:07:13Z DEBUG tokio_postgres::query] executing statement s81 with parameters: ["Генератор в режиме трансляции питания от электросети работает исправно."]
-[2022-03-21T21:07:13Z DEBUG tokio_postgres::prepare] preparing query s82: SELECT событие, время_и_дата FROM события_авр ORDER BY время_и_дата DESC limit 1
-[2022-03-21T21:07:13Z DEBUG tokio_postgres::query] executing statement s82 with parameters: []
-[2022-03-21T21:07:13Z INFO  ats_monitoring::psql::postgresql] Запись в табл. события_авр: Питание от электросети есть.
-[2022-03-21T21:07:13Z DEBUG tokio_postgres::prepare] preparing query s83: SELECT событие, время_и_дата FROM события_авр ORDER BY время_и_дата DESC limit 1
-[2022-03-21T21:07:13Z DEBUG tokio_postgres::query] executing statement s83 with parameters: []
-[2022-03-21T21:07:13Z INFO  ats_monitoring::psql::postgresql] Запись в табл. события_авр: Генератор в режиме трансляции питания от электросети работает исправно.
-[2022-03-21T21:07:13Z DEBUG tokio_postgres::prepare] preparing query s84: INSERT INTO журнал_работы_приложения (событие) VALUES ($1)
-[2022-03-21T21:07:13Z DEBUG tokio_postgres::query] executing statement s84 with parameters: ["Питание от электросети есть."]
-[2022-03-21T21:07:13Z DEBUG tokio_postgres::prepare] preparing query s85: SELECT событие, время_и_дата FROM журнал_работы_приложения ORDER BY время_и_дата DESC limit 1
-[2022-03-21T21:07:13Z DEBUG tokio_postgres::prepare] preparing query s86: INSERT INTO журнал_работы_приложения (событие) VALUES ($1)
-[2022-03-21T21:07:13Z DEBUG tokio_postgres::query] executing statement s85 with parameters: []
-[2022-03-21T21:07:13Z DEBUG tokio_postgres::query] executing statement s86 with parameters: ["Генератор в режиме трансляции питания от электросети работает исправно."]
-[2022-03-21T21:07:13Z INFO  ats_monitoring::psql::postgresql] Запись в табл. журнал_работы_приложения: Питание от электросети есть.
-[2022-03-21T21:07:13Z DEBUG tokio_postgres::prepare] preparing query s87: SELECT событие, время_и_дата FROM журнал_работы_приложения ORDER BY время_и_дата DESC limit 1
-[2022-03-21T21:07:13Z DEBUG tokio_postgres::query] executing statement s87 with parameters: []
-[2022-03-21T21:07:13Z INFO  ats_monitoring::psql::postgresql] Запись в табл. журнал_работы_приложения: Генератор в режиме трансляции питания от электросети работает исправно.
-[2022-03-21T21:07:13Z INFO  ats_monitoring] starting up write_data_to_ram_spawn
-[2022-03-21T21:07:13Z DEBUG tokio_postgres::prepare] preparing query s88: SELECT EXTRACT(epoch FROM mark) FROM avr_control_insert ORDER BY mark DESC limit 1
-[2022-03-21T21:07:13Z DEBUG tokio_postgres::query] executing statement s88 with parameters: []
-[2022-03-21T21:07:13Z INFO  ats_monitoring::ram::db] Time (unix) of the last entry in a table 'avr_control_insert': Postgres = 1647896833.057242, Skytable = 1647273642.663296
-[2022-03-21T21:07:13Z DEBUG tokio_postgres::prepare] preparing query s89: SELECT EXTRACT(epoch FROM now()) FROM avr_control_insert ORDER BY now() DESC limit 1
-[2022-03-21T21:07:13Z DEBUG tokio_postgres::query] executing statement s89 with parameters: []
-[2022-03-21T21:07:13Z INFO  ats_monitoring::ram::db] Time (unix) now: PostgreSQL = 1647896833.504449, Skytable = 1647273645.505613
-[2022-03-21T21:07:13Z DEBUG tokio_postgres::prepare] preparing query s90: SELECT mark, connection FROM avr_control_insert ORDER BY mark DESC limit 1
-[2022-03-21T21:07:13Z DEBUG tokio_postgres::query] executing statement s90 with parameters: []
-[2022-03-21T21:07:13Z INFO  ats_monitoring::ram::db] Latest value of plc_connect: PostgreSQL = 1, Skytable = 1
-[2022-03-21T21:07:13Z DEBUG tokio_postgres::prepare] preparing query s91: SELECT mark, generator_faulty FROM avr_control_insert ORDER BY mark DESC limit 1
-[2022-03-21T21:07:13Z DEBUG tokio_postgres::query] executing statement s91 with parameters: []
-[2022-03-21T21:07:13Z INFO  ats_monitoring::ram::db] Latest value of generator_faulty: PostgreSQL = 0, Skytable = 0
-[2022-03-21T21:07:14Z INFO  ats_monitoring] starting up modbus_winter_garden_spawn
+[2022-03-21T21:08:29Z INFO  postgres::config] NOTICE: relation "события_авр" already exists, skipping
+[2022-03-21T21:08:29Z INFO  ats_monitoring] starting up write_data_to_ram_spawn
+[2022-03-21T21:08:29Z INFO  ats_monitoring] starting up modbus_ats_spawn
+[2022-03-21T21:08:29Z INFO  ats_monitoring] starting up power_supply_monitoring_spawn
+[2022-03-21T21:08:29Z INFO  ats_monitoring] starting up generator_monitoring_spawn
+[2022-03-21T21:08:29Z INFO  ats_monitoring] starting up modbus_winter_garden_spawn
+[2022-03-21T21:08:29Z INFO  ats_monitoring::power_supply_monitoring::power_supply] Запрос наличия питания от электросети
+[2022-03-21T21:08:29Z INFO  ats_monitoring::generator_monitoring::generator] Запрос работоспособности генератора в режиме трансляции питания от электросети
+[2022-03-21T21:08:29Z INFO  ats_monitoring::power_supply_monitoring::power_supply] response from PostgreSQL: mains_power_supply = 2
+[2022-03-21T21:08:29Z INFO  ats_monitoring::generator_monitoring::generator] response from PostgreSQL: generator_faulty = 0
+[2022-03-21T21:08:29Z INFO  ats_monitoring::power_supply_monitoring::power_supply] Питание от электросети есть
+[2022-03-21T21:08:29Z INFO  ats_monitoring::generator_monitoring::generator] Генератор в режиме трансляции питания от электросети работает исправно
+[2022-03-21T21:08:29Z DEBUG tokio_postgres::prepare] preparing query s0: SELECT EXTRACT(epoch FROM mark) FROM avr_control_insert ORDER BY mark DESC limit 1
+[2022-03-21T21:08:29Z DEBUG tokio_postgres::query] executing statement s0 with parameters: []
+[2022-03-21T21:08:29Z DEBUG tokio_postgres::prepare] preparing query s1: INSERT INTO события_авр (событие) VALUES ($1)
+[2022-03-21T21:08:29Z DEBUG tokio_postgres::query] executing statement s1 with parameters: ["Генератор в режиме трансляции питания от электросети работает исправно."]
+[2022-03-21T21:08:29Z DEBUG tokio_postgres::prepare] preparing query s2: INSERT INTO события_авр (событие) VALUES ($1)
+[2022-03-21T21:08:29Z DEBUG tokio_postgres::query] executing statement s2 with parameters: ["Питание от электросети есть."]
+[2022-03-21T21:08:29Z INFO  ats_monitoring::ram::db] Time (unix) of the last entry in a table 'avr_control_insert': Postgres = 1647896898.193101, Skytable = 1647273642.663296
+[2022-03-21T21:08:29Z DEBUG tokio_postgres::prepare] preparing query s3: SELECT событие, время_и_дата FROM события_авр ORDER BY время_и_дата DESC limit 1
+[2022-03-21T21:08:29Z DEBUG tokio_postgres::query] executing statement s3 with parameters: []
+[2022-03-21T21:08:29Z INFO  ats_monitoring::psql::postgresql] Запись в табл. события_авр: Генератор в режиме трансляции питания от электросети работает исправно.
+[2022-03-21T21:08:29Z DEBUG tokio_postgres::prepare] preparing query s4: SELECT EXTRACT(epoch FROM now()) FROM avr_control_insert ORDER BY now() DESC limit 1
+[2022-03-21T21:08:29Z DEBUG tokio_postgres::prepare] preparing query s5: SELECT событие, время_и_дата FROM события_авр ORDER BY время_и_дата DESC limit 1
+[2022-03-21T21:08:29Z DEBUG tokio_postgres::query] executing statement s5 with parameters: []
+[2022-03-21T21:08:29Z DEBUG tokio_postgres::query] executing statement s4 with parameters: []
+[2022-03-21T21:08:29Z INFO  ats_monitoring::psql::postgresql] Запись в табл. события_авр: Питание от электросети есть.
+[2022-03-21T21:08:29Z INFO  ats_monitoring::ram::db] Time (unix) now: PostgreSQL = 1647896909.878633, Skytable = 1647273645.505613
+[2022-03-21T21:08:29Z DEBUG tokio_postgres::prepare] preparing query s6: INSERT INTO журнал_работы_приложения (событие) VALUES ($1)
+[2022-03-21T21:08:29Z DEBUG tokio_postgres::query] executing statement s6 with parameters: ["Генератор в режиме трансляции питания от электросети работает исправно."]
+[2022-03-21T21:08:29Z DEBUG tokio_postgres::prepare] preparing query s7: INSERT INTO журнал_работы_приложения (событие) VALUES ($1)
+[2022-03-21T21:08:29Z DEBUG tokio_postgres::prepare] preparing query s8: SELECT событие, время_и_дата FROM журнал_работы_приложения ORDER BY время_и_дата DESC limit 1
+[2022-03-21T21:08:29Z DEBUG tokio_postgres::query] executing statement s7 with parameters: ["Питание от электросети есть."]
+[2022-03-21T21:08:29Z DEBUG tokio_postgres::prepare] preparing query s9: SELECT mark, connection FROM avr_control_insert ORDER BY mark DESC limit 1
+[2022-03-21T21:08:29Z DEBUG tokio_postgres::query] executing statement s8 with parameters: []
+[2022-03-21T21:08:29Z DEBUG tokio_postgres::query] executing statement s9 with parameters: []
+[2022-03-21T21:08:29Z DEBUG tokio_postgres::prepare] preparing query s10: SELECT событие, время_и_дата FROM журнал_работы_приложения ORDER BY время_и_дата DESC limit 1
+[2022-03-21T21:08:29Z INFO  ats_monitoring::psql::postgresql] Запись в табл. журнал_работы_приложения: Генератор в режиме трансляции питания от электросети работает исправно.
+[2022-03-21T21:08:29Z DEBUG tokio_postgres::query] executing statement s10 with parameters: []
+[2022-03-21T21:08:29Z INFO  ats_monitoring::ram::db] Latest value of plc_connect: PostgreSQL = 1, Skytable = 1
+[2022-03-21T21:08:29Z INFO  ats_monitoring::psql::postgresql] Запись в табл. журнал_работы_приложения: Питание от электросети есть.
+[2022-03-21T21:08:29Z DEBUG tokio_postgres::prepare] preparing query s11: SELECT mark, generator_faulty FROM avr_control_insert ORDER BY mark DESC limit 1
+[2022-03-21T21:08:29Z DEBUG tokio_postgres::query] executing statement s11 with parameters: []
+[2022-03-21T21:08:29Z INFO  ats_monitoring::ram::db] Latest value of generator_faulty: PostgreSQL = 0, Skytable = 0
+[2022-03-21T21:08:30Z INFO  ats_monitoring::modbus_ats::avr_control] Связь ПЛК с модулем modbus_ats: Ok
+[2022-03-21T21:08:30Z INFO  ats_monitoring::modbus_winter_garden::winter_garden] Связь ПЛК с модулем modbus_winter_garden: Ok
+[2022-03-21T21:08:30Z INFO  ats_monitoring::modbus_ats::avr_control] Response IR mains_power_supply: [0]
+[2022-03-21T21:08:30Z INFO  ats_monitoring::modbus_winter_garden::winter_garden] Response IR phyto_lighting_1: [0]
+[2022-03-21T21:08:30Z INFO  ats_monitoring::modbus_ats::avr_control] Response IR start_generator: [0]
+[2022-03-21T21:08:30Z INFO  ats_monitoring::modbus_winter_garden::winter_garden] Response IR phyto_lighting_2: [0]
+[2022-03-21T21:08:30Z INFO  ats_monitoring::modbus_ats::avr_control] Response IR generator_faulty: [0]
+[2022-03-21T21:08:30Z INFO  ats_monitoring::modbus_winter_garden::winter_garden] Response IR phyto_lighting_3: [0]
+[2022-03-21T21:08:30Z INFO  ats_monitoring::modbus_ats::avr_control] Response IR generator_work: [0]
+[2022-03-21T21:08:30Z INFO  ats_monitoring::modbus_winter_garden::winter_garden] Response IR phyto_lighting_4: [0]
+[2022-03-21T21:08:30Z INFO  ats_monitoring::modbus_ats::avr_control] Response IR connection: [1]
+[2022-03-21T21:08:30Z INFO  ats_monitoring::modbus_winter_garden::winter_garden] Response IR fan: [0]
+[2022-03-21T21:08:30Z INFO  ats_monitoring::modbus_ats::avr_control] Response IR load: [0]
+[2022-03-21T21:08:30Z DEBUG tokio_postgres::prepare] preparing query s12: INSERT INTO avr_control_insert (mains_power_supply, start_generator, generator_faulty, generator_work, connection) VALUES ($1, $2, $3, $4, $5)
+[2022-03-21T21:08:30Z INFO  ats_monitoring::modbus_winter_garden::winter_garden] Response IR automatic_watering_1: [0]
+[2022-03-21T21:08:30Z DEBUG tokio_postgres::query] executing statement s12 with parameters: [0, 0, 0, 0, 1]
+[2022-03-21T21:08:30Z DEBUG tokio_postgres::prepare] preparing query s13: SELECT mains_power_supply, start_generator, generator_faulty, generator_work, connection FROM avr_control_insert ORDER BY mark DESC limit 1
+[2022-03-21T21:08:30Z DEBUG tokio_postgres::query] executing statement s13 with parameters: []
+[2022-03-21T21:08:30Z INFO  ats_monitoring::modbus_ats::avr_control] Считаны из ПЛК и записаны в табл. avr_control_insert следующие значения: mains_power_supply: 0, start_generator: 0, generator_faulty: 0, generator_work: 0, connection: 1
+[2022-03-21T21:08:30Z DEBUG tokio_postgres::prepare] preparing query s14: INSERT INTO нагрузка_на_генератор (нагрузка) VALUES ($1)
+[2022-03-21T21:08:30Z DEBUG tokio_postgres::query] executing statement s14 with parameters: [0]
+[2022-03-21T21:08:30Z DEBUG tokio_postgres::prepare] preparing query s15: SELECT нагрузка FROM нагрузка_на_генератор ORDER BY время_и_дата DESC limit 1
+[2022-03-21T21:08:30Z DEBUG tokio_postgres::query] executing statement s15 with parameters: []
+[2022-03-21T21:08:30Z INFO  ats_monitoring::modbus_ats::avr_control] Считаны из ПЛК и записаны в табл. нагрузка_на_генератор следующие значения: load: 0
+[2022-03-21T21:08:30Z INFO  ats_monitoring::modbus_winter_garden::winter_garden] Response IR automatic_watering_2: [0]
+[2022-03-21T21:08:30Z INFO  ats_monitoring::modbus_winter_garden::winter_garden] Response IR automatic_watering_3: [0]
+[2022-03-21T21:08:30Z INFO  ats_monitoring::modbus_winter_garden::winter_garden] Response IR temperature_indoor: [21]
+[2022-03-21T21:08:30Z INFO  ats_monitoring::modbus_winter_garden::winter_garden] Response IR humidity_indoor: [19]
+[2022-03-21T21:08:30Z INFO  ats_monitoring::modbus_winter_garden::winter_garden] Response IR illumination_indoor: [13]
+[2022-03-21T21:08:30Z INFO  ats_monitoring::modbus_winter_garden::winter_garden] Response IR illumination_outdoor: [65377]
+[2022-03-21T21:08:32Z INFO  ats_monitoring] starting up generator_monitoring_spawn
+[2022-03-21T21:08:32Z INFO  ats_monitoring] starting up power_supply_monitoring_spawn
+[2022-03-21T21:08:32Z INFO  ats_monitoring::generator_monitoring::generator] Запрос работоспособности генератора в режиме трансляции питания от электросети
+[2022-03-21T21:08:32Z INFO  ats_monitoring::power_supply_monitoring::power_supply] Запрос наличия питания от электросети
+[2022-03-21T21:08:32Z INFO  ats_monitoring::generator_monitoring::generator] response from PostgreSQL: generator_faulty = 0
+[2022-03-21T21:08:32Z INFO  ats_monitoring::power_supply_monitoring::power_supply] response from PostgreSQL: mains_power_supply = 2
+[2022-03-21T21:08:32Z INFO  ats_monitoring::generator_monitoring::generator] Генератор в режиме трансляции питания от электросети работает исправно
+[2022-03-21T21:08:32Z INFO  ats_monitoring::power_supply_monitoring::power_supply] Питание от электросети есть
+[2022-03-21T21:08:32Z INFO  ats_monitoring] starting up write_data_to_ram_spawn
+[2022-03-21T21:08:32Z DEBUG tokio_postgres::prepare] preparing query s16: INSERT INTO события_авр (событие) VALUES ($1)
+[2022-03-21T21:08:32Z DEBUG tokio_postgres::prepare] preparing query s17: INSERT INTO события_авр (событие) VALUES ($1)
+[2022-03-21T21:08:32Z DEBUG tokio_postgres::query] executing statement s17 with parameters: ["Питание от электросети есть."]
+[2022-03-21T21:08:32Z DEBUG tokio_postgres::query] executing statement s16 with parameters: ["Генератор в режиме трансляции питания от электросети работает исправно."]
+[2022-03-21T21:08:32Z DEBUG tokio_postgres::prepare] preparing query s18: SELECT EXTRACT(epoch FROM mark) FROM avr_control_insert ORDER BY mark DESC limit 1
+[2022-03-21T21:08:32Z DEBUG tokio_postgres::query] executing statement s18 with parameters: []
+[2022-03-21T21:08:32Z INFO  ats_monitoring::ram::db] Time (unix) of the last entry in a table 'avr_control_insert': Postgres = 1647896910.492902, Skytable = 1647273642.663296
+[2022-03-21T21:08:32Z DEBUG tokio_postgres::prepare] preparing query s19: SELECT событие, время_и_дата FROM события_авр ORDER BY время_и_дата DESC limit 1
+[2022-03-21T21:08:32Z DEBUG tokio_postgres::query] executing statement s19 with parameters: []
+[2022-03-21T21:08:32Z INFO  ats_monitoring::psql::postgresql] Запись в табл. события_авр: Питание от электросети есть.
+[2022-03-21T21:08:32Z DEBUG tokio_postgres::prepare] preparing query s20: SELECT событие, время_и_дата FROM события_авр ORDER BY время_и_дата DESC limit 1
+[2022-03-21T21:08:32Z DEBUG tokio_postgres::prepare] preparing query s21: SELECT EXTRACT(epoch FROM now()) FROM avr_control_insert ORDER BY now() DESC limit 1
+[2022-03-21T21:08:32Z DEBUG tokio_postgres::query] executing statement s20 with parameters: []
+[2022-03-21T21:08:32Z INFO  ats_monitoring::psql::postgresql] Запись в табл. события_авр: Генератор в режиме трансляции питания от электросети работает исправно.
+[2022-03-21T21:08:32Z DEBUG tokio_postgres::query] executing statement s21 with parameters: []
+[2022-03-21T21:08:32Z DEBUG tokio_postgres::prepare] preparing query s22: INSERT INTO журнал_работы_приложения (событие) VALUES ($1)
+[2022-03-21T21:08:32Z DEBUG tokio_postgres::query] executing statement s22 with parameters: ["Питание от электросети есть."]
+[2022-03-21T21:08:32Z INFO  ats_monitoring::ram::db] Time (unix) now: PostgreSQL = 1647896912.890755, Skytable = 1647273645.505613
+[2022-03-21T21:08:32Z DEBUG tokio_postgres::prepare] preparing query s23: INSERT INTO журнал_работы_приложения (событие) VALUES ($1)
+[2022-03-21T21:08:32Z DEBUG tokio_postgres::prepare] preparing query s24: SELECT событие, время_и_дата FROM журнал_работы_приложения ORDER BY время_и_дата DESC limit 1
+[2022-03-21T21:08:32Z DEBUG tokio_postgres::query] executing statement s23 with parameters: ["Генератор в режиме трансляции питания от электросети работает исправно."]
+[2022-03-21T21:08:32Z DEBUG tokio_postgres::query] executing statement s24 with parameters: []
+[2022-03-21T21:08:32Z INFO  ats_monitoring::psql::postgresql] Запись в табл. журнал_работы_приложения: Питание от электросети есть.
+[2022-03-21T21:08:32Z DEBUG tokio_postgres::prepare] preparing query s25: SELECT mark, connection FROM avr_control_insert ORDER BY mark DESC limit 1
+[2022-03-21T21:08:32Z DEBUG tokio_postgres::query] executing statement s25 with parameters: []
+[2022-03-21T21:08:32Z DEBUG tokio_postgres::prepare] preparing query s26: SELECT событие, время_и_дата FROM журнал_работы_приложения ORDER BY время_и_дата DESC limit 1
+[2022-03-21T21:08:32Z DEBUG tokio_postgres::query] executing statement s26 with parameters: []
+[2022-03-21T21:08:32Z INFO  ats_monitoring::ram::db] Latest value of plc_connect: PostgreSQL = 1, Skytable = 1
+[2022-03-21T21:08:32Z INFO  ats_monitoring::psql::postgresql] Запись в табл. журнал_работы_приложения: Генератор в режиме трансляции питания от электросети работает исправно.
+[2022-03-21T21:08:32Z DEBUG tokio_postgres::prepare] preparing query s27: SELECT mark, generator_faulty FROM avr_control_insert ORDER BY mark DESC limit 1
+[2022-03-21T21:08:32Z DEBUG tokio_postgres::query] executing statement s27 with parameters: []
+[2022-03-21T21:08:32Z INFO  ats_monitoring::ram::db] Latest value of generator_faulty: PostgreSQL = 0, Skytable = 0
+[2022-03-21T21:08:33Z INFO  ats_monitoring] starting up modbus_ats_spawn
+[2022-03-21T21:08:33Z INFO  ats_monitoring::modbus_ats::avr_control] Связь ПЛК с модулем modbus_ats: Ok
+[2022-03-21T21:08:33Z INFO  ats_monitoring::modbus_ats::avr_control] Response IR mains_power_supply: [0]
+[2022-03-21T21:08:33Z INFO  ats_monitoring::modbus_ats::avr_control] Response IR start_generator: [0]
+[2022-03-21T21:08:33Z INFO  ats_monitoring::modbus_ats::avr_control] Response IR generator_faulty: [0]
+[2022-03-21T21:08:33Z INFO  ats_monitoring::modbus_ats::avr_control] Response IR generator_work: [0]
+[2022-03-21T21:08:33Z INFO  ats_monitoring] starting up modbus_winter_garden_spawn
+[2022-03-21T21:08:33Z INFO  ats_monitoring::modbus_ats::avr_control] Response IR connection: [1]
+[2022-03-21T21:08:34Z INFO  ats_monitoring::modbus_winter_garden::winter_garden] Связь ПЛК с модулем modbus_winter_garden: Ok
+[2022-03-21T21:08:34Z INFO  ats_monitoring::modbus_ats::avr_control] Response IR load: [0]
+[2022-03-21T21:08:34Z DEBUG tokio_postgres::prepare] preparing query s28: INSERT INTO avr_control_insert (mains_power_supply, start_generator, generator_faulty, generator_work, connection) VALUES ($1, $2, $3, $4, $5)
+[2022-03-21T21:08:34Z DEBUG tokio_postgres::query] executing statement s28 with parameters: [0, 0, 0, 0, 1]
+[2022-03-21T21:08:34Z DEBUG tokio_postgres::prepare] preparing query s29: SELECT mains_power_supply, start_generator, generator_faulty, generator_work, connection FROM avr_control_insert ORDER BY mark DESC limit 1
+[2022-03-21T21:08:34Z DEBUG tokio_postgres::query] executing statement s29 with parameters: []
+[2022-03-21T21:08:34Z INFO  ats_monitoring::modbus_ats::avr_control] Считаны из ПЛК и записаны в табл. avr_control_insert следующие значения: mains_power_supply: 0, start_generator: 0, generator_faulty: 0, generator_work: 0, connection: 1
+[2022-03-21T21:08:34Z DEBUG tokio_postgres::prepare] preparing query s30: INSERT INTO нагрузка_на_генератор (нагрузка) VALUES ($1)
+[2022-03-21T21:08:34Z DEBUG tokio_postgres::query] executing statement s30 with parameters: [0]
+[2022-03-21T21:08:34Z DEBUG tokio_postgres::prepare] preparing query s31: SELECT нагрузка FROM нагрузка_на_генератор ORDER BY время_и_дата DESC limit 1
+[2022-03-21T21:08:34Z DEBUG tokio_postgres::query] executing statement s31 with parameters: []
+[2022-03-21T21:08:34Z INFO  ats_monitoring::modbus_ats::avr_control] Считаны из ПЛК и записаны в табл. нагрузка_на_генератор следующие значения: load: 0
+[2022-03-21T21:08:34Z INFO  ats_monitoring::modbus_winter_garden::winter_garden] Response IR phyto_lighting_1: [0]
+[2022-03-21T21:08:34Z INFO  ats_monitoring::modbus_winter_garden::winter_garden] Response IR phyto_lighting_2: [0]
+[2022-03-21T21:08:34Z INFO  ats_monitoring::modbus_winter_garden::winter_garden] Response IR phyto_lighting_3: [0]
+[2022-03-21T21:08:34Z INFO  ats_monitoring::modbus_winter_garden::winter_garden] Response IR phyto_lighting_4: [0]
+[2022-03-21T21:08:34Z INFO  ats_monitoring::modbus_winter_garden::winter_garden] Response IR fan: [0]
+[2022-03-21T21:08:34Z INFO  ats_monitoring::modbus_winter_garden::winter_garden] Response IR automatic_watering_1: [0]
+[2022-03-21T21:08:34Z INFO  ats_monitoring::modbus_winter_garden::winter_garden] Response IR automatic_watering_2: [0]
+[2022-03-21T21:08:34Z INFO  ats_monitoring::modbus_winter_garden::winter_garden] Response IR automatic_watering_3: [0]
+[2022-03-21T21:08:34Z INFO  ats_monitoring::modbus_winter_garden::winter_garden] Response IR temperature_indoor: [21]
+[2022-03-21T21:08:34Z INFO  ats_monitoring::modbus_winter_garden::winter_garden] Response IR humidity_indoor: [19]
+[2022-03-21T21:08:34Z INFO  ats_monitoring::modbus_winter_garden::winter_garden] Response IR illumination_indoor: [10]
+[2022-03-21T21:08:34Z INFO  ats_monitoring::modbus_winter_garden::winter_garden] Response IR illumination_outdoor: [65363]
+[2022-03-21T21:08:35Z INFO  ats_monitoring] starting up power_supply_monitoring_spawn
+[2022-03-21T21:08:35Z INFO  ats_monitoring] starting up generator_monitoring_spawn
+[2022-03-21T21:08:35Z INFO  ats_monitoring] starting up write_data_to_ram_spawn
+[2022-03-21T21:08:35Z INFO  ats_monitoring::power_supply_monitoring::power_supply] Запрос наличия питания от электросети
+[2022-03-21T21:08:35Z INFO  ats_monitoring::power_supply_monitoring::power_supply] response from PostgreSQL: mains_power_supply = 2
+[2022-03-21T21:08:35Z INFO  ats_monitoring::generator_monitoring::generator] Запрос работоспособности генератора в режиме трансляции питания от электросети
+[2022-03-21T21:08:35Z INFO  ats_monitoring::generator_monitoring::generator] response from PostgreSQL: generator_faulty = 0
+[2022-03-21T21:08:35Z INFO  ats_monitoring::power_supply_monitoring::power_supply] Питание от электросети есть
+[2022-03-21T21:08:35Z INFO  ats_monitoring::generator_monitoring::generator] Генератор в режиме трансляции питания от электросети работает исправно
+[2022-03-21T21:08:35Z DEBUG tokio_postgres::prepare] preparing query s32: SELECT EXTRACT(epoch FROM mark) FROM avr_control_insert ORDER BY mark DESC limit 1
+[2022-03-21T21:08:35Z DEBUG tokio_postgres::query] executing statement s32 with parameters: []
+[2022-03-21T21:08:35Z DEBUG tokio_postgres::prepare] preparing query s33: INSERT INTO события_авр (событие) VALUES ($1)
+[2022-03-21T21:08:35Z DEBUG tokio_postgres::query] executing statement s33 with parameters: ["Питание от электросети есть."]
+[2022-03-21T21:08:35Z DEBUG tokio_postgres::prepare] preparing query s34: INSERT INTO события_авр (событие) VALUES ($1)
+[2022-03-21T21:08:35Z DEBUG tokio_postgres::query] executing statement s34 with parameters: ["Генератор в режиме трансляции питания от электросети работает исправно."]
+[2022-03-21T21:08:35Z INFO  ats_monitoring::ram::db] Time (unix) of the last entry in a table 'avr_control_insert': Postgres = 1647896914.023162, Skytable = 1647273642.663296
+[2022-03-21T21:08:35Z DEBUG tokio_postgres::prepare] preparing query s35: SELECT событие, время_и_дата FROM события_авр ORDER BY время_и_дата DESC limit 1
+[2022-03-21T21:08:35Z DEBUG tokio_postgres::query] executing statement s35 with parameters: []
+[2022-03-21T21:08:35Z INFO  ats_monitoring::psql::postgresql] Запись в табл. события_авр: Питание от электросети есть.
+[2022-03-21T21:08:35Z DEBUG tokio_postgres::prepare] preparing query s36: SELECT EXTRACT(epoch FROM now()) FROM avr_control_insert ORDER BY now() DESC limit 1
+[2022-03-21T21:08:35Z DEBUG tokio_postgres::prepare] preparing query s37: SELECT событие, время_и_дата FROM события_авр ORDER BY время_и_дата DESC limit 1
+[2022-03-21T21:08:35Z DEBUG tokio_postgres::query] executing statement s36 with parameters: []
+[2022-03-21T21:08:35Z DEBUG tokio_postgres::query] executing statement s37 with parameters: []
+[2022-03-21T21:08:35Z INFO  ats_monitoring::psql::postgresql] Запись в табл. события_авр: Генератор в режиме трансляции питания от электросети работает исправно.
+[2022-03-21T21:08:35Z DEBUG tokio_postgres::prepare] preparing query s38: INSERT INTO журнал_работы_приложения (событие) VALUES ($1)
+[2022-03-21T21:08:35Z INFO  ats_monitoring::ram::db] Time (unix) now: PostgreSQL = 1647896915.910902, Skytable = 1647273645.505613
+[2022-03-21T21:08:35Z DEBUG tokio_postgres::query] executing statement s38 with parameters: ["Питание от электросети есть."]
+[2022-03-21T21:08:35Z DEBUG tokio_postgres::prepare] preparing query s39: INSERT INTO журнал_работы_приложения (событие) VALUES ($1)
+[2022-03-21T21:08:35Z DEBUG tokio_postgres::prepare] preparing query s40: SELECT событие, время_и_дата FROM журнал_работы_приложения ORDER BY время_и_дата DESC limit 1
+[2022-03-21T21:08:35Z DEBUG tokio_postgres::query] executing statement s39 with parameters: ["Генератор в режиме трансляции питания от электросети работает исправно."]
+[2022-03-21T21:08:35Z DEBUG tokio_postgres::prepare] preparing query s41: SELECT mark, connection FROM avr_control_insert ORDER BY mark DESC limit 1
+[2022-03-21T21:08:35Z DEBUG tokio_postgres::query] executing statement s40 with parameters: []
+[2022-03-21T21:08:35Z DEBUG tokio_postgres::query] executing statement s41 with parameters: []
+[2022-03-21T21:08:35Z INFO  ats_monitoring::psql::postgresql] Запись в табл. журнал_работы_приложения: Питание от электросети есть.
+[2022-03-21T21:08:35Z DEBUG tokio_postgres::prepare] preparing query s42: SELECT событие, время_и_дата FROM журнал_работы_приложения ORDER BY время_и_дата DESC limit 1
+[2022-03-21T21:08:35Z INFO  ats_monitoring::ram::db] Latest value of plc_connect: PostgreSQL = 1, Skytable = 1
+[2022-03-21T21:08:35Z DEBUG tokio_postgres::query] executing statement s42 with parameters: []
+[2022-03-21T21:08:35Z INFO  ats_monitoring::psql::postgresql] Запись в табл. журнал_работы_приложения: Генератор в режиме трансляции питания от электросети работает исправно.
+[2022-03-21T21:08:35Z DEBUG tokio_postgres::prepare] preparing query s43: SELECT mark, generator_faulty FROM avr_control_insert ORDER BY mark DESC limit 1
+[2022-03-21T21:08:35Z DEBUG tokio_postgres::query] executing statement s43 with parameters: []
+[2022-03-21T21:08:35Z INFO  ats_monitoring::ram::db] Latest value of generator_faulty: PostgreSQL = 0, Skytable = 0
+[2022-03-21T21:08:37Z INFO  ats_monitoring] starting up modbus_ats_spawn
+[2022-03-21T21:08:37Z INFO  ats_monitoring::modbus_ats::avr_control] Связь ПЛК с модулем modbus_ats: Ok
+[2022-03-21T21:08:37Z INFO  ats_monitoring::modbus_ats::avr_control] Response IR mains_power_supply: [0]
+[2022-03-21T21:08:37Z INFO  ats_monitoring::modbus_ats::avr_control] Response IR start_generator: [0]
+[2022-03-21T21:08:37Z INFO  ats_monitoring::modbus_ats::avr_control] Response IR generator_faulty: [0]
+[2022-03-21T21:08:37Z INFO  ats_monitoring::modbus_ats::avr_control] Response IR generator_work: [0]
+[2022-03-21T21:08:37Z INFO  ats_monitoring::modbus_ats::avr_control] Response IR connection: [1]
+[2022-03-21T21:08:37Z INFO  ats_monitoring::modbus_ats::avr_control] Response IR load: [0]
+[2022-03-21T21:08:37Z DEBUG tokio_postgres::prepare] preparing query s44: INSERT INTO avr_control_insert (mains_power_supply, start_generator, generator_faulty, generator_work, connection) VALUES ($1, $2, $3, $4, $5)
+[2022-03-21T21:08:37Z DEBUG tokio_postgres::query] executing statement s44 with parameters: [0, 0, 0, 0, 1]
+[2022-03-21T21:08:37Z DEBUG tokio_postgres::prepare] preparing query s45: SELECT mains_power_supply, start_generator, generator_faulty, generator_work, connection FROM avr_control_insert ORDER BY mark DESC limit 1
+[2022-03-21T21:08:37Z DEBUG tokio_postgres::query] executing statement s45 with parameters: []
+[2022-03-21T21:08:37Z INFO  ats_monitoring::modbus_ats::avr_control] Считаны из ПЛК и записаны в табл. avr_control_insert следующие значения: mains_power_supply: 0, start_generator: 0, generator_faulty: 0, generator_work: 0, connection: 1
+[2022-03-21T21:08:37Z DEBUG tokio_postgres::prepare] preparing query s46: INSERT INTO нагрузка_на_генератор (нагрузка) VALUES ($1)
+[2022-03-21T21:08:37Z DEBUG tokio_postgres::query] executing statement s46 with parameters: [0]
+[2022-03-21T21:08:37Z DEBUG tokio_postgres::prepare] preparing query s47: SELECT нагрузка FROM нагрузка_на_генератор ORDER BY время_и_дата DESC limit 1
+[2022-03-21T21:08:37Z DEBUG tokio_postgres::query] executing statement s47 with parameters: []
+[2022-03-21T21:08:37Z INFO  ats_monitoring::modbus_ats::avr_control] Считаны из ПЛК и записаны в табл. нагрузка_на_генератор следующие значения: load: 0
+[2022-03-21T21:08:37Z INFO  ats_monitoring] starting up modbus_winter_garden_spawn
+[2022-03-21T21:08:37Z INFO  ats_monitoring::modbus_winter_garden::winter_garden] Связь ПЛК с модулем modbus_winter_garden: Ok
+[2022-03-21T21:08:38Z INFO  ats_monitoring::modbus_winter_garden::winter_garden] Response IR phyto_lighting_1: [0]
+[2022-03-21T21:08:38Z INFO  ats_monitoring::modbus_winter_garden::winter_garden] Response IR phyto_lighting_2: [0]
+[2022-03-21T21:08:38Z INFO  ats_monitoring::modbus_winter_garden::winter_garden] Response IR phyto_lighting_3: [0]
+[2022-03-21T21:08:38Z INFO  ats_monitoring::modbus_winter_garden::winter_garden] Response IR phyto_lighting_4: [0]
+[2022-03-21T21:08:38Z INFO  ats_monitoring::modbus_winter_garden::winter_garden] Response IR fan: [0]
+[2022-03-21T21:08:38Z INFO  ats_monitoring::modbus_winter_garden::winter_garden] Response IR automatic_watering_1: [0]
+[2022-03-21T21:08:38Z INFO  ats_monitoring::modbus_winter_garden::winter_garden] Response IR automatic_watering_2: [0]
+[2022-03-21T21:08:38Z INFO  ats_monitoring::modbus_winter_garden::winter_garden] Response IR automatic_watering_3: [0]
+[2022-03-21T21:08:38Z INFO  ats_monitoring::modbus_winter_garden::winter_garden] Response IR temperature_indoor: [21]
+[2022-03-21T21:08:38Z INFO  ats_monitoring::modbus_winter_garden::winter_garden] Response IR humidity_indoor: [19]
+[2022-03-21T21:08:38Z INFO  ats_monitoring::modbus_winter_garden::winter_garden] Response IR illumination_indoor: [12]
+[2022-03-21T21:08:38Z INFO  ats_monitoring::modbus_winter_garden::winter_garden] Response IR illumination_outdoor: [65365]
+[2022-03-21T21:08:38Z INFO  ats_monitoring] starting up power_supply_monitoring_spawn
+[2022-03-21T21:08:38Z INFO  ats_monitoring] starting up generator_monitoring_spawn
+[2022-03-21T21:08:38Z INFO  ats_monitoring] starting up write_data_to_ram_spawn
+[2022-03-21T21:08:38Z INFO  ats_monitoring::power_supply_monitoring::power_supply] Запрос наличия питания от электросети
+[2022-03-21T21:08:38Z INFO  ats_monitoring::generator_monitoring::generator] Запрос работоспособности генератора в режиме трансляции питания от электросети
+[2022-03-21T21:08:38Z INFO  ats_monitoring::power_supply_monitoring::power_supply] response from PostgreSQL: mains_power_supply = 2
+[2022-03-21T21:08:38Z INFO  ats_monitoring::generator_monitoring::generator] response from PostgreSQL: generator_faulty = 0
+[2022-03-21T21:08:38Z INFO  ats_monitoring::power_supply_monitoring::power_supply] Питание от электросети есть
+[2022-03-21T21:08:38Z INFO  ats_monitoring::generator_monitoring::generator] Генератор в режиме трансляции питания от электросети работает исправно
+[2022-03-21T21:08:38Z DEBUG tokio_postgres::prepare] preparing query s48: SELECT EXTRACT(epoch FROM mark) FROM avr_control_insert ORDER BY mark DESC limit 1
+[2022-03-21T21:08:38Z DEBUG tokio_postgres::query] executing statement s48 with parameters: []
+[2022-03-21T21:08:38Z DEBUG tokio_postgres::prepare] preparing query s49: INSERT INTO события_авр (событие) VALUES ($1)
+[2022-03-21T21:08:38Z DEBUG tokio_postgres::prepare] preparing query s50: INSERT INTO события_авр (событие) VALUES ($1)
+[2022-03-21T21:08:38Z DEBUG tokio_postgres::query] executing statement s49 with parameters: ["Питание от электросети есть."]
+[2022-03-21T21:08:38Z DEBUG tokio_postgres::query] executing statement s50 with parameters: ["Генератор в режиме трансляции питания от электросети работает исправно."]
+[2022-03-21T21:08:38Z INFO  ats_monitoring::ram::db] Time (unix) of the last entry in a table 'avr_control_insert': Postgres = 1647896917.55632, Skytable = 1647273642.663296
+[2022-03-21T21:08:38Z DEBUG tokio_postgres::prepare] preparing query s51: SELECT событие, время_и_дата FROM события_авр ORDER BY время_и_дата DESC limit 1
+[2022-03-21T21:08:38Z DEBUG tokio_postgres::prepare] preparing query s52: SELECT событие, время_и_дата FROM события_авр ORDER BY время_и_дата DESC limit 1
+[2022-03-21T21:08:38Z DEBUG tokio_postgres::query] executing statement s51 with parameters: []
+[2022-03-21T21:08:38Z DEBUG tokio_postgres::query] executing statement s52 with parameters: []
+[2022-03-21T21:08:38Z INFO  ats_monitoring::psql::postgresql] Запись в табл. события_авр: Генератор в режиме трансляции питания от электросети работает исправно.
+[2022-03-21T21:08:38Z INFO  ats_monitoring::psql::postgresql] Запись в табл. события_авр: Генератор в режиме трансляции питания от электросети работает исправно.
+[2022-03-21T21:08:38Z DEBUG tokio_postgres::prepare] preparing query s53: SELECT EXTRACT(epoch FROM now()) FROM avr_control_insert ORDER BY now() DESC limit 1
+[2022-03-21T21:08:38Z DEBUG tokio_postgres::query] executing statement s53 with parameters: []
+[2022-03-21T21:08:38Z DEBUG tokio_postgres::prepare] preparing query s54: INSERT INTO журнал_работы_приложения (событие) VALUES ($1)
+[2022-03-21T21:08:38Z DEBUG tokio_postgres::prepare] preparing query s55: INSERT INTO журнал_работы_приложения (событие) VALUES ($1)
+[2022-03-21T21:08:38Z DEBUG tokio_postgres::query] executing statement s54 with parameters: ["Питание от электросети есть."]
+[2022-03-21T21:08:38Z DEBUG tokio_postgres::query] executing statement s55 with parameters: ["Генератор в режиме трансляции питания от электросети работает исправно."]
+[2022-03-21T21:08:38Z INFO  ats_monitoring::ram::db] Time (unix) now: PostgreSQL = 1647896918.93817, Skytable = 1647273645.505613
+[2022-03-21T21:08:38Z DEBUG tokio_postgres::prepare] preparing query s56: SELECT событие, время_и_дата FROM журнал_работы_приложения ORDER BY время_и_дата DESC limit 1
+[2022-03-21T21:08:38Z DEBUG tokio_postgres::query] executing statement s56 with parameters: []
+[2022-03-21T21:08:38Z DEBUG tokio_postgres::prepare] preparing query s57: SELECT событие, время_и_дата FROM журнал_работы_приложения ORDER BY время_и_дата DESC limit 1
+[2022-03-21T21:08:38Z DEBUG tokio_postgres::query] executing statement s57 with parameters: []
+[2022-03-21T21:08:38Z INFO  ats_monitoring::psql::postgresql] Запись в табл. журнал_работы_приложения: Генератор в режиме трансляции питания от электросети работает исправно.
+[2022-03-21T21:08:38Z INFO  ats_monitoring::psql::postgresql] Запись в табл. журнал_работы_приложения: Генератор в режиме трансляции питания от электросети работает исправно.
+[2022-03-21T21:08:38Z DEBUG tokio_postgres::prepare] preparing query s58: SELECT mark, connection FROM avr_control_insert ORDER BY mark DESC limit 1
+[2022-03-21T21:08:38Z DEBUG tokio_postgres::query] executing statement s58 with parameters: []
+[2022-03-21T21:08:38Z INFO  ats_monitoring::ram::db] Latest value of plc_connect: PostgreSQL = 1, Skytable = 1
+[2022-03-21T21:08:38Z DEBUG tokio_postgres::prepare] preparing query s59: SELECT mark, generator_faulty FROM avr_control_insert ORDER BY mark DESC limit 1
+[2022-03-21T21:08:38Z DEBUG tokio_postgres::query] executing statement s59 with parameters: []
+[2022-03-21T21:08:38Z INFO  ats_monitoring::ram::db] Latest value of generator_faulty: PostgreSQL = 0, Skytable = 0

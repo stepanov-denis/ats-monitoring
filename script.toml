@@ -11,7 +11,7 @@ script = "cargo clippy"
 script = "cargo deb"
 
 [tasks.run]
-script = "cd /home/stepanov/projects/ats-monitoring/ && RUST_LOG=debug cargo run --release > log.txt"
+script = "RUST_LOG=debug cargo run --release > log.txt"
 
 [tasks.app]
 dependencies = [
