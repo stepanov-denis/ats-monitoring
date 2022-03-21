@@ -1,0 +1,25 @@
+[tasks.deb_install]
+script = "cargo install cargo-deb"
+
+[tasks.fmt_run]
+script = "cargo fmt"
+
+[tasks.clippy_run]
+script = "cargo clippy"
+
+[tasks.deb_run]
+script = "cargo deb"
+
+[tasks.run]
+script = "cd /home/stepanov/projects/ats-monitoring/ && RUST_LOG=debug cargo run --release > log.txt"
+
+[tasks.app]
+dependencies = [
+    "deb_install",
+    "fmt_run",
+    "clippy_run",
+    "test",
+    "build",
+    "deb_run",
+    "run"
+]

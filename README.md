@@ -84,6 +84,10 @@ $ RUST_LOG=trace cargo run --release
 ```
 $ RUST_LOG=debug cargo run --release > log.txt
 ```
+* For run with cargo-make
+```
+$ cargo make --makefile script.toml app
+``` 
 ## Use
 * Сreate and save the report in the form you need in Orange Data Mining
 * Check your phone for SMS messages from ClickSend
