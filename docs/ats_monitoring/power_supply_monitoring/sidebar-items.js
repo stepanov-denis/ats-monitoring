@@ -1,0 +1,1 @@
+initSidebarItems({"mod":[["power_supply",""]]});

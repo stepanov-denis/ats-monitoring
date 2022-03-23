@@ -1,0 +1,1 @@
+initSidebarItems({"fn":[["avr_control_insert","Communication session with the PLC via Modbus TCP."],["reading_input_registers","Reading variable values from the PLC “trim5” via Modbus TCP and writing the obtained values to the PostgreSQL DBMS."]]});
