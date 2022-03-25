@@ -13,15 +13,6 @@ script = "cargo test"
 [tasks.run_build]
 script = "cargo build --release"
 
-[tasks.doc]
-script = "cargo doc --no-deps"
-
-[tasks.copy_docs]
-script = [
-    "mkdir -p ./docs",
-    "mv ./target/doc/* ./docs"
-]
-
 [tasks.run]
 script = "RUST_LOG=debug cargo run --release > log.txt"
 
@@ -32,7 +23,5 @@ dependencies = [
     "run_clippy",
     "test",
     "run_build",
-    "doc",
-    "copy_docs",
     "run"
 ]
