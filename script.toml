@@ -4,9 +4,6 @@ script = "cargo clean"
 [tasks.run_fmt]
 script = "cargo fmt"
 
-[tasks.run_clippy]
-script = "cargo clippy"
-
 [tasks.run_test]
 script = "cargo test"
 
@@ -20,8 +17,7 @@ script = "RUST_LOG=debug cargo run --release > log.txt"
 dependencies = [
     "run_clean",
     "run_fmt",
-    "run_clippy",
-    "test",
+    "run_test",
     "run_build",
     "run"
 ]

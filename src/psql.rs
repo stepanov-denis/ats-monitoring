@@ -3,7 +3,7 @@ pub mod postgresql {
 
     pub fn db_connect() -> String {
         let string_connection =
-            String::from("postgresql://stepanov:postgres@localhost:5433/postgres");
+            String::from("postgresql://postgres:mysecretpassword@postgresql:5432/postgres");
         string_connection
     }
 

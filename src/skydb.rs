@@ -5,14 +5,14 @@ pub mod skytable {
 
     /// Record f64 to skyd
     pub fn set_f64_skydb(key: &str, value: &str) -> Result<(), error::Error> {
-        let mut con = Connection::new("127.0.0.1", 2003)?;
+        let mut con = Connection::new("skytable", 2003)?;
         con.set(key, value)?;
         Ok(())
     }
 
     /// Write f64 from skyd
     pub fn get_f64_skydb(key: &str) -> Option<String> {
-        let mut con = Connection::new("127.0.0.1", 2003).ok()?;
+        let mut con = Connection::new("skytable", 2003).ok()?;
         let x: String = con.get(key).ok()?;
         if x.parse::<f64>().is_ok() {
             Some(x)
@@ -23,14 +23,14 @@ pub mod skytable {
 
     /// Record i32 to skyd
     pub fn set_i32_skydb(key: &str, value: &str) -> Result<(), error::Error> {
-        let mut con = Connection::new("127.0.0.1", 2003)?;
+        let mut con = Connection::new("skytable", 2003)?;
         con.set(key, value)?;
         Ok(())
     }
 
     /// Write i32 from skyd
     pub fn get_i32_skydb(key: &str) -> Option<String> {
-        let mut con = Connection::new("127.0.0.1", 2003).ok()?;
+        let mut con = Connection::new("skytable", 2003).ok()?;
         let x: String = con.get(key).ok()?;
         if x.parse::<i32>().is_ok() {
             Some(x)
