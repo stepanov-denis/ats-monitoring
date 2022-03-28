@@ -3,7 +3,7 @@ services:
   app:
     image: rust:latest
     restart: always
-    command: sh -c "RUST_LOG=debug cargo run --release"
+    command: sh -c "RUST_LOG=debug cargo run --release > log.txt"
     ports:
       - "5432:5432"
       - "2003:2003"
