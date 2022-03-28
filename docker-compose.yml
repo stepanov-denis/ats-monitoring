@@ -21,6 +21,8 @@ services:
   postgresql:
     image: postgres:13.6
     restart: always
+    ports:
+      - "6543:5432"
     volumes:
       - psql-db:/var/lib/postgresql/data
     environment:
