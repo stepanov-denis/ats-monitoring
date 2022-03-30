@@ -4,9 +4,9 @@ services:
     image: rust:latest
     restart: always
     command: sh -c "RUST_LOG=debug cargo run --release > log.txt"
-    ports:
-      - "5432:5432"
-      - "2003:2003"
+    # ports:
+    #   - "5432:5432"
+    #   - "2003:2003"
     working_dir: /app
     volumes:
       - ./:/app
@@ -22,7 +22,7 @@ services:
     image: postgres:13.6
     restart: always
     ports:
-      - "6543:5432"
+      - "5434:5432"
     volumes:
       - psql-db:/var/lib/postgresql/data
     environment:

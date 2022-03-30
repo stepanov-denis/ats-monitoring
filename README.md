@@ -9,7 +9,7 @@ $ docker-compose up -d
 ```
 * Look at the logs
 ```
-$ docker-compose -f logs
+$ docker-compose logs -f
 ```
 * Look at the logs for app or skytable or postgresql
 ```
