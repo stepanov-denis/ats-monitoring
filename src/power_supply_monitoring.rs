@@ -16,7 +16,7 @@ pub mod power_supply {
     /// Additional spawn - the function of determining the serviceability/malfunction of the generator
     /// and notifying about it by SMS using the gateway API.
     pub fn ats_state() -> Result<()> {
-        if crate::skydb::skytable::unix_sql() + 5.00 > crate::skydb::skytable::unix_sql_now() {
+        if crate::skydb::skytable::unix_sql() + 5.00 >= crate::skydb::skytable::unix_sql_now() {
             // Сhecking the connection of the OPC server with the plc.
             if crate::skydb::skytable::plc_connect() == 1 {
                 // Request for the presence of a power failure from the power grid.
@@ -32,7 +32,7 @@ pub mod power_supply {
                     crate::generator_monitoring::generator::timer_for_delay(90);
                     // Checking the connection of the PostgreSQL DBMS with the OPC server.
                     if crate::skydb::skytable::unix_sql() + 5.00
-                        > crate::skydb::skytable::unix_sql_now()
+                        >= crate::skydb::skytable::unix_sql_now()
                     {
                         // Сhecking the connection of the OPC server with the plc.
                         if crate::skydb::skytable::plc_connect() == 1 {
@@ -96,7 +96,7 @@ pub mod power_supply {
                                     'inner: loop {
                                         // Checking the connection of the PostgreSQL DBMS with the OPC server.
                                         if crate::skydb::skytable::unix_sql() + 5.00
-                                            > crate::skydb::skytable::unix_sql_now()
+                                            >= crate::skydb::skytable::unix_sql_now()
                                         {
                                             // Сhecking the connection of the OPC server with the plc.
                                             if crate::skydb::skytable::plc_connect() == 1 {
