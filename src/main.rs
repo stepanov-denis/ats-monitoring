@@ -30,6 +30,7 @@ fn main() -> Result<(), Error> {
     psql::postgresql::create_winter_garden_table();
     psql::postgresql::create_generator_load_table();
     psql::postgresql::create_avr_events_table();
+    skydb::skytable::set_skyd();
 
     let _write_data_to_ram_spawn = thread::spawn(|| loop {
         info!("starting up write_data_to_ram_spawn");

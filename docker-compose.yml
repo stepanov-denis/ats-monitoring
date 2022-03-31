@@ -1,19 +1,18 @@
 version: "3.7"
 services:
   app:
-    image: rust:latest
+    image: rust:1.59.0
     restart: always
     command: sh -c "RUST_LOG=debug cargo run --release > log.txt"
-    # ports:
-    #   - "5432:5432"
-    #   - "2003:2003"
     working_dir: /app
     volumes:
       - ./:/app
 
   skytable:
-    image: skytable/sdb:latest
+    image: skytable/sdb
     restart: always
+    ports:
+     - "2003:2003"
     working_dir: /skytable-db
     volumes:
       - skytable-db:/skytable-db

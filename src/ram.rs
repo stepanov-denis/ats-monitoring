@@ -36,7 +36,10 @@ pub mod db {
             &[],
         )? {
             let unix_from_sql = UnixFromSql { time: row.get(0) };
-            crate::skydb::skytable::set_f64_skydb("unix_from_sql", &unix_from_sql.time.to_string());
+            crate::skydb::skytable::update_f64_skydb(
+                "unix_from_sql",
+                &unix_from_sql.time.to_string(),
+            );
             info!(
                 "Time (unix) of the last entry in a table 'avr_control_insert': Postgres = {}, Skytable = {}",
                 unix_from_sql.time, crate::skydb::skytable::unix_sql()
@@ -53,7 +56,7 @@ pub mod db {
             &[],
         )? {
             let unix_from_sql_now = UnixFromSqlNow { time: row.get(0) };
-            crate::skydb::skytable::set_f64_skydb(
+            crate::skydb::skytable::update_f64_skydb(
                 "unix_from_sql_now",
                 &unix_from_sql_now.time.to_string(),
             );
@@ -76,7 +79,7 @@ pub mod db {
             let plc_connect = PlcConnect {
                 connection: row.get(1),
             };
-            crate::skydb::skytable::set_i32_skydb(
+            crate::skydb::skytable::update_i32_skydb(
                 "plc_connect",
                 &plc_connect.connection.to_string(),
             );
@@ -99,7 +102,7 @@ pub mod db {
             let faulty = &Faulty {
                 generator_faulty: row.get(1),
             };
-            crate::skydb::skytable::set_i32_skydb(
+            crate::skydb::skytable::update_i32_skydb(
                 "generator_faulty",
                 &faulty.generator_faulty.to_string(),
             );
@@ -125,7 +128,7 @@ pub mod db {
                     start_generator: row.get(1),
                     generator_work: row.get(2),
                 };
-                crate::skydb::skytable::set_i32_skydb(
+                crate::skydb::skytable::update_i32_skydb(
                     "mains_power_supply",
                     &powersupply.mains_power_supply.to_string(),
                 );
@@ -133,7 +136,7 @@ pub mod db {
                     "Latest value of mains_power_supply: PostgreSQL = {}, Skytable = {}",
                     powersupply.mains_power_supply, crate::skydb::skytable::mains_power_supply()
                 );
-                crate::skydb::skytable::set_i32_skydb(
+                crate::skydb::skytable::update_i32_skydb(
                     "start_generator",
                     &powersupply.start_generator.to_string(),
                 );
@@ -141,7 +144,7 @@ pub mod db {
                     "Latest value of start_generator: PostgreSQL = {}, Skytable = {}",
                     powersupply.start_generator, crate::skydb::skytable::start_generator()
                 );
-                crate::skydb::skytable::set_i32_skydb(
+                crate::skydb::skytable::update_i32_skydb(
                     "generator_work",
                     &powersupply.generator_work.to_string(),
                 );

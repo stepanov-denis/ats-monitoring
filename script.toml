@@ -10,7 +10,7 @@ script = "cargo test"
 [tasks.run_build]
 script = "cargo build --release"
 
-[tasks.run]
+[tasks.run_app]
 script = "RUST_LOG=debug cargo run --release > log.txt"
 
 [tasks.app]
@@ -19,5 +19,5 @@ dependencies = [
     "run_fmt",
     "run_test",
     "run_build",
-    "run"
+    "run_app"
 ]

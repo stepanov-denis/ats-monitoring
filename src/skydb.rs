@@ -3,16 +3,28 @@ pub mod skytable {
     use skytable::error;
     use skytable::sync::Connection;
 
+    pub fn skyd_connect() -> String {
+        let string_connection = String::from("skytable");
+        string_connection
+    }
+
     /// Record f64 to skyd
     pub fn set_f64_skydb(key: &str, value: &str) -> Result<(), error::Error> {
-        let mut con = Connection::new("skytable", 2003)?;
+        let mut con = Connection::new(&skyd_connect(), 2003)?;
         con.set(key, value)?;
+        Ok(())
+    }
+
+    /// Update f64 to skyd
+    pub fn update_f64_skydb(key: &str, value: &str) -> Result<(), error::Error> {
+        let mut con = Connection::new(&skyd_connect(), 2003)?;
+        con.update(key, value)?;
         Ok(())
     }
 
     /// Write f64 from skyd
     pub fn get_f64_skydb(key: &str) -> Option<String> {
-        let mut con = Connection::new("skytable", 2003).ok()?;
+        let mut con = Connection::new(&skyd_connect(), 2003).ok()?;
         let x: String = con.get(key).ok()?;
         if x.parse::<f64>().is_ok() {
             Some(x)
@@ -23,14 +35,21 @@ pub mod skytable {
 
     /// Record i32 to skyd
     pub fn set_i32_skydb(key: &str, value: &str) -> Result<(), error::Error> {
-        let mut con = Connection::new("skytable", 2003)?;
+        let mut con = Connection::new(&skyd_connect(), 2003)?;
         con.set(key, value)?;
+        Ok(())
+    }
+
+    /// Update i32 to skyd
+    pub fn update_i32_skydb(key: &str, value: &str) -> Result<(), error::Error> {
+        let mut con = Connection::new(&skyd_connect(), 2003)?;
+        con.update(key, value)?;
         Ok(())
     }
 
     /// Write i32 from skyd
     pub fn get_i32_skydb(key: &str) -> Option<String> {
-        let mut con = Connection::new("skytable", 2003).ok()?;
+        let mut con = Connection::new(&skyd_connect(), 2003).ok()?;
         let x: String = con.get(key).ok()?;
         if x.parse::<i32>().is_ok() {
             Some(x)
@@ -93,5 +112,15 @@ pub mod skytable {
         let generator_work_str = generator_work.get_or_insert("2".to_string());
         let generator_work_i32 = generator_work_str.parse::<i32>().unwrap();
         generator_work_i32
+    }
+
+    pub fn set_skyd() {
+        set_f64_skydb("unix_from_sql", &0.00.to_string());
+        set_f64_skydb("unix_from_sql_now", &0.00.to_string());
+        set_i32_skydb("plc_connect", &0.to_string());
+        set_i32_skydb("generator_faulty", &0.to_string());
+        set_i32_skydb("mains_power_supply", &0.to_string());
+        set_i32_skydb("start_generator", &0.to_string());
+        set_i32_skydb("generator_work", &0.to_string());
     }
 }
