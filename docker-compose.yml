@@ -9,13 +9,8 @@ services:
       - ./:/app
 
   skytable:
-    image: skytable/sdb
+    image: stepanovdenis/skytable
     restart: always
-    ports:
-     - "2003:2003"
-    working_dir: /skytable-db
-    volumes:
-      - skytable-db:/skytable-db
 
   postgresql:
     image: postgres:13.6
