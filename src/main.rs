@@ -7,6 +7,7 @@ use env_logger::{Builder, Target};
 use std::io::Error;
 use std::thread;
 use std::time::Duration;
+mod alerts;
 mod generator_monitoring;
 mod modbus_ats;
 mod modbus_winter_garden;
@@ -14,7 +15,7 @@ mod power_supply_monitoring;
 mod psql;
 mod ram;
 mod skydb;
-mod sms;
+mod telegram;
 
 /// Application workflows.
 fn main() -> Result<(), Error> {
@@ -39,6 +40,12 @@ fn main() -> Result<(), Error> {
         crate::ram::db::write_to_ram_plc_connect();
         crate::ram::db::write_to_ram_generator_faulty();
         thread::sleep(Duration::from_millis(3000));
+    });
+
+    let _ats_monitoring_bot = thread::spawn(|| loop {
+        info!("starting up ats_monitoring_bot");
+        telegram::bot::bot_commands();
+        thread::sleep(Duration::from_millis(1))
     });
 
     let _modbus_ats_spawn = thread::spawn(|| loop {

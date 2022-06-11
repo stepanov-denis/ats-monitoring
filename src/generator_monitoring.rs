@@ -4,6 +4,7 @@ pub mod generator {
     use error_chain::error_chain;
     use online::sync::check;
     use std::sync::mpsc::channel;
+    use teloxide::prelude::*;
 
     error_chain! {
         foreign_links {
@@ -44,8 +45,9 @@ pub mod generator {
                     if check(None).is_ok() {
                         info!("Выполнение http запроса поставщику услуг SMS оповещения");
                         // Executing an http get request to the SMS gateway provider.
-                        let resp =
-                            reqwest::blocking::get(crate::sms::gateway::sms_generator_work_err())?;
+                        let resp = reqwest::blocking::get(
+                            crate::alerts::gateway::sms_generator_work_err(),
+                        )?;
                         if resp.status().is_success() {
                             info!("Http запрос выполнен успешно");
                             info!("Отправлено SMS сообщение: /Авария! Генератор неисправен! Срочно произведите сервисные работы!");
@@ -73,7 +75,7 @@ pub mod generator {
                                                 info!("Выполнение http запроса поставщику услуг SMS оповещения");
                                                 // Executing an http get request to the SMS gateway provider.
                                                 let resp = reqwest::blocking::get(
-                                                    crate::sms::gateway::sms_generator_work_restored(),
+                                                    crate::alerts::gateway::sms_generator_work_restored(),
                                                 )?;
                                                 if resp.status().is_success() {
                                                     info!("Http запрос выполнен успешно");
