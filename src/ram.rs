@@ -155,4 +155,61 @@ pub mod db {
             }
         Ok(())
     }
+
+    pub fn write_to_ram_winter_garden_data_sql() -> Result<(), PostgresError> {
+        let mut client = Client::connect(&crate::psql::postgresql::db_connect(), NoTls)?;
+        for row in client.query("SELECT фитоосвещение_1, фитоосвещение_2, фитоосвещение_3, фитоосвещение_4, вентилятор, автополив_1, автополив_2, автополив_3, температура, влажность, освещенность_в_помещении, освещенность_на_улице FROM зимний_сад ORDER BY время_и_дата DESC limit 1", &[]).unwrap() {
+            let phyto_lighting_1: i32 = row.get(0);
+            let phyto_lighting_2: i32 = row.get(1);
+            let phyto_lighting_3: i32 = row.get(2);
+            let phyto_lighting_4: i32 = row.get(3);
+            let fan: i32 = row.get(4);
+            let automatic_watering_1: i32 = row.get(5);
+            let automatic_watering_2: i32 = row.get(6);
+            let automatic_watering_3: i32 = row.get(7);
+            let temperature_indoor: i32 = row.get(8);
+            let humidity_indoor: i32 = row.get(9);
+            let illumination_indoor: i32 = row.get(10);
+            let illumination_outdoor: i32 = row.get(11);
+
+            crate::skydb::skytable::update_i32_skydb("phyto_lighting_1", &phyto_lighting_1.to_string());
+            crate::skydb::skytable::update_i32_skydb("phyto_lighting_2", &phyto_lighting_2.to_string());
+            crate::skydb::skytable::update_i32_skydb("phyto_lighting_3", &phyto_lighting_3.to_string());
+            crate::skydb::skytable::update_i32_skydb("phyto_lighting_4", &phyto_lighting_4.to_string());
+            crate::skydb::skytable::update_i32_skydb("fan", &fan.to_string());
+            crate::skydb::skytable::update_i32_skydb("automatic_watering_1", &automatic_watering_1.to_string());
+            crate::skydb::skytable::update_i32_skydb("automatic_watering_2", &automatic_watering_2.to_string());
+            crate::skydb::skytable::update_i32_skydb("automatic_watering_3", &automatic_watering_3.to_string());
+            crate::skydb::skytable::update_i32_skydb("temperature_indoor", &temperature_indoor.to_string());
+            crate::skydb::skytable::update_i32_skydb("humidity_indoor", &humidity_indoor.to_string());
+            crate::skydb::skytable::update_i32_skydb("illumination_indoor", &illumination_indoor.to_string());
+            crate::skydb::skytable::update_i32_skydb("illumination_outdoor", &illumination_outdoor.to_string());
+
+            info!("Latest value of phyto_lighting_1: {}\n
+            phyto_lighting_2: {}\n
+            phyto_lighting_3: {}\n
+            phyto_lighting_4: {}\n
+            fan: {}\n
+            automatic_watering_1: {}\n
+            automatic_watering_2: {}\n
+            automatic_watering_3: {}\n
+            temperature_indoor: {}\n
+            humidity_indoor: {}\n
+            illumination_indoor: {}\n
+            illumination_outndoor: {}",
+            phyto_lighting_1,
+            phyto_lighting_2,
+            phyto_lighting_3,
+            phyto_lighting_4,
+            fan,
+            automatic_watering_1,
+            automatic_watering_2,
+            automatic_watering_3,
+            temperature_indoor,
+            humidity_indoor,
+            illumination_indoor,
+            illumination_outdoor);
+        }
+        Ok(())
+    }
 }

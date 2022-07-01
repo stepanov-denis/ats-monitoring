@@ -39,6 +39,7 @@ fn main() -> Result<(), Error> {
         crate::ram::db::write_to_ram_unix_from_sql_now();
         crate::ram::db::write_to_ram_plc_connect();
         crate::ram::db::write_to_ram_generator_faulty();
+        crate::ram::db::write_to_ram_winter_garden_data_sql();
         thread::sleep(Duration::from_millis(3000));
     });
 

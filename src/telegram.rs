@@ -1,7 +1,7 @@
 pub mod bot {
-    use teloxide::{prelude::*, utils::command::BotCommands};
-
+    use postgres::{Client, Error as PostgresError, NoTls};
     use std::error::Error;
+    use teloxide::{prelude::*, utils::command::BotCommands};
 
     #[tokio::main]
     pub async fn bot_commands() {
@@ -16,9 +16,7 @@ pub mod bot {
         description = "Описание команд управления ботом:"
     )]
     enum Command {
-        #[command(
-            description = "Вот что делает этот бот:\nОтправляет уведомления о сбоях в работе АВР.\nОтправляет мгновенные значения систем мониторинга зимнего сада и АВР.\nДля получения списка команд введите команду: /help"
-        )]
+        #[command(description = "Подписаться на уведомления событий АВР.")]
         Start,
         #[command(description = "Справочная информация.")]
         Help,
@@ -43,10 +41,61 @@ pub mod bot {
                     .await?
             }
             Command::WinterGarden => {
+                let phyto_lighting_1 = crate::skydb::skytable::get_i32_skydb("phyto_lighting_1");
+                let phyto_lighting_2 = crate::skydb::skytable::get_i32_skydb("phyto_lighting_2");
+                let phyto_lighting_3 = crate::skydb::skytable::get_i32_skydb("phyto_lighting_3");
+                let phyto_lighting_4 = crate::skydb::skytable::get_i32_skydb("phyto_lighting_4");
+                let fan = crate::skydb::skytable::get_i32_skydb("fan");
+                let automatic_watering_1 = crate::skydb::skytable::get_i32_skydb("automatic_watering_1");
+                let automatic_watering_2 = crate::skydb::skytable::get_i32_skydb("automatic_watering_2");
+                let automatic_watering_3 = crate::skydb::skytable::get_i32_skydb("automatic_watering_3");
+                let temperature_indoor = crate::skydb::skytable::get_i32_skydb("temperature_indoor");
+                let humidity_indoor = crate::skydb::skytable::get_i32_skydb("humidity_indoor");
+                let illumination_indoor = crate::skydb::skytable::get_i32_skydb("illumination_indoor");
+                let illumination_outdoor = crate::skydb::skytable::get_i32_skydb("illumination_outdoor");
+                let mut connection = "".to_string();
+                if crate::skydb::skytable::unix_sql() + 5.00 >= crate::skydb::skytable::unix_sql_now() {
+                    if crate::skydb::skytable::plc_connect() == 1 {
+                        connection = "yes".to_string();
+                    } else {
+                        connection = "Ошибка! Связь Modbus клиента с ПЛК отсутствует!".to_string();
+                    }
+                } else {
+                    connection = "Ошибка! Связь СУБД PostgreSQL с Modbus клиентом отсутствует!".to_string();
+                }
+                let winter_garden_data = format!("Connection:\n
+                {}\n
+                The latest data from winter garden:\n
+                > phyto_lighting_1: {}\n
+                > phyto_lighting_2: {}\n
+                > phyto_lighting_3: {}\n
+                > phyto_lighting_4: {}\n
+                > fan: {}\n
+                > automatic_watering_1: {}\n
+                > automatic_watering_2: {}\n
+                > automatic_watering_3: {}\n
+                > temperature_indoor: {}\n
+                > humidity_indoor: {}\n
+                > illumination_indoor: {}\n
+                > illumination_outdoor: {}\n
+                ",
+                connection,
+                phyto_lighting_1.unwrap(),
+                phyto_lighting_2.unwrap(),
+                phyto_lighting_3.unwrap(),
+                phyto_lighting_4.unwrap(),
+                fan.unwrap(),
+                automatic_watering_1.unwrap(),
+                automatic_watering_2.unwrap(),
+                automatic_watering_3.unwrap(),
+                temperature_indoor.unwrap(),
+                humidity_indoor.unwrap(),
+                illumination_indoor.unwrap(),
+                illumination_outdoor.unwrap());
                 bot.send_message(
                     message.chat.id,
-                    format!("This is monitoring of winter garden."),
-                )
+                    winter_garden_data
+                    )
                 .await?
             }
             Command::Ats => {
