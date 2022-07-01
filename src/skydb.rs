@@ -62,56 +62,49 @@ pub mod skytable {
     pub fn unix_sql() -> f64 {
         let mut unix_from_sql = get_f64_skydb("unix_from_sql");
         let unix_from_sql_str = unix_from_sql.get_or_insert("0".to_string());
-        let unix_from_sql_f64 = unix_from_sql_str.parse::<f64>().unwrap();
-        unix_from_sql_f64
+        unix_from_sql_str.parse::<f64>().unwrap()
     }
 
     /// Value of unix time now
     pub fn unix_sql_now() -> f64 {
         let mut unix_from_sql_now = get_f64_skydb("unix_from_sql_now");
         let unix_from_sql_now_str = unix_from_sql_now.get_or_insert("1000".to_string());
-        let unix_from_sql_now_f64 = unix_from_sql_now_str.parse::<f64>().unwrap();
-        unix_from_sql_now_f64
+        unix_from_sql_now_str.parse::<f64>().unwrap()
     }
 
     /// PLC connection status
     pub fn plc_connect() -> i32 {
         let mut plc_connect = get_i32_skydb("plc_connect");
         let plc_connect_str = plc_connect.get_or_insert("2".to_string());
-        let plc_connect_i32 = plc_connect_str.parse::<i32>().unwrap();
-        plc_connect_i32
+        plc_connect_str.parse::<i32>().unwrap()
     }
 
     /// Generator fault status
     pub fn generator_faulty() -> i32 {
         let mut generator_faulty = get_i32_skydb("generator_faulty");
         let generator_faulty_str = generator_faulty.get_or_insert("2".to_string());
-        let generator_faulty_i32 = generator_faulty_str.parse::<i32>().unwrap();
-        generator_faulty_i32
+        generator_faulty_str.parse::<i32>().unwrap()
     }
 
     /// Mains power status
     pub fn mains_power_supply() -> i32 {
         let mut mains_power_supply = get_i32_skydb("mains_power_supply");
         let mains_power_supply_str = mains_power_supply.get_or_insert("2".to_string());
-        let mains_power_supply_i32 = mains_power_supply_str.parse::<i32>().unwrap();
-        mains_power_supply_i32
+        mains_power_supply_str.parse::<i32>().unwrap()
     }
 
     /// Start generator status
     pub fn start_generator() -> i32 {
         let mut start_generator = get_i32_skydb("start_generator");
         let start_generator_str = start_generator.get_or_insert("2".to_string());
-        let start_generator_i32 = start_generator_str.parse::<i32>().unwrap();
-        start_generator_i32
+        start_generator_str.parse::<i32>().unwrap()
     }
 
     /// Generator work status
     pub fn generator_work() -> i32 {
         let mut generator_work = get_i32_skydb("generator_work");
         let generator_work_str = generator_work.get_or_insert("2".to_string());
-        let generator_work_i32 = generator_work_str.parse::<i32>().unwrap();
-        generator_work_i32
+        generator_work_str.parse::<i32>().unwrap()
     }
 
     pub fn set_skyd() {

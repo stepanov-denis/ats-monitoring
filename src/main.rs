@@ -4,9 +4,9 @@ extern crate chrono;
 extern crate env_logger;
 extern crate timer;
 use env_logger::{Builder, Target};
-use std::io::Error;
 use std::thread;
 use std::time::Duration;
+use std::error;
 mod alerts;
 mod generator_monitoring;
 mod modbus_ats;
@@ -18,7 +18,7 @@ mod skydb;
 mod telegram;
 
 /// Application workflows.
-fn main() -> Result<(), Error> {
+fn main() -> Result<(), Box<dyn error::Error + Send + Sync>> {
     let mut builder = Builder::from_default_env();
     builder.target(Target::Stdout);
     builder.init();

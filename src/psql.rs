@@ -1,10 +1,9 @@
 pub mod postgresql {
     use postgres::{Client, Error as PostgresError, NoTls};
+    use std::error::Error;
 
     pub fn db_connect() -> String {
-        let string_connection =
-            String::from("postgresql://postgres:mysecretpassword@postgresql:5432/postgres");
-        string_connection
+            String::from("postgresql://postgres:mysecretpassword@postgresql:5432/postgres")
     }
 
     /// Set default transaction isolation level for database

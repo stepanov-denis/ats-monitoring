@@ -1,21 +1,22 @@
 pub mod power_supply {
     extern crate chrono;
     extern crate timer;
-    use error_chain::error_chain;
+    // use error_chain::error_chain;
+    use std::error;
     use online::sync::check;
 
-    error_chain! {
-        foreign_links {
-            Io(std::io::Error);
-            HttpRequest(reqwest::Error);
-        }
-    }
+    // error_chain! {
+    //     foreign_links {
+    //         Io(std::io::Error);
+    //         HttpRequest(reqwest::Error);
+    //     }
+    // }
 
     /// Main spawn - the function for detecting a power failure from the mains/restoring power from the mains,
     /// successful start of the generator, failure of the generator start, and notifications about these events.
     /// Additional spawn - the function of determining the serviceability/malfunction of the generator
     /// and notifying about it by SMS using the gateway API.
-    pub fn ats_state() -> Result<()> {
+    pub fn ats_state() -> Result<(), Box<dyn error::Error + Send + Sync>> {
         if crate::skydb::skytable::unix_sql() + 5.00 >= crate::skydb::skytable::unix_sql_now() {
             // Сhecking the connection of the OPC server with the plc.
             if crate::skydb::skytable::plc_connect() == 1 {
