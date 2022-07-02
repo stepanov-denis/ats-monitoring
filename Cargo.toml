@@ -1,9 +1,9 @@
 [package]
 name = "ats-monitoring"
-version = "1.2.6"
+version = "1.3.0"
 edition = "2021"
 authors = ["Stepanov Denis <stepanov.d.m@yandex.ru>"]
-description = "An application for sending notifications via the SMS gateway API and recording events in the PostgreSQL DBMS about the status of the ATS (city power grid, generator, UPS)."
+description = "Application for monitoring and reporting of engineering systems, sending notifications via Telegram-bot, API SMS gateway."
 license = "Apache-2.0"
 repository = "https://github.com/stepanov-denis/ats-monitoring/"
 keywords = ["scada", "notifications", "smart", "ats"]
