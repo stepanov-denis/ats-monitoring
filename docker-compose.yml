@@ -1,7 +1,7 @@
 version: "3.7"
 services:
   app:
-    image: rust:1.59.0
+    image: rust:1.61.0
     restart: always
     command: sh -c "export TELOXIDE_TOKEN=5471110323:AAGa_aMMdecYFApf5B9Z9wgiM1eWvZmGXPI && RUST_LOG=debug cargo run --release"
     working_dir: /app

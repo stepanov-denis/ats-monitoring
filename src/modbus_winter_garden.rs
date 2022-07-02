@@ -131,7 +131,7 @@ pub mod winter_garden {
     }
 
     /// Communication session with the PLC via Modbus TCP.
-    pub fn winter_garden_insert() {
+    pub fn winter_garden_insert() -> Result<(), Error> {
         let mut client = TcpClient::new("10.54.52.201:502");
         let result = client.connect();
         match result {
@@ -149,5 +149,6 @@ pub mod winter_garden {
                 client.disconnect();
             }
         }
+        Ok(())
     }
 }

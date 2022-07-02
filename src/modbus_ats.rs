@@ -85,7 +85,7 @@ pub mod avr_control {
     }
 
     /// Communication session with the PLC via Modbus TCP.
-    pub fn avr_control_insert() {
+    pub fn avr_control_insert() -> Result<(), Error> {
         let mut client = TcpClient::new("10.54.52.201:502");
         let result = client.connect();
         match result {
@@ -103,5 +103,6 @@ pub mod avr_control {
                 client.disconnect();
             }
         }
+        Ok(())
     }
 }

@@ -107,7 +107,7 @@ pub mod skytable {
         generator_work_str.parse::<i32>().unwrap()
     }
 
-    pub fn set_skyd() {
+    pub fn set_skyd() -> Result<(), error::Error> {
         set_f64_skydb("unix_from_sql", &0.00.to_string());
         set_f64_skydb("unix_from_sql_now", &0.00.to_string());
         set_i32_skydb("plc_connect", &0.to_string());
@@ -127,5 +127,6 @@ pub mod skytable {
         set_i32_skydb("humidity_indoor", &0.to_string());
         set_i32_skydb("illumination_indoor", &0.to_string());
         set_i32_skydb("illumination_outdoor", &0.to_string());
+        Ok(())
     }
 }
