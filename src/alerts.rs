@@ -14,7 +14,7 @@ pub mod gateway {
 
     /// The text of the Telegram-message about the generator operation error
     pub fn _tg_msg_generator_work_err() -> String {
-            String::from("Авария! Генератор неисправен! Срочно произведите сервисные работы!")
+        String::from("Авария! Генератор неисправен! Срочно произведите сервисные работы!")
     }
 
     /// The text of the SMS-message about the resumption of the generator operation

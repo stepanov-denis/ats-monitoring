@@ -3,7 +3,7 @@ pub mod postgresql {
     use std::error::Error;
 
     pub fn db_connect() -> String {
-            String::from("postgresql://postgres:mysecretpassword@postgresql:5432/postgres")
+        String::from("postgresql://postgres:mysecretpassword@postgresql:5432/postgres")
     }
 
     /// Set default transaction isolation level for database
@@ -104,7 +104,7 @@ pub mod postgresql {
     /// Records the event "Авария! Генератор неисправен! Срочно произведите сервисные работы!" in the sql table "события_авр".
     pub fn event_generator_work_err() -> Result<(), PostgresError> {
         let mut client = Client::connect(&db_connect(), NoTls)?;
-        let event = "Авария! Генератор неисправен! Срочно произведите сервисные работы!";
+        let event = "Alarm! The generator is faulty! Urgently perform service work!";
         client.execute("INSERT INTO события_авр (событие) VALUES ($1)", &[&event])?;
 
         for row in client.query(
@@ -122,7 +122,7 @@ pub mod postgresql {
     pub fn event_generator_work_restored() -> Result<(), PostgresError> {
         let mut client = Client::connect(&db_connect(), NoTls)?;
         let event =
-            "Работоспособность генератора восстановлена. Генератор исправен. Генератор работает.";
+            "the efficiency of the generator in the mode of transmission of electricity from the power grid has been restored";
         client.execute("INSERT INTO события_авр (событие) VALUES ($1)", &[&event])?;
 
         for row in client.query(
@@ -139,7 +139,7 @@ pub mod postgresql {
     /// Records the event "Генератор в режиме трансляции питания от электросети работает исправно." in the sql table "события_авр".
     pub fn event_generator_work_ok() -> Result<(), PostgresError> {
         let mut client = Client::connect(&db_connect(), NoTls)?;
-        let event = "Генератор в режиме трансляции питания от электросети работает исправно.";
+        let event = "generator is working properly in the mode of electricity transmission from the power grid";
         client.execute("INSERT INTO события_авр (событие) VALUES ($1)", &[&event])?;
 
         for row in client.query(
@@ -202,7 +202,7 @@ pub mod postgresql {
     /// Records log "Авария! Генератор неисправен! Срочно произведите сервисные работы!" in the sql table "журнал_работы_приложения".
     pub fn log_generator_work_err() -> Result<(), PostgresError> {
         let mut client = Client::connect(&db_connect(), NoTls)?;
-        let event = "Авария! Генератор неисправен! Срочно произведите сервисные работы!";
+        let event = "Alarm! The generator is faulty! Urgently perform service work!";
         client.execute(
             "INSERT INTO журнал_работы_приложения (событие) VALUES ($1)",
             &[&event],
@@ -225,7 +225,7 @@ pub mod postgresql {
     /// Records log "Генератор в режиме трансляции питания от электросети работает исправно." in the sql table "журнал_работы_приложения".
     pub fn log_generator_work_ok() -> Result<(), PostgresError> {
         let mut client = Client::connect(&db_connect(), NoTls)?;
-        let event = "Генератор в режиме трансляции питания от электросети работает исправно.";
+        let event = "generator is working properly in the mode of electricity transmission from the power grid";
         client.execute(
             "INSERT INTO журнал_работы_приложения (событие) VALUES ($1)",
             &[&event],
@@ -249,7 +249,7 @@ pub mod postgresql {
     pub fn log_generator_work_restored() -> Result<(), PostgresError> {
         let mut client = Client::connect(&db_connect(), NoTls)?;
         let event =
-            "Работоспособность генератора в режиме трансляции питания от электросети восстановлена";
+            "the efficiency of the generator in the mode of transmission of electricity from the power grid has been restored";
         client.execute(
             "INSERT INTO журнал_работы_приложения (событие) VALUES ($1)",
             &[&event],
@@ -272,7 +272,8 @@ pub mod postgresql {
     /// Records log "Отправлено SMS сообщение: /Авария! Генератор неисправен! Срочно произведите сервисные работы!/ на номер +79139402913" in the sql table "журнал_работы_приложения".
     pub fn log_send_sms_generator_work_err() -> Result<(), PostgresError> {
         let mut client = Client::connect(&db_connect(), NoTls)?;
-        let event = "Отправлено SMS сообщение: /Авария! Генератор неисправен! Срочно произведите сервисные работы!/ на номер +79139402913";
+        let event = "an SMS message was sent: 
+        Авария! Генератор неисправен! Срочно произведите сервисные работы!";
         client.execute(
             "INSERT INTO журнал_работы_приложения (событие) VALUES ($1)",
             &[&event],
@@ -296,7 +297,7 @@ pub mod postgresql {
     pub fn log_send_sms_generator_work_restored() -> Result<(), PostgresError> {
         let mut client = Client::connect(&db_connect(), NoTls)?;
         let event =
-            "Отправлено SMS сообщение: /Работоспособность генератора в режиме трансляции питания от электросети восстановлена./ на номер +79139402913";
+            "an sms message was sent: Работоспособность генератора в режиме трансляции питания от электросети восстановлена. Генератор исправен. Генератор работает.";
         client.execute(
             "INSERT INTO журнал_работы_приложения (событие) VALUES ($1)",
             &[&event],
@@ -319,7 +320,7 @@ pub mod postgresql {
     /// Records log "Server error! Ошибка! SMS уведомление не было отправлено!" in the sql table "журнал_работы_приложения".
     pub fn log_server_err() -> Result<(), PostgresError> {
         let mut client = Client::connect(&db_connect(), NoTls)?;
-        let event = "Server error! Ошибка! SMS уведомление не было отправлено!";
+        let event = "server error the sms notification was not sent";
         client.execute(
             "INSERT INTO журнал_работы_приложения (событие) VALUES ($1)",
             &[&event],
@@ -388,7 +389,7 @@ pub mod postgresql {
     /// Records log "Ошибка! Связь OPC сервера с ПЛК отсутствует!" in the sql table "журнал_работы_приложения".
     pub fn log_plc_err() -> Result<(), PostgresError> {
         let mut client = Client::connect(&db_connect(), NoTls)?;
-        let event = "Ошибка! Связь Modbus клиента с ПЛК отсутствует!";
+        let event = "error connection app to plc";
         client.execute(
             "INSERT INTO журнал_работы_приложения (событие) VALUES ($1)",
             &[&event],
@@ -411,7 +412,7 @@ pub mod postgresql {
     /// Records log "Ошибка! Связь СУБД PostgreSQL с OPC сервером отсутствует!" in the sql table "журнал_работы_приложения".
     pub fn log_opc_err() -> Result<(), PostgresError> {
         let mut client = Client::connect(&db_connect(), NoTls)?;
-        let event = "Ошибка! Связь СУБД PostgreSQL с Modbus клиентом отсутствует!";
+        let event = "error connection app to postgresql";
         client.execute(
             "INSERT INTO журнал_работы_приложения (событие) VALUES ($1)",
             &[&event],

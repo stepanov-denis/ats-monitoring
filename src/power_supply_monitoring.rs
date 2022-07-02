@@ -2,8 +2,8 @@ pub mod power_supply {
     extern crate chrono;
     extern crate timer;
     // use error_chain::error_chain;
-    use std::error;
     use online::sync::check;
+    use std::error;
 
     // error_chain! {
     //     foreign_links {
