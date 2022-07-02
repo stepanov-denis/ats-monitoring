@@ -1,5 +1,5 @@
 pub mod bot {
-    use postgres::{Client, Error as PostgresError, NoTls};
+    
     use std::error::Error;
     use teloxide::{prelude::*, utils::command::BotCommands};
 
@@ -114,7 +114,7 @@ pub mod bot {
     }
 
     async fn send_alerts(
-        bot: AutoSend<Bot>,
+        _bot: AutoSend<Bot>,
         msg: Message,
         s: String,
     ) -> Result<(), Box<dyn Error + Send + Sync>> {

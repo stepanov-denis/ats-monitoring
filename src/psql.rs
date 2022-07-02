@@ -1,6 +1,6 @@
 pub mod postgresql {
     use postgres::{Client, Error as PostgresError, NoTls};
-    use std::error::Error;
+    
 
     pub fn db_connect() -> String {
         String::from("postgresql://postgres:mysecretpassword@postgresql:5432/postgres")
