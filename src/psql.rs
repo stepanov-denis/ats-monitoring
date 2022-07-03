@@ -816,4 +816,49 @@ pub mod postgresql {
         }
         Ok(())
     }
+
+    pub fn insert_input_registers_ats(
+        mains_power_supply: i32,
+        start_generator: i32,
+        generator_faulty: i32,
+        generator_work: i32,
+        connection: i32
+    ) -> Result<(), PostgresError> {
+        let mut client = Client::connect(&crate::psql::postgresql::db_connect(), NoTls)?;
+        client.execute(
+            "INSERT INTO avr_control_insert (mains_power_supply, start_generator, generator_faulty, generator_work, connection) VALUES ($1, $2, $3, $4, $5)",
+            &[&mains_power_supply, &start_generator, &generator_faulty, &generator_work, &connection],
+        )?;
+
+        for row in client.query("SELECT mains_power_supply, start_generator, generator_faulty, generator_work, connection FROM avr_control_insert ORDER BY mark DESC limit 1", &[])? {
+            let mains_power_supply: i32 = row.get(0);
+            let start_generator: i32 = row.get(1);
+            let generator_faulty: i32 = row.get(2);
+            let generator_work: i32 = row.get(3);
+            let connection: i32 = row.get(4);
+            info!(
+                "the following values are read from the plc and written to the avr_control_insert table: mains_power_supply: {}, start_generator: {}, generator_faulty: {}, generator_work: {}, connection: {}",
+                mains_power_supply, start_generator, generator_faulty, generator_work, connection);
+        }
+        Ok(())
+    }
+
+    pub fn insert_generator_load(load: i32) -> Result<(), PostgresError> {
+        let mut client = Client::connect(&crate::psql::postgresql::db_connect(), NoTls)?;
+        client.execute(
+            "INSERT INTO нагрузка_на_генератор (нагрузка) VALUES ($1)",
+            &[&load],
+        )?;
+
+        for row in client.query(
+            "SELECT нагрузка FROM нагрузка_на_генератор ORDER BY время_и_дата DESC limit 1",
+            &[],
+        )? {
+            let load: i32 = row.get(0);
+            info!(
+                "the following values are read from the plc and written to the нагрузка_на_генератор table: load: {}",
+                load);
+        }
+        Ok(())
+    }
 }

@@ -81,7 +81,7 @@ pub mod generator {
 
     /// Logging request for operation of the generator
     /// in the mode of transmission of electricity from the power grid
-    pub fn log_connection_is_true() {
+    pub fn log_request_to_generator() {
         info!(
             "request for operation of the generator 
             in the mode of transmission of electricity from the power grid"
@@ -97,7 +97,7 @@ pub mod generator {
     pub fn inner_loop_generator_faulty() -> Result<()> {
         'inner: loop {
             if connection() == Some(true) {
-                log_connection_is_true();
+                log_request_to_generator();
                 if crate::skydb::skytable::generator_faulty() == 0 {
                     info!(
                         "the efficiency of the generator in the mode 
@@ -141,7 +141,7 @@ pub mod generator {
     /// of the generator and notifying about it by SMS using the gateway API.
     pub fn generator_state() -> Result<()> {
         if connection() == Some(true) {
-            log_connection_is_true();
+            log_request_to_generator();
             if crate::skydb::skytable::generator_faulty() == 1 {
                 log_alarm();
                 info!("executing an http request to an SMS notification service provider");

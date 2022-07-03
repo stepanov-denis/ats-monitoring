@@ -93,7 +93,7 @@ fn main() -> Result<(), Box<dyn Error + Send + Sync>> {
 
     let _modbus_ats_spawn = thread::spawn(|| loop {
         info!("starting up modbus_ats_spawn");
-        if modbus_ats::avr_control::avr_control_insert().is_ok() {
+        if modbus_ats::avr_control::avr_control().is_ok() {
             info!("avr_control_insert(): ok");
         } else {
             info!("avr_control_insert(): error");
