@@ -1,5 +1,5 @@
 pub mod bot {
-    
+
     use std::error::Error;
     use teloxide::{prelude::*, utils::command::BotCommands};
 

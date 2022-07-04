@@ -25,31 +25,35 @@ pub mod generator {
     }
 
     /// Check connection app to plc and postgresql
-    pub fn connection() -> Option<bool> {
-        if crate::skydb::skytable::unix_sql() + 5.00 >= crate::skydb::skytable::unix_sql_now() {
-            if crate::skydb::skytable::plc_connect() == 1 {
-                let connection = true;
-                info!("connection app to plc and postgresql: ok");
-                Some(connection)
-            } else {
-                let connection = false;
-                info!("connection app to plc: error");
-                if crate::psql::postgresql::log_plc_err().is_ok() {
-                    info!("log_plc_err(): ok");
-                } else {
-                    info!("log_plc_err(): error");
+    pub fn check_connect_app_to_db_and_plc() -> Option<bool> {
+        match crate::skydb::skytable::unix_sql() + 5.00 >= crate::skydb::skytable::unix_sql_now() {
+            false => {
+                info!("connection app to postgresql: error");
+                match crate::psql::postgresql::log_opc_err() {
+                    Ok(_) => info!("connection app to postgresql: ok"),
+                    Err(e) => info!("{}", e),
                 }
-                Some(connection)
+
+                Some(false)
             }
-        } else {
-            let connection = false;
-            info!("connection app to postgresql: error");
-            if crate::psql::postgresql::log_opc_err().is_ok() {
-                info!("log_opc_err(): ok");
-            } else {
-                info!("log_opc_err(): error");
+            true => check_connect_app_to_plc(),
+        }
+    }
+
+    pub fn check_connect_app_to_plc() -> Option<bool> {
+        match crate::skydb::skytable::plc_connect() == 1 {
+            false => {
+                info!("connection app to plc: error");
+                match crate::psql::postgresql::log_plc_err() {
+                    Ok(_) => info!("log_plc_err(): ok"),
+                    Err(e) => info!("{}", e),
+                }
+                Some(false)
             }
-            Some(connection)
+            true => {
+                info!("connection app to plc and postgresql: ok");
+                Some(true)
+            }
         }
     }
 
@@ -96,7 +100,7 @@ pub mod generator {
     /// Inner loop for cyclic polling of the emergency generator
     pub fn inner_loop_generator_faulty() -> Result<()> {
         'inner: loop {
-            if connection() == Some(true) {
+            if check_connect_app_to_db_and_plc() == Some(true) {
                 log_request_to_generator();
                 if crate::skydb::skytable::generator_faulty() == 0 {
                     info!(
@@ -140,7 +144,7 @@ pub mod generator {
     /// The function of determining the serviceability/malfunction
     /// of the generator and notifying about it by SMS using the gateway API.
     pub fn generator_state() -> Result<()> {
-        if connection() == Some(true) {
+        if check_connect_app_to_db_and_plc() == Some(true) {
             log_request_to_generator();
             if crate::skydb::skytable::generator_faulty() == 1 {
                 log_alarm();

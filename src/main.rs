@@ -9,6 +9,7 @@ use std::thread;
 use std::time::Duration;
 mod alerts;
 mod generator_monitoring;
+mod init;
 mod modbus_ats;
 mod modbus_winter_garden;
 mod power_supply_monitoring;
@@ -25,40 +26,15 @@ fn main() -> Result<(), Box<dyn Error + Send + Sync>> {
 
     info!("starting up ats-monitoring app");
     info!("please wait...");
-    if psql::postgresql::set_transaction_isolation().is_ok() {
-        info!("set_transaction_isolation(): ok");
-    } else {
-        info!("set_transaction_isolation(): error");
+
+    match init::postgresql::init_postgres() {
+        Ok(_) => info!("init_postgres(): ok"),
+        Err(e) => info!("{}", e)
     }
-    if psql::postgresql::create_avr_control_insert_table().is_ok() {
-        info!("create_avr_control_insert_table(): ok");
-    } else {
-        info!("create_avr_control_insert_table(): error");
-    }
-    if psql::postgresql::create_log_of_work_app_table().is_ok() {
-        info!("create_log_of_work_app_table(): ok");
-    } else {
-        info!("create_log_of_work_app_table(): error");
-    }
-    if psql::postgresql::create_winter_garden_table().is_ok() {
-        info!("create_winter_garden_table(): ok");
-    } else {
-        info!("create_winter_garden_table(): ok");
-    }
-    if psql::postgresql::create_generator_load_table().is_ok() {
-        info!("create_generator_load_table(): ok");
-    } else {
-        info!("create_generator_load_table(): error");
-    }
-    if psql::postgresql::create_avr_events_table().is_ok() {
-        info!("create_avr_events_table(): ok");
-    } else {
-        info!("create_avr_events_table(): error");
-    }
-    if skydb::skytable::set_skyd().is_ok() {
-        info!("set_skyd(): ok");
-    } else {
-        info!("set_skyd(): error");
+
+    match init::skyd::init_skyd() {
+        Ok(_) => info!("init_skyd(): ok"),
+        Err(e) => info!("{}", e)
     }
 
     let _write_data_to_ram_spawn = thread::spawn(|| loop {

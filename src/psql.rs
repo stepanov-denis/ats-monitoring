@@ -1,6 +1,5 @@
 pub mod postgresql {
     use postgres::{Client, Error as PostgresError, NoTls};
-    
 
     pub fn db_connect() -> String {
         String::from("postgresql://postgres:mysecretpassword@postgresql:5432/postgres")
@@ -822,7 +821,7 @@ pub mod postgresql {
         start_generator: i32,
         generator_faulty: i32,
         generator_work: i32,
-        connection: i32
+        connection: i32,
     ) -> Result<(), PostgresError> {
         let mut client = Client::connect(&crate::psql::postgresql::db_connect(), NoTls)?;
         client.execute(

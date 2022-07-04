@@ -106,27 +106,4 @@ pub mod skytable {
         let generator_work_str = generator_work.get_or_insert("2".to_string());
         generator_work_str.parse::<i32>().unwrap()
     }
-
-    pub fn set_skyd() -> Result<(), error::Error> {
-        set_f64_skydb("unix_from_sql", &0.00.to_string());
-        set_f64_skydb("unix_from_sql_now", &0.00.to_string());
-        set_i32_skydb("plc_connect", &0.to_string());
-        set_i32_skydb("generator_faulty", &0.to_string());
-        set_i32_skydb("mains_power_supply", &0.to_string());
-        set_i32_skydb("start_generator", &0.to_string());
-        set_i32_skydb("generator_work", &0.to_string());
-        set_i32_skydb("phyto_lighting_1", &0.to_string());
-        set_i32_skydb("phyto_lighting_2", &0.to_string());
-        set_i32_skydb("phyto_lighting_3", &0.to_string());
-        set_i32_skydb("phyto_lighting_4", &0.to_string());
-        set_i32_skydb("fan", &0.to_string());
-        set_i32_skydb("automatic_watering_1", &0.to_string());
-        set_i32_skydb("automatic_watering_2", &0.to_string());
-        set_i32_skydb("automatic_watering_3", &0.to_string());
-        set_i32_skydb("temperature_indoor", &0.to_string());
-        set_i32_skydb("humidity_indoor", &0.to_string());
-        set_i32_skydb("illumination_indoor", &0.to_string());
-        set_i32_skydb("illumination_outdoor", &0.to_string());
-        Ok(())
-    }
 }
