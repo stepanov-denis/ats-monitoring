@@ -105,7 +105,8 @@ pub mod generator {
                     }
                     info!("executing an http request to an SMS notification service provider");
                     let resp = reqwest::blocking::get(
-                        crate::alerts::gateway::sms_message("SMS_GEN_WORK_RESTORED").unwrap_or_default(),
+                        crate::alerts::gateway::sms_message("SMS_GEN_WORK_RESTORED")
+                            .unwrap_or_default(),
                     )?;
                     if resp.status().is_success() {
                         info!("http request completed successfully");
@@ -136,8 +137,7 @@ pub mod generator {
                 log_alarm();
                 info!("executing an http request to an SMS notification service provider");
                 let resp = reqwest::blocking::get(
-                    crate::alerts::gateway::sms_message("SMS_GEN_WORK_ERR")
-                    .unwrap_or_default(),
+                    crate::alerts::gateway::sms_message("SMS_GEN_WORK_ERR").unwrap_or_default(),
                 )?;
                 if resp.status().is_success() {
                     info!("http request completed successfully");

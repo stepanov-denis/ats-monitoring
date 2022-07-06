@@ -71,7 +71,8 @@ pub mod power_supply {
                                         crate::psql::postgresql::log_start_generator_ok();
                                         // Executing an http get request to the SMS gateway provider.
                                         let resp = reqwest::blocking::get(
-                                            crate::alerts::gateway::sms_message("SMS_START_GEN_OK").unwrap_or_default(),
+                                            crate::alerts::gateway::sms_message("SMS_START_GEN_OK")
+                                                .unwrap_or_default(),
                                         )?;
                                         if resp.status().is_success() {
                                             info!("Http запрос выполнен успешно");
@@ -92,8 +93,10 @@ pub mod power_supply {
                                         crate::psql::postgresql::log_start_generator_err();
                                         // Executing an http get request to the SMS gateway provider.
                                         let resp = reqwest::blocking::get(
-                                            crate::alerts::gateway::sms_message("SMS_START_GEN_ERR")
-                                                .unwrap_or_default(),
+                                            crate::alerts::gateway::sms_message(
+                                                "SMS_START_GEN_ERR",
+                                            )
+                                            .unwrap_or_default(),
                                         )?;
                                         if resp.status().is_success() {
                                             info!("Http запрос выполнен успешно");

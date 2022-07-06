@@ -15,10 +15,10 @@ mod modbus_winter_garden;
 mod power_supply_monitoring;
 mod psql;
 mod ram;
+mod read_env;
 mod skydb;
 mod telegram;
 mod write_data_to_ram;
-mod read_env;
 
 /// Application workflows.
 fn main() -> Result<(), Box<dyn Error + Send + Sync>> {
