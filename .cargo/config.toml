@@ -1,3 +1,4 @@
+[env]
 # PostgreSQL settings
 POSTGRES_USERNAME = "postgres"
 POSTGRES_PASSWORD = "mysecretpassword"
@@ -27,6 +28,7 @@ SMS_POW_RESTORED_GEN_OK = "Питание+от+электросети+восст
 
 # The text of the SMS-message about the resumption of power supply from the network and the failure of the generator
 SMS_POW_RESTORED_GEN_ERR = "Питание+от+электросети+восстановлено.+Генератор+неисправен.+Генератор+не+работает."
+
 
 # Alert messages for Telegram-bot
 # The text of the Telegram-message about the generator operation error

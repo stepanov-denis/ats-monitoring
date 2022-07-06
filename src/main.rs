@@ -1,7 +1,5 @@
 #[macro_use]
 extern crate log;
-#[macro_use]
-extern crate dotenv_codegen;
 extern crate chrono;
 extern crate env_logger;
 extern crate timer;
