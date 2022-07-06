@@ -105,7 +105,7 @@ pub mod generator {
                     }
                     info!("executing an http request to an SMS notification service provider");
                     let resp = reqwest::blocking::get(
-                        crate::alerts::gateway::sms_generator_work_restored().unwrap_or_default(),
+                        crate::alerts::gateway::sms_message("SMS_GEN_WORK_RESTORED").unwrap_or_default(),
                     )?;
                     if resp.status().is_success() {
                         info!("http request completed successfully");
@@ -135,8 +135,10 @@ pub mod generator {
             if crate::skydb::skytable::generator_faulty() == 1 {
                 log_alarm();
                 info!("executing an http request to an SMS notification service provider");
-                let resp =
-                    reqwest::blocking::get(crate::alerts::gateway::sms_generator_work_err().unwrap_or_default())?;
+                let resp = reqwest::blocking::get(
+                    crate::alerts::gateway::sms_message("SMS_GEN_WORK_ERR")
+                    .unwrap_or_default(),
+                )?;
                 if resp.status().is_success() {
                     info!("http request completed successfully");
                     info!(
