@@ -20,6 +20,7 @@ mod ram;
 mod skydb;
 mod telegram;
 mod write_data_to_ram;
+mod read_env;
 
 /// Application workflows.
 fn main() -> Result<(), Box<dyn Error + Send + Sync>> {
@@ -29,7 +30,7 @@ fn main() -> Result<(), Box<dyn Error + Send + Sync>> {
 
     info!("starting up ats-monitoring app");
     info!("please wait...");
-
+    // println!("{}", crate::psql::postgresql::db_connect());
     info!("init postresql");
     init::postgresql::init_postgres();
 

@@ -2,7 +2,18 @@ pub mod postgresql {
     use postgres::{Client, Error as PostgresError, NoTls};
 
     pub fn db_connect() -> String {
-        String::from("postgresql://postgres:mysecretpassword@postgresql:5432/postgres")
+        // String::from("postgresql://postgres:mysecretpassword@postgresql:5432/postgres")
+        let mut s = String::from("postgresql://");
+        s.push_str(&crate::read_env::env::read("POSTGRES_USERNAME").unwrap_or_default());
+        s.push_str(":");
+        s.push_str(&crate::read_env::env::read("POSTGRES_PASSWORD").unwrap_or_default());
+        s.push_str("@");
+        s.push_str(&crate::read_env::env::read("POSTGRES_HOSTNAME").unwrap_or_default());
+        s.push_str(":");
+        s.push_str(&crate::read_env::env::read("POSTGRES_PORT").unwrap_or_default());
+        s.push_str("/");
+        s.push_str(&crate::read_env::env::read("POSTGRES_DB").unwrap_or_default());
+        s
     }
 
     /// Set default transaction isolation level for database

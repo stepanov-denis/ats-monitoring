@@ -44,22 +44,16 @@ $ cd skytable && cargo build --release
 ```
 $ git clone git@github.com:stepanov-denis/ats-monitoring.git
 ```
-* Edit your authentication string in module alerts
+* Edit your authentication string in config.toml
 ```
-    pub fn sms_gateway_string_connection() -> String {
-        String::from(<URI with your token>)
-    }
+GATEWAY_STR_CONNECTION=<URI with your token>)
 ```
-* Edit your SMS messages text in module alerts
+* Edit your alert messages text in config.toml
 ```
-pub fn sms_generator_work_err() -> String {
-    let mut string_connection = String::from(sms_gateway_string_connection());
-    string_connection
-        .push_str("Авария!+Генератор+неисправен!+Срочно+произведите+сервисные+работы!");
-    string_connection
-}
+# The text of the Telegram-message about the generator operation error
+TG_GEN_WORK_ERR=Авария! Генератор неисправен! Срочно произведите сервисные работы!
 ```
-* Edit the connection configuration strings to PostgreSQL in module psql
+* Edit the connection configuration strings to PostgreSQL in config.toml
 ```
     pub fn db_connect() -> String {
         String::from(<your string connection>)
