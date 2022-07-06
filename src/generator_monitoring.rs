@@ -2,26 +2,12 @@ pub mod generator {
     extern crate chrono;
     extern crate timer;
     use error_chain::error_chain;
-    use std::sync::mpsc::channel;
 
     error_chain! {
         foreign_links {
             Io(std::io::Error);
             HttpRequest(reqwest::Error);
         }
-    }
-
-    /// Timer for delay 'inner: loop.
-    pub fn timer_for_delay(sec: i64) {
-        let timer = timer::Timer::new();
-        let (tx, rx) = channel();
-
-        let _guard = timer.schedule_with_delay(chrono::Duration::seconds(sec), move || {
-            tx.send(()).unwrap();
-            let _ignored = tx.send(());
-        });
-
-        rx.recv().unwrap();
     }
 
     /// Check connection app to plc and postgresql
@@ -119,7 +105,7 @@ pub mod generator {
                     }
                     info!("executing an http request to an SMS notification service provider");
                     let resp = reqwest::blocking::get(
-                        crate::alerts::gateway::sms_generator_work_restored(),
+                        crate::alerts::gateway::sms_generator_work_restored().unwrap_or_default(),
                     )?;
                     if resp.status().is_success() {
                         info!("http request completed successfully");
@@ -150,7 +136,7 @@ pub mod generator {
                 log_alarm();
                 info!("executing an http request to an SMS notification service provider");
                 let resp =
-                    reqwest::blocking::get(crate::alerts::gateway::sms_generator_work_err())?;
+                    reqwest::blocking::get(crate::alerts::gateway::sms_generator_work_err().unwrap_or_default())?;
                 if resp.status().is_success() {
                     info!("http request completed successfully");
                     info!(

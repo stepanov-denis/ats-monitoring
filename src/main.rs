@@ -17,6 +17,7 @@ mod psql;
 mod ram;
 mod skydb;
 mod telegram;
+mod write_data_to_ram;
 
 /// Application workflows.
 fn main() -> Result<(), Box<dyn Error + Send + Sync>> {
@@ -27,53 +28,21 @@ fn main() -> Result<(), Box<dyn Error + Send + Sync>> {
     info!("starting up ats-monitoring app");
     info!("please wait...");
 
-    match init::postgresql::init_postgres() {
-        Ok(_) => info!("init_postgres(): ok"),
-        Err(e) => info!("{}", e)
-    }
+    info!("init postresql");
+    init::postgresql::init_postgres();
 
-    match init::skyd::init_skyd() {
-        Ok(_) => info!("init_skyd(): ok"),
-        Err(e) => info!("{}", e)
-    }
+    info!("init skyd");
+    init::skyd::init_skyd();
 
     let _write_data_to_ram_spawn = thread::spawn(|| loop {
         info!("starting up write_data_to_ram_spawn");
-        if ram::db::write_to_ram_unix_from_sql().is_ok() {
-            info!("write_to_ram_unix_from_sql(): ok");
-        } else {
-            info!("write_to_ram_unix_from_sql(): error");
-        }
-        if ram::db::write_to_ram_unix_from_sql_now().is_ok() {
-            info!("write_to_ram_unix_from_sql_now(): ok");
-        } else {
-            info!("write_to_ram_unix_from_sql_now(): error");
-        }
-        if ram::db::write_to_ram_plc_connect().is_ok() {
-            info!("write_to_ram_plc_connect(): ok");
-        } else {
-            info!("write_to_ram_plc_connect(): error");
-        }
-        if ram::db::write_to_ram_generator_faulty().is_ok() {
-            info!("write_to_ram_generator_faulty(): ok");
-        } else {
-            info!("write_to_ram_generator_faulty(): error");
-        }
-        if ram::db::write_to_ram_winter_garden_data_sql().is_ok() {
-            info!("write_to_ram_winter_garden_data_sql(): ok");
-        } else {
-            info!("write_to_ram_winter_garden_data_sql(): error");
-        }
+        write_data_to_ram::write::from_psql_to_skyd();
         thread::sleep(Duration::from_millis(1000));
     });
 
     let _modbus_ats_spawn = thread::spawn(|| loop {
         info!("starting up modbus_ats_spawn");
-        if modbus_ats::avr_control::avr_control().is_ok() {
-            info!("avr_control_insert(): ok");
-        } else {
-            info!("avr_control_insert(): error");
-        }
+        modbus_ats::avr_control::avr_control();
         thread::sleep(Duration::from_millis(1000));
     });
 

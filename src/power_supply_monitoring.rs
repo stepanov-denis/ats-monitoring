@@ -4,6 +4,7 @@ pub mod power_supply {
     // use error_chain::error_chain;
     use online::sync::check;
     use std::error;
+    use std::sync::mpsc::channel;
 
     // error_chain! {
     //     foreign_links {
@@ -11,6 +12,19 @@ pub mod power_supply {
     //         HttpRequest(reqwest::Error);
     //     }
     // }
+
+    /// Timer for delay 'inner: loop.
+    pub fn timer_for_delay(sec: i64) {
+        let timer = timer::Timer::new();
+        let (tx, rx) = channel();
+
+        let _guard = timer.schedule_with_delay(chrono::Duration::seconds(sec), move || {
+            tx.send(()).unwrap();
+            let _ignored = tx.send(());
+        });
+
+        rx.recv().unwrap();
+    }
 
     /// Main spawn - the function for detecting a power failure from the mains/restoring power from the mains,
     /// successful start of the generator, failure of the generator start, and notifications about these events.
@@ -30,7 +44,7 @@ pub mod power_supply {
                     info!("Произошел сбой питания от электросети");
                     info!("Ожидание (90 секунд) подтверждения отсутствия питания от электросети");
                     crate::psql::postgresql::log_power_failure();
-                    crate::generator_monitoring::generator::timer_for_delay(90);
+                    timer_for_delay(90);
                     // Checking the connection of the PostgreSQL DBMS with the OPC server.
                     if crate::skydb::skytable::unix_sql() + 5.00
                         >= crate::skydb::skytable::unix_sql_now()
@@ -57,7 +71,7 @@ pub mod power_supply {
                                         crate::psql::postgresql::log_start_generator_ok();
                                         // Executing an http get request to the SMS gateway provider.
                                         let resp = reqwest::blocking::get(
-                                            crate::alerts::gateway::sms_start_generator_ok(),
+                                            crate::alerts::gateway::sms_start_generator_ok().unwrap_or_default(),
                                         )?;
                                         if resp.status().is_success() {
                                             info!("Http запрос выполнен успешно");
@@ -78,7 +92,7 @@ pub mod power_supply {
                                         crate::psql::postgresql::log_start_generator_err();
                                         // Executing an http get request to the SMS gateway provider.
                                         let resp = reqwest::blocking::get(
-                                            crate::alerts::gateway::sms_start_generator_err(),
+                                            crate::alerts::gateway::sms_start_generator_err().unwrap_or_default(),
                                         )?;
                                         if resp.status().is_success() {
                                             info!("Http запрос выполнен успешно");
@@ -118,7 +132,7 @@ pub mod power_supply {
                                                             crate::psql::postgresql::event_power_restored_generator_work_ok();
                                                             crate::psql::postgresql::log_power_restored_generator_ok();
                                                             // Executing an http get request to the SMS gateway provider.
-                                                            let resp = reqwest::blocking::get(crate::alerts::gateway::sms_power_restored_generator_ok())?;
+                                                            let resp = reqwest::blocking::get(crate::alerts::gateway::sms_power_restored_generator_ok().unwrap_or_default())?;
                                                             if resp.status().is_success() {
                                                                 info!(
                                                                     "Http запрос выполнен успешно"
@@ -145,7 +159,7 @@ pub mod power_supply {
                                                             crate::psql::postgresql::event_power_restored_generator_work_err();
                                                             crate::psql::postgresql::log_power_restored_generator_err();
                                                             // Executing an http get request to the SMS gateway provider.
-                                                            let resp = reqwest::blocking::get(crate::alerts::gateway::sms_power_restored_generator_err())?;
+                                                            let resp = reqwest::blocking::get(crate::alerts::gateway::sms_power_restored_generator_err().unwrap_or_default())?;
                                                             if resp.status().is_success() {
                                                                 info!(
                                                                     "Http запрос выполнен успешно"
@@ -180,19 +194,14 @@ pub mod power_supply {
                                                 } else {
                                                     info!("Питание от электросети еще не было восстановлено, после отключения");
                                                     crate::psql::postgresql::log_power_dont_restored();
-                                                    crate::generator_monitoring::generator::timer_for_delay(3);
                                                 }
                                             } else {
                                                 info!("Ошибка! Связь Modbus клиента с ПЛК отсутствует!");
                                                 crate::psql::postgresql::log_plc_err();
-                                                crate::generator_monitoring::generator::timer_for_delay(3);
                                             }
                                         } else {
                                             info!("Ошибка! Связь СУБД PostgreSQL с Modbus клиентом отсутствует!");
                                             crate::psql::postgresql::log_opc_err();
-                                            crate::generator_monitoring::generator::timer_for_delay(
-                                                3,
-                                            );
                                         }
                                     }
                                 } else {
@@ -221,12 +230,10 @@ pub mod power_supply {
             } else {
                 info!("Ошибка! Связь Modbus клиента с ПЛК отсутствует!");
                 crate::psql::postgresql::log_plc_err();
-                crate::generator_monitoring::generator::timer_for_delay(3);
             }
         } else {
             info!("Ошибка! Связь СУБД PostgreSQL с Modbus клиентом отсутствует!");
             crate::psql::postgresql::log_opc_err();
-            crate::generator_monitoring::generator::timer_for_delay(3);
         }
         Ok(())
     }
