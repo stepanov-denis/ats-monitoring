@@ -1,16 +1,12 @@
 version: "3.7"
 services:
   app:
-    image: rust:1.61.0
+    image: rust:1.62.0
     restart: always
-    command: sh -c "export TELOXIDE_TOKEN=5554390902:AAHlRMql--ZbLHEybzEY1MK_r19b9EEU6_I && RUST_LOG=debug cargo run --release"
+    command: sh -c "export TELOXIDE_TOKEN=5554390902:AAHlRMql--ZbLHEybzEY1MK_r19b9EEU6_I && RUST_LOG=info cargo run --release"
     working_dir: /app
     volumes:
       - ./:/app
-
-  skytable:
-    image: stepanovdenis/skytable
-    restart: always
 
   postgresql:
     image: postgres:13.6
@@ -24,4 +20,3 @@ services:
 
 volumes:
   psql-db:
-  skytable-db:
