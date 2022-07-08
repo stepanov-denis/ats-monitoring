@@ -112,7 +112,7 @@ pub mod postgresql {
     }
 
     /// Records the event "Авария! Генератор неисправен! Срочно произведите сервисные работы!" in the sql table "события_авр".
-    pub fn event_generator_work_err() -> Result<(), PostgresError> {
+    pub fn event_generator_work_err() -> Result<String, PostgresError> {
         let mut client = Client::connect(&db_connect(), NoTls)?;
         let event = "Alarm! The generator is faulty! Urgently perform service work!";
         client.execute("INSERT INTO события_авр (событие) VALUES ($1)", &[&event])?;
@@ -125,11 +125,11 @@ pub mod postgresql {
 
             info!("Запись в табл. события_авр: {}", event);
         }
-        Ok(())
+        Ok(String::from("some event"))
     }
 
     /// Records the event "Работоспособность генератора восстановлена. Генератор исправен. Генератор работает." in the sql table "события_авр".
-    pub fn event_generator_work_restored() -> Result<(), PostgresError> {
+    pub fn event_generator_work_restored() -> Result<String, PostgresError> {
         let mut client = Client::connect(&db_connect(), NoTls)?;
         let event =
             "the efficiency of the generator in the mode of transmission of electricity from the power grid has been restored";
@@ -141,13 +141,13 @@ pub mod postgresql {
         )? {
             let event: &str = row.get(0);
 
-            info!("Запись в табл. события_авр: {}", event);
+            return Ok(String::from(event));
         }
-        Ok(())
+        Ok(String::from("some event"))
     }
 
     /// Records the event "Генератор в режиме трансляции питания от электросети работает исправно." in the sql table "события_авр".
-    pub fn event_generator_work_ok() -> Result<(), PostgresError> {
+    pub fn event_generator_work_ok() -> Result<String, PostgresError> {
         let mut client = Client::connect(&db_connect(), NoTls)?;
         let event = "generator is working properly in the mode of electricity transmission from the power grid";
         client.execute("INSERT INTO события_авр (событие) VALUES ($1)", &[&event])?;
@@ -158,13 +158,13 @@ pub mod postgresql {
         )? {
             let event: &str = row.get(0);
 
-            info!("Запись в табл. события_авр: {}", event);
+            return Ok(String::from(event));
         }
-        Ok(())
+        Ok(String::from("some event"))
     }
 
     /// Records log "Ошибка! Связь ПЛК с модулем modbus_ats отсутствует!" in the sql table "журнал_работы_приложения".
-    pub fn log_timeout_or_host_unreachable_modbus_ats() -> Result<(), PostgresError> {
+    pub fn log_timeout_or_host_unreachable_modbus_ats() -> Result<String, PostgresError> {
         let mut client = Client::connect(&db_connect(), NoTls)?;
         let event = "Ошибка! Связь ПЛК с модулем modbus_ats отсутствует!";
         client.execute(
@@ -181,9 +181,9 @@ pub mod postgresql {
         {
             let event: &str = row.get(0);
 
-            info!("Запись в табл. журнал_работы_приложения: {}", event);
+            return Ok(String::from(event))
         }
-        Ok(())
+        Ok(String::from("some event"))
     }
 
     /// Records log "Ошибка! Связь ПЛК с модулем modbus_winter_garden отсутствует!" in the sql table "журнал_работы_приложения".
@@ -210,7 +210,7 @@ pub mod postgresql {
     }
 
     /// Records log "Авария! Генератор неисправен! Срочно произведите сервисные работы!" in the sql table "журнал_работы_приложения".
-    pub fn log_generator_work_err() -> Result<(), PostgresError> {
+    pub fn log_generator_work_err() -> Result<String, PostgresError> {
         let mut client = Client::connect(&db_connect(), NoTls)?;
         let event = "Alarm! The generator is faulty! Urgently perform service work!";
         client.execute(
@@ -227,13 +227,13 @@ pub mod postgresql {
         {
             let event: &str = row.get(0);
 
-            info!("Запись в табл. журнал_работы_приложения: {}", event);
+            return Ok(String::from(event))
         }
-        Ok(())
+        Ok(String::from("some event"))
     }
 
     /// Records log "Генератор в режиме трансляции питания от электросети работает исправно." in the sql table "журнал_работы_приложения".
-    pub fn log_generator_work_ok() -> Result<(), PostgresError> {
+    pub fn log_generator_work_ok() -> Result<String, PostgresError> {
         let mut client = Client::connect(&db_connect(), NoTls)?;
         let event = "generator is working properly in the mode of electricity transmission from the power grid";
         client.execute(
@@ -250,13 +250,13 @@ pub mod postgresql {
         {
             let event: &str = row.get(0);
 
-            info!("Запись в табл. журнал_работы_приложения: {}", event);
+            return Ok(String::from(event))
         }
-        Ok(())
+        Ok(String::from("some event"))
     }
 
     /// Records log "Работоспособность генератора в режиме трансляции питания от электросети восстановлена" in the sql table "журнал_работы_приложения".
-    pub fn log_generator_work_restored() -> Result<(), PostgresError> {
+    pub fn log_generator_work_restored() -> Result<String, PostgresError> {
         let mut client = Client::connect(&db_connect(), NoTls)?;
         let event =
             "the efficiency of the generator in the mode of transmission of electricity from the power grid has been restored";
@@ -274,13 +274,13 @@ pub mod postgresql {
         {
             let event: &str = row.get(0);
 
-            info!("Запись в табл. журнал_работы_приложения: {}", event);
+            return Ok(String::from(event))
         }
-        Ok(())
+        Ok(String::from("some event"))
     }
 
     /// Records log "Отправлено SMS сообщение: /Авария! Генератор неисправен! Срочно произведите сервисные работы!/ на номер +79139402913" in the sql table "журнал_работы_приложения".
-    pub fn log_send_sms_generator_work_err() -> Result<(), PostgresError> {
+    pub fn log_send_sms_generator_work_err() -> Result<String, PostgresError> {
         let mut client = Client::connect(&db_connect(), NoTls)?;
         let event = "an SMS message was sent: 
         Авария! Генератор неисправен! Срочно произведите сервисные работы!";
@@ -298,16 +298,14 @@ pub mod postgresql {
         {
             let event: &str = row.get(0);
 
-            info!("Запись в табл. журнал_работы_приложения: {}", event);
+            return Ok(String::from(event))
         }
-        Ok(())
+        Ok(String::from("some event"))
     }
 
     /// Records log "Отправлено SMS сообщение: /Работоспособность генератора в режиме трансляции питания от электросети восстановлена./ на номер +79139402913" in the sql table "журнал_работы_приложения".
-    pub fn log_send_sms_generator_work_restored() -> Result<(), PostgresError> {
+    pub fn log_send_sms_generator_work_restored(event: &str) -> Result<String, PostgresError> {
         let mut client = Client::connect(&db_connect(), NoTls)?;
-        let event =
-            "an sms message was sent: Работоспособность генератора в режиме трансляции питания от электросети восстановлена. Генератор исправен. Генератор работает.";
         client.execute(
             "INSERT INTO журнал_работы_приложения (событие) VALUES ($1)",
             &[&event],
@@ -322,13 +320,13 @@ pub mod postgresql {
         {
             let event: &str = row.get(0);
 
-            info!("Запись в табл. журнал_работы_приложения: {}", event);
+            return Ok(String::from(event))
         }
-        Ok(())
+        Ok(String::from("some event"))
     }
 
     /// Records log "Server error! Ошибка! SMS уведомление не было отправлено!" in the sql table "журнал_работы_приложения".
-    pub fn log_server_err() -> Result<(), PostgresError> {
+    pub fn log_server_err() -> Result<String, PostgresError> {
         let mut client = Client::connect(&db_connect(), NoTls)?;
         let event = "server error the sms notification was not sent";
         client.execute(
@@ -345,9 +343,9 @@ pub mod postgresql {
         {
             let event: &str = row.get(0);
 
-            info!("Запись в табл. журнал_работы_приложения: {}", event);
+            return Ok(String::from(event))
         }
-        Ok(())
+        Ok(String::from("some event"))
     }
 
     /// Records log "Http request status error! Ошибка! SMS уведомление не было отправлено!" in the sql table "журнал_работы_приложения".
@@ -870,5 +868,18 @@ pub mod postgresql {
                 load);
         }
         Ok(())
+    }
+
+    pub fn select_generator_faulty() -> Result<i32, PostgresError> {
+        let mut client = Client::connect(&crate::psql::postgresql::db_connect(), NoTls)?;
+
+        for row in client.query(
+            "SELECT generator_faulty FROM avr_control_insert ORDER BY mark DESC limit 1",
+            &[],
+        )? {
+            let generator_faulty: i32 = row.get(0);
+            return Ok(generator_faulty);
+        }
+        Ok(2)
     }
 }
