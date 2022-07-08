@@ -83,24 +83,55 @@ pub mod avr_control {
         match result {
             Err(message) => {
                 info!(
-                    "error: there is no connection between the app and the plc {}",
+                    "error: there is no connection between the app and the plc, {}",
                     message
                 );
-                if crate::psql::postgresql::log_timeout_or_host_unreachable_modbus_ats().is_ok() {
-                    info!("log_timeout_or_host_unreachable_modbus_ats(): ok");
-                } else {
-                    info!("log_timeout_or_host_unreachable_modbus_ats(): error");
-                }
+                info!(
+                    "entry in the журнал_работы_приложения table: {:?}",
+                    crate::psql::postgresql::log_timeout_or_host_unreachable_modbus_ats()
+                );
             }
             Ok(_) => {
                 info!("app communication with plc: ok");
-                if reading_input_registers(&mut client).is_ok() {
-                    info!("reading_input_registers(): ok");
-                } else {
-                    info!("reading_input_registers(): error");
+                match reading_input_registers(&mut client) {
+                    Ok(_) => info!("reading_input_registers(): ok"),
+                    Err(e) => info!("{}", e),
                 }
                 client.disconnect();
             }
         }
+    }
+
+    /// Reading the value of the "connection" variable from the TRIM5 PLC via Modbus TCP
+    /// to check the connection of the app to the PLC
+    pub fn reading_connection() -> Option<bool> {
+        let mut client = TcpClient::new("10.54.52.201:502");
+        let result = client.connect();
+        match result {
+            Err(message) => {
+                info!(
+                    "error: there is no connection between the app and the plc, {}",
+                    message
+                );
+                info!(
+                    "entry in the журнал_работы_приложения table: {:?}",
+                    crate::psql::postgresql::log_timeout_or_host_unreachable_modbus_ats()
+                );
+            }
+            Ok(_) => {
+                info!("app communication with plc: ok");
+                let connection_response = client.read_input_registers(00019, 1);
+                info!("response reading_connection(): {:?}", connection_response);
+                client.disconnect();
+                match connection_response.len() {
+                    1 => match connection_response[0] {
+                        1 => return Some(true),
+                        _ => return Some(false)
+                    }
+                    _ => info!("reading_connection() error: the value is not transmitted to the app from the plc")
+                }
+            }
+        }
+        Some(false)
     }
 }
