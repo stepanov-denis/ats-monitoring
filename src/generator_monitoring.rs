@@ -10,165 +10,130 @@ pub mod generator {
         }
     }
 
-    /// Check connection app to plc and postgresql
-    pub fn check_connect_app_to_db_and_plc() -> Option<bool> {
-        match crate::skydb::skytable::unix_sql() + 5.00 >= crate::skydb::skytable::unix_sql_now() {
-            false => {
-                info!("connection app to postgresql: error");
-                match crate::psql::postgresql::log_opc_err() {
-                    Ok(_) => info!("connection app to postgresql: ok"),
-                    Err(e) => info!("{}", e),
-                }
-
-                Some(false)
-            }
-            true => check_connect_app_to_plc(),
-        }
-    }
-
-    pub fn check_connect_app_to_plc() -> Option<bool> {
-        match crate::skydb::skytable::plc_connect() == 1 {
-            false => {
-                info!("connection app to plc: error");
-                match crate::psql::postgresql::log_plc_err() {
-                    Ok(_) => info!("log_plc_err(): ok"),
-                    Err(e) => info!("{}", e),
-                }
-                Some(false)
-            }
-            true => {
-                info!("connection app to plc and postgresql: ok");
-                Some(true)
-            }
-        }
-    }
-
-    /// Logging event "Alarm! The generator is faulty! Urgently perform service work!"
+    /// Logging event "Alarm! The generator is faulty! Urgently perform service work!".
     pub fn log_alarm() {
         info!("Alarm! The generator is faulty! Urgently perform service work!");
-        if crate::psql::postgresql::event_generator_work_err().is_ok() {
-            info!("event_generator_work_err(): ok");
-        } else {
-            info!("event_generator_work_err(): error");
-        }
-        if crate::psql::postgresql::log_generator_work_err().is_ok() {
-            info!("log_generator_work_err(): ok");
-        } else {
-            info!("log_generator_work_err(): error");
-        }
+        info!(
+            "entry in the события_авр table: {:?}",
+            crate::psql::postgresql::event_generator_work_err()
+        );
+        info!(
+            "entry in the журнал_работы_приложения table: {:?}",
+            crate::psql::postgresql::log_generator_work_err()
+        );
     }
 
-    /// Logging event "server error the sms notification was not sent"
+    /// Logging event "server error the sms notification was not sent".
     pub fn log_sms_gateway_server_error(response: reqwest::blocking::Response) {
         info!("status http request: {}", response.status());
         info!("server error the sms notification was not sent");
-        if crate::psql::postgresql::log_server_err().is_ok() {
-            info!("log_server_err(): ok");
-        } else {
-            info!("log_server_err(): error");
-        }
+        info!(
+            "entry in the журнал_работы_приложения table: {:?}",
+            crate::psql::postgresql::log_server_err()
+        );
     }
 
     /// Logging request for operation of the generator
-    /// in the mode of transmission of electricity from the power grid
+    /// in the mode of transmission of electricity from the power grid.
     pub fn log_request_to_generator() {
         info!(
             "request for operation of the generator 
             in the mode of transmission of electricity from the power grid"
         );
-
         info!(
-            "response from postgresql: generator_faulty = {}",
-            generator_faulty = crate::skydb::skytable::generator_faulty()
+            "response from postgresql: generator_faulty = {:?}",
+            crate::psql::postgresql::select_generator_faulty()
         );
     }
 
-    /// Inner loop for cyclic polling of the emergency generator
-    pub fn inner_loop_generator_faulty() -> Result<()> {
+    /// Sending SMS.
+    pub fn send_sms(message_env: &str) -> Result<()> {
+        info!("executing an http request to an sms notification service provider");
+        let resp = reqwest::blocking::get(
+            crate::alerts::sms_gateway::sms_message(message_env).unwrap_or_default(),
+        )?;
+        match resp.status().is_success() {
+            true => {
+                info!("http request completed successfully");
+                info!(
+                    "an sms message was sent: {:?}",
+                    crate::read_env::env::read(message_env)
+                );
+                info!(
+                    "entry in the журнал_работы_приложения table: {:?}",
+                    crate::psql::postgresql::log_send_sms_generator_work_restored(message_env)
+                );
+            }
+            false => log_sms_gateway_server_error(resp),
+        }
+        Ok(())
+    }
+
+    /// Inner loop for cyclic polling of the emergency generator.
+    pub fn inner_loop_generator_faulty() {
         'inner: loop {
-            if check_connect_app_to_db_and_plc() == Some(true) {
+            // Checking the connection of the app to the PLC.
+            if crate::modbus_ats::avr_control::reading_connection() == Some(true) {
                 log_request_to_generator();
-                if crate::skydb::skytable::generator_faulty() == 0 {
-                    info!(
-                        "the efficiency of the generator in the mode 
-                        of transmission of electricity from the power grid has been restored"
-                    );
-                    if crate::psql::postgresql::event_generator_work_restored().is_ok() {
-                        info!("event_generator_work_restored(): ok");
-                    } else {
-                        info!("event_generator_work_restored(): error");
-                    }
-                    if crate::psql::postgresql::log_generator_work_restored().is_ok() {
-                        info!("log_generator_work_restored(): ok");
-                    } else {
-                        info!("log_generator_work_restored(): error");
-                    }
-                    info!("executing an http request to an SMS notification service provider");
-                    let resp = reqwest::blocking::get(
-                        crate::alerts::gateway::sms_message("SMS_GEN_WORK_RESTORED")
-                            .unwrap_or_default(),
-                    )?;
-                    if resp.status().is_success() {
-                        info!("http request completed successfully");
-                        info!("an sms message was sent: Работоспособность генератора в режиме трансляции питания от электросети восстановлена. Генератор исправен. Генератор работает.");
-                        if crate::psql::postgresql::log_send_sms_generator_work_restored().is_ok() {
-                            info!("log_send_sms_generator_work_restored(): ok");
-                        } else {
-                            info!("log_send_sms_generator_work_restored(): error");
+                // Checking the faulty condition of the generator
+                // 0 => the generator is working properly
+                // 1 => the generator is faulty.
+                match crate::psql::postgresql::select_generator_faulty() {
+                    Ok(0) => {
+                        info!(
+                            "the efficiency of the generator in the mode 
+                            of transmission of electricity from the power grid has been restored"
+                        );
+                        info!(
+                            "entry in the события_авр table: {:?}",
+                            crate::psql::postgresql::event_generator_work_restored()
+                        );
+                        info!(
+                            "entry in the журнал_работы_приложения table: {:?}",
+                            crate::psql::postgresql::log_generator_work_restored()
+                        );
+                        match send_sms("SMS_GEN_WORK_RESTORED") {
+                            Ok(_) => info!("send_sms('SMS_GEN_WORK_RESTORED'): ok"),
+                            Err(e) => info!("{}", e),
                         }
-                    } else {
-                        log_sms_gateway_server_error(resp);
+                        break 'inner;
                     }
-                    break 'inner;
-                } else {
-                    log_alarm();
+                    _ => log_alarm(),
                 }
             }
         }
-        Ok(())
     }
 
     /// The function of determining the serviceability/malfunction
     /// of the generator and notifying about it by SMS using the gateway API.
     pub fn generator_state() -> Result<()> {
-        if check_connect_app_to_db_and_plc() == Some(true) {
+        // Checking the connection of the app to the PLC.
+        if crate::modbus_ats::avr_control::reading_connection() == Some(true) {
             log_request_to_generator();
-            if crate::skydb::skytable::generator_faulty() == 1 {
-                log_alarm();
-                info!("executing an http request to an SMS notification service provider");
-                let resp = reqwest::blocking::get(
-                    crate::alerts::gateway::sms_message("SMS_GEN_WORK_ERR").unwrap_or_default(),
-                )?;
-                if resp.status().is_success() {
-                    info!("http request completed successfully");
+            // Checking the faulty condition of the generator
+            // 0 => the generator is working properly
+            // 1 => the generator is faulty.
+            match crate::psql::postgresql::select_generator_faulty() {
+                Ok(1) => {
+                    log_alarm();
+                    // Sending SMS notification.
+                    match send_sms("SMS_GEN_WORK_ERR") {
+                        Ok(_) => info!("send_sms('SMS_GEN_WORK_ERR'): ok"),
+                        Err(e) => info!("{}", e),
+                    }
+                    // Entering the generator polling cycle when a fault is detected.
+                    inner_loop_generator_faulty();
+                }
+                _ => {
+                    info!("generator is working properly in the mode of electricity transmission from the power grid");
                     info!(
-                        "an sms message was sent: 
-                    Авария! Генератор неисправен! Срочно произведите сервисные работы!"
+                        "entry in the события_авр table: {:?}",
+                        crate::psql::postgresql::event_generator_work_ok()
                     );
-                    if crate::psql::postgresql::log_send_sms_generator_work_err().is_ok() {
-                        info!("log_send_sms_generator_work_err(): ok");
-                    } else {
-                        info!("log_send_sms_generator_work_err(): error");
-                    }
-                    if inner_loop_generator_faulty().is_ok() {
-                        info!("inner_loop(): ok");
-                    } else {
-                        info!("inner_loop(): error");
-                    }
-                } else {
-                    log_sms_gateway_server_error(resp);
-                }
-            } else {
-                info!("generator is working properly in the mode of electricity transmission from the power grid");
-                if crate::psql::postgresql::event_generator_work_ok().is_ok() {
-                    info!("event_generator_work_ok(): ok");
-                } else {
-                    info!("event_generator_work_ok(): error");
-                }
-                if crate::psql::postgresql::log_generator_work_ok().is_ok() {
-                    info!("log_generator_work_ok(): ok");
-                } else {
-                    info!("log_generator_work_ok(): error");
+                    info!(
+                        "entry in the журнал_работы_приложения table: {:?}",
+                        crate::psql::postgresql::log_generator_work_ok()
+                    );
                 }
             }
         }
