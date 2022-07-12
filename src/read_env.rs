@@ -1,7 +1,25 @@
 pub mod env {
     use std::env;
 
-    pub fn read(s: &str) -> Option<String> {
-        Some(env::var(s).unwrap())
+    pub fn read_str(s: &str) -> Option<String> {
+        match env::var(s) {
+            Ok(val) => return Some(val),
+            Err(e) => info!("couldn't interpret {s}: {e}")
+        }
+        None
+    }
+
+    pub fn read_u16(s: &str) -> Option<u16> {
+        // Some(env::var(s).unwrap().parse::<u16>().unwrap())
+        match env::var(s) {
+            Ok(val) => {
+                match val.parse::<u16>() {
+                    Ok(val) => return Some(val),
+                    Err(e) => info!("couldn't interpret {s}: {}", e)
+                }
+            }
+            Err(e) => info!("couldn't interpret {s}: {e}"),
+        }
+        None
     }
 }
