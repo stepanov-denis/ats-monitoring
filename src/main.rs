@@ -7,18 +7,15 @@ use env_logger::{Builder, Target};
 use std::error::Error;
 use std::thread;
 use std::time::Duration;
-mod alerts;
 mod generator_monitoring;
 mod init;
 mod modbus_ats;
 mod modbus_winter_garden;
 mod power_supply_monitoring;
 mod psql;
-mod ram;
 mod read_env;
-mod skydb;
 mod telegram;
-mod write_data_to_ram;
+mod sms;
 
 /// Application workflows.
 fn main() -> Result<(), Box<dyn Error + Send + Sync>> {
@@ -54,10 +51,7 @@ fn main() -> Result<(), Box<dyn Error + Send + Sync>> {
     // Run the monitoring of the generator.
     let _generator_monitoring_thread = thread::spawn(|| loop {
         info!("starting up generator_monitoring_spawn");
-        match generator_monitoring::generator::generator_state() {
-            Ok(_) => info!("generator_state(): ok"),
-            Err(e) => info!("{}", e),
-        }
+        generator_monitoring::generator::generator_state();
         thread::sleep(Duration::from_millis(1000));
     });
 
