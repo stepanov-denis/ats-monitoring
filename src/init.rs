@@ -15,7 +15,7 @@ pub mod postgresql {
 
         // Creating avr_control_insert_table
         // a table containing information about the operation of the generator.
-        match crate::psql::postgresql::create_avr_control_table() {
+        match crate::psql::postgresql::create_ats_control_table() {
             Ok(_) => info!("create_avr_control_insert_table(): ok"),
             Err(e) => {
                 info!("{}", e);
