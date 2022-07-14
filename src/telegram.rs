@@ -41,36 +41,28 @@ pub mod bot {
                     .await?
             }
             Command::WinterGarden => {
-                let phyto_lighting_1 = crate::skydb::skytable::get_i32_skydb("phyto_lighting_1");
-                let phyto_lighting_2 = crate::skydb::skytable::get_i32_skydb("phyto_lighting_2");
-                let phyto_lighting_3 = crate::skydb::skytable::get_i32_skydb("phyto_lighting_3");
-                let phyto_lighting_4 = crate::skydb::skytable::get_i32_skydb("phyto_lighting_4");
-                let fan = crate::skydb::skytable::get_i32_skydb("fan");
-                let automatic_watering_1 =
-                    crate::skydb::skytable::get_i32_skydb("automatic_watering_1");
-                let automatic_watering_2 =
-                    crate::skydb::skytable::get_i32_skydb("automatic_watering_2");
-                let automatic_watering_3 =
-                    crate::skydb::skytable::get_i32_skydb("automatic_watering_3");
-                let temperature_indoor =
-                    crate::skydb::skytable::get_i32_skydb("temperature_indoor");
-                let humidity_indoor = crate::skydb::skytable::get_i32_skydb("humidity_indoor");
-                let illumination_indoor =
-                    crate::skydb::skytable::get_i32_skydb("illumination_indoor");
-                let illumination_outdoor =
-                    crate::skydb::skytable::get_i32_skydb("illumination_outdoor");
-                let mut connection = "".to_string();
-                if crate::skydb::skytable::unix_sql() + 5.00
-                    >= crate::skydb::skytable::unix_sql_now()
-                {
-                    if crate::skydb::skytable::plc_connect() == 1 {
-                        connection = "Connection is ok".to_string();
-                    } else {
-                        connection = "Err connecting server to PLC".to_string();
-                    }
-                } else {
-                    connection = "Err connecting server to PostgreSQL".to_string();
-                }
+                let phyto_lighting_1 = "";
+                let phyto_lighting_2 = "";
+                let phyto_lighting_3 = "";
+                let phyto_lighting_4 = "";
+                let fan = "";
+                let automatic_watering_1 ="";
+                    
+                let automatic_watering_2 ="";
+                    
+                let automatic_watering_3 ="";
+                    
+                let temperature_indoor ="";
+                    
+                let humidity_indoor = "";
+                let illumination_indoor ="";
+                    
+                let illumination_outdoor ="";
+                    
+                let mut connection = "";
+                connection = "Connection is ok";
+                connection = "Err connecting server to PLC";
+                connection = "Err connecting server to PostgreSQL";
                 let winter_garden_data = format!(
                     "Winter Garden:\n
                 {}\n
@@ -88,18 +80,18 @@ pub mod bot {
                 > illumination_outdoor: {}\n
                 ",
                     connection,
-                    phyto_lighting_1.unwrap(),
-                    phyto_lighting_2.unwrap(),
-                    phyto_lighting_3.unwrap(),
-                    phyto_lighting_4.unwrap(),
-                    fan.unwrap(),
-                    automatic_watering_1.unwrap(),
-                    automatic_watering_2.unwrap(),
-                    automatic_watering_3.unwrap(),
-                    temperature_indoor.unwrap(),
-                    humidity_indoor.unwrap(),
-                    illumination_indoor.unwrap(),
-                    illumination_outdoor.unwrap()
+                    phyto_lighting_1,
+                    phyto_lighting_2,
+                    phyto_lighting_3,
+                    phyto_lighting_4,
+                    fan,
+                    automatic_watering_1,
+                    automatic_watering_2,
+                    automatic_watering_3,
+                    temperature_indoor,
+                    humidity_indoor,
+                    illumination_indoor,
+                    illumination_outdoor
                 );
                 bot.send_message(message.chat.id, winter_garden_data)
                     .await?
