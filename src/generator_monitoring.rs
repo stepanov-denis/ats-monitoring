@@ -1,18 +1,6 @@
 pub mod generator {
-    extern crate chrono;
-    extern crate timer;
-    use error_chain::error_chain;
-    use reqwest::StatusCode;
-
-    error_chain! {
-        foreign_links {
-            Io(std::io::Error);
-            HttpRequest(reqwest::Error);
-        }
-    }
-
     /// Logging event "Alarm! The generator is faulty! Urgently perform service work!".
-    pub fn log_alarm() {
+    fn log_alarm() {
         info!("Alarm! The generator is faulty! Urgently perform service work!");
         // Records the event
         // "Авария! Генератор неисправен! Срочно произведите сервисные работы!"
@@ -30,22 +18,9 @@ pub mod generator {
         }
     }
 
-    /// Logging event "server error the sms notification was not sent".
-    pub fn log_sms_gateway_server_error(response: reqwest::blocking::Response) {
-        info!("status http request: {}", response.status());
-        info!("server error the sms notification was not sent");
-        // Records log
-        // "Server error! Ошибка! SMS уведомление не было отправлено!"
-        // in the sql table "журнал_работы_приложения".
-        match crate::psql::postgresql::log_server_err() {
-            Ok(_) => info!("crate::psql::postgresql::log_server_err(): ok"),
-            Err(e) => info!("{}", e)
-        }
-    }
-
     /// Logging request for operation of the generator
     /// in the mode of transmission of electricity from the power grid.
-    pub fn log_request_to_generator() {
+    fn log_request_to_generator() {
         info!(
             "request for operation of the generator 
             in the mode of transmission of electricity from the power grid"
@@ -56,36 +31,8 @@ pub mod generator {
         );
     }
 
-    /// Sending SMS.
-    pub fn send_sms(message_env: &str) -> Result<()> {
-        info!("executing an http request to an sms notification service provider");
-        let resp = reqwest::blocking::get(
-            crate::alerts::sms_gateway::sms_message(message_env).unwrap_or_default(),
-        )?;
-        match resp.status() {
-            StatusCode::OK => {
-                info!("http request completed successfully");
-                info!(
-                    "an sms message was sent: {:?}",
-                    crate::read_env::env::read_str(message_env)
-                );
-                // Records log 
-                // "Отправлено SMS сообщение:
-                // Работоспособность генератора в режиме трансляции питания 
-                // от электросети восстановлена.
-                // in the sql table "журнал_работы_приложения".
-                match crate::psql::postgresql::log_send_sms_generator_work_restored(message_env) {
-                    Ok(_) => info!("crate::psql::postgresql::log_send_sms_generator_work_restored(message_env): ok"),
-                    Err(e) => info!("{}", e)
-                }
-            }
-            _ => log_sms_gateway_server_error(resp)
-        }
-        Ok(())
-    }
-
     /// Inner loop for cyclic polling of the emergency generator.
-    pub fn inner_loop_generator_faulty() {
+    fn inner_loop_generator_faulty() {
         'inner: loop {
             // Checking the connection of the app to the PLC.
             if crate::modbus_ats::avr_control::reading_connection() == Some(true) {
@@ -114,7 +61,7 @@ pub mod generator {
                             Err(e) => info!("{}", e)
                         }
                         // Sending SMS notification.
-                        match send_sms("SMS_GEN_WORK_RESTORED") {
+                        match crate::sms::gateway::send_notification("SMS_GEN_WORK_RESTORED") {
                             Ok(_) => info!("send_sms('SMS_GEN_WORK_RESTORED'): ok"),
                             Err(e) => info!("{}", e),
                         }
@@ -128,7 +75,7 @@ pub mod generator {
 
     /// The function of determining the serviceability/malfunction
     /// of the generator and notifying about it by SMS using the gateway API.
-    pub fn generator_state() -> Result<()> {
+    pub fn generator_state() {
         // Checking the connection of the app to the PLC.
         if crate::modbus_ats::avr_control::reading_connection() == Some(true) {
             log_request_to_generator();
@@ -139,7 +86,7 @@ pub mod generator {
                 Ok(1) => {
                     log_alarm();
                     // Sending SMS notification.
-                    match send_sms("SMS_GEN_WORK_ERR") {
+                    match crate::sms::gateway::send_notification("SMS_GEN_WORK_ERR") {
                         Ok(_) => info!("send_sms('SMS_GEN_WORK_ERR'): ok"),
                         Err(e) => info!("{}", e),
                     }
@@ -165,6 +112,5 @@ pub mod generator {
                 }
             }
         }
-        Ok(())
     }
 }
