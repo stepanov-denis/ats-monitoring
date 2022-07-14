@@ -4,6 +4,17 @@ pub mod winter_garden {
     use modbus_iiot::tcp::masteraccess::MasterAccess;
     use std::error::Error;
 
+    fn log_error_connection(message: &str) {
+        let event = format!("error: there is no connection between the app and the plc, {}",
+        message);
+        info!("{}", event);
+        // Records event to the SQL table 'app_log'.
+        match crate::psql::postgresql::insert_event(&event) {
+            Ok(_) => info!("insert_event(): {}", event),
+            Err(e) => info!("{}", e)
+        }
+    }
+
     /// Reading variable values from the PLC "trim5" via Modbus TCP and writing the obtained values to the PostgreSQL DBMS.
     fn reading_input_registers(client: &mut TcpClient) -> Result<(), Box<dyn Error + Send + Sync>> {
         let phyto_lighting_1 = client.read_input_registers(00007, 1);
@@ -117,16 +128,7 @@ pub mod winter_garden {
         let result = client.connect();
         match result {
             Err(message) => {
-                info!(
-                    "error: there is no connection between the app and the plc, {}",
-                    message
-                );
-                // Records log
-                // "Ошибка! Связь ПЛК с модулем modbus_ats отсутствует!" in the sql table "журнал_работы_приложения".
-                match crate::psql::postgresql::log_timeout_or_host_unreachable_modbus_ats() {
-                    Ok(_) => info!("crate::psql::postgresql::log_timeout_or_host_unreachable_modbus_ats(): ok"),
-                    Err(e) => info!("{}", e)
-                }
+                log_error_connection(&message);
             }
             Ok(_) => {
                 info!("app communication with plc: ok");

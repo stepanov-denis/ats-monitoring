@@ -4,6 +4,17 @@ pub mod avr_control {
     use modbus_iiot::tcp::masteraccess::MasterAccess;
     use std::error::Error;
 
+    fn log_error_connection(message: &str) {
+        let event = format!("error: there is no connection between the app and the plc, {}",
+        message);
+        info!("{}", event);
+        // Records event to the SQL table 'app_log'.
+        match crate::psql::postgresql::insert_event(&event) {
+            Ok(_) => info!("insert_event(): {}", event),
+            Err(e) => info!("{}", e)
+        }
+    }
+
     /// Reading variable values from the PLC "trim5" via Modbus TCP and writing the obtained values to the PostgreSQL DBMS.
     fn reading_input_registers(
         client: &mut TcpClient,
@@ -78,16 +89,7 @@ pub mod avr_control {
         let result = client.connect();
         match result {
             Err(message) => {
-                info!(
-                    "error: there is no connection between the app and the plc, {}",
-                    message
-                );
-                // Records log
-                // "Ошибка! Связь ПЛК с модулем modbus_ats отсутствует!" in the sql table "журнал_работы_приложения".
-                match crate::psql::postgresql::log_timeout_or_host_unreachable_modbus_ats() {
-                    Ok(_) => info!("crate::psql::postgresql::log_timeout_or_host_unreachable_modbus_ats(): ok"),
-                    Err(e) => info!("{}", e)
-                }
+                log_error_connection(&message);
             }
             Ok(_) => {
                 info!("app communication with plc: ok");
@@ -103,22 +105,13 @@ pub mod avr_control {
     }
 
     /// Reading the value of the "connection" variable from the TRIM5 PLC via Modbus TCP
-    /// to check the connection of the app to the PLC
+    /// to check the connection of the app to the PLC.
     pub fn reading_connection() -> Option<bool> {
         let mut client = TcpClient::new("10.54.52.201:502");
         let result = client.connect();
         match result {
             Err(message) => {
-                info!(
-                    "error: there is no connection between the app and the plc, {}",
-                    message
-                );
-                // Records log
-                // "Ошибка! Связь ПЛК с модулем modbus_ats отсутствует!" in the sql table "журнал_работы_приложения".
-                match crate::psql::postgresql::log_timeout_or_host_unreachable_modbus_ats() {
-                    Ok(_) => info!("crate::psql::postgresql::log_timeout_or_host_unreachable_modbus_ats(): ok"),
-                    Err(e) => info!("{}", e)
-                }
+                log_error_connection(&message);
             }
             Ok(_) => {
                 info!("app communication with plc: ok");

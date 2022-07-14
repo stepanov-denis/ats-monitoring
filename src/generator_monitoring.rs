@@ -1,19 +1,11 @@
 pub mod generator {
     /// Logging event "Alarm! The generator is faulty! Urgently perform service work!".
     fn log_alarm() {
-        info!("Alarm! The generator is faulty! Urgently perform service work!");
-        // Records the event
-        // "Авария! Генератор неисправен! Срочно произведите сервисные работы!"
-        // in the sql table "события_авр".
-        match crate::psql::postgresql::event_generator_work_err() {
-            Ok(_) => info!("crate::psql::postgresql::event_generator_work_err(): ok"),
-            Err(e) => info!("{}", e)
-        }
-        // Records log
-        // "Авария! Генератор неисправен! Срочно произведите сервисные работы!"
-        // in the sql table "журнал_работы_приложения".
-        match crate::psql::postgresql::log_generator_work_err() {
-            Ok(_) => info!("crate::psql::postgresql::log_generator_work_err(): ok"),
+        let event = "Alarm! The generator is faulty! Urgently perform service work!";
+        info!("{}", event);
+        // Records event to the SQL table 'app_log'.
+        match crate::psql::postgresql::insert_event(event) {
+            Ok(_) => info!("insert_event(): {}", event),
             Err(e) => info!("{}", e)
         }
     }
@@ -42,22 +34,12 @@ pub mod generator {
                 // 1 => the generator is faulty.
                 match crate::psql::postgresql::select_generator_faulty() {
                     Ok(0) => {
-                        info!(
-                            "the efficiency of the generator in the mode 
-                            of transmission of electricity from the power grid has been restored"
-                        );
-                        // Records the event
-                        // "Работоспособность генератора восстановлена. Генератор исправен. Генератор работает."
-                        // in the sql table "события_авр".
-                        match crate::psql::postgresql::event_generator_work_restored() {
-                            Ok(_) => info!("crate::psql::postgresql::event_generator_work_restored(): ok"),
-                            Err(e) => info!("{}", e)
-                        }
-                        // Records log 
-                        // "Работоспособность генератора в режиме трансляции питания от электросети восстановлена"
-                        // in the sql table "журнал_работы_приложения".
-                        match crate::psql::postgresql::log_generator_work_restored() {
-                            Ok(_) => info!("crate::psql::postgresql::log_generator_work_restored(): ok"),
+                        let event = "the efficiency of the generator in the mode 
+                        of transmission of electricity from the power grid has been restored";
+                        info!("{}", event);
+                        // Records event to the SQL table 'app_log'.
+                        match crate::psql::postgresql::insert_event(event) {
+                            Ok(_) => info!("insert_event(): {}", event),
                             Err(e) => info!("{}", e)
                         }
                         // Sending SMS notification.
@@ -94,19 +76,11 @@ pub mod generator {
                     inner_loop_generator_faulty();
                 }
                 _ => {
-                    info!("generator is working properly in the mode of electricity transmission from the power grid");
-                    // Records the event
-                    // "Генератор в режиме трансляции питания от электросети работает исправно."
-                    // in the sql table "события_авр".
-                    match crate::psql::postgresql::event_generator_work_ok() {
-                        Ok(_) => info!("crate::psql::postgresql::event_generator_work_ok(): ok"),
-                        Err(e) => info!("{}", e)
-                    }
-                     // Records log
-                     // "Генератор в режиме трансляции питания от электросети работает исправно."
-                     // in the sql table "журнал_работы_приложения".
-                    match crate::psql::postgresql::log_generator_work_ok() {
-                        Ok(_) => info!("crate::psql::postgresql::log_generator_work_ok(): ok"),
+                    let event = "generator is working properly in the mode of electricity transmission from the power grid";
+                    info!("{}", event);
+                    // Records event to the SQL table 'app_log'.
+                    match crate::psql::postgresql::insert_event(event) {
+                        Ok(_) => info!("insert_event(): {}", event),
                         Err(e) => info!("{}", e)
                     }
                 }

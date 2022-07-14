@@ -19,18 +19,16 @@ pub mod gateway {
 
     /// Logging event "server error the sms notification was not sent".
     fn log_sms_gateway_server_error(response: reqwest::blocking::Response) {
-        info!("status http request: {}", response.status());
-        info!("server error the sms notification was not sent");
-        // Records log
-        // "Server error! Ошибка! SMS уведомление не было отправлено!"
-        // in the sql table "журнал_работы_приложения".
-        match crate::psql::postgresql::log_server_err() {
-            Ok(_) => info!("crate::psql::postgresql::log_server_err(): ok"),
+        let event = format!("error: the sms notification was not sent, status http request: {}", response.status());
+        info!("{}", event);
+        // Records event to the SQL table 'app_log'.
+        match crate::psql::postgresql::insert_event(&event) {
+            Ok(_) => info!("insert_event(): {}", event),
             Err(e) => info!("{}", e)
         }
     }
 
-    /// Sending SMS.
+    /// Sending SMS notification.
     pub fn send_notification(message_env: &str) -> Result<()> {
         info!("executing an http request to an sms notification service provider");
         let resp = reqwest::blocking::get(
@@ -38,18 +36,12 @@ pub mod gateway {
         )?;
         match resp.status() {
             StatusCode::OK => {
-                info!("http request completed successfully");
-                info!(
-                    "an sms message was sent: {:?}",
-                    crate::read_env::env::read_str(message_env)
-                );
-                // Records log 
-                // "Отправлено SMS сообщение:
-                // Работоспособность генератора в режиме трансляции питания 
-                // от электросети восстановлена.
-                // in the sql table "журнал_работы_приложения".
-                match crate::psql::postgresql::log_send_sms_generator_work_restored(message_env) {
-                    Ok(_) => info!("crate::psql::postgresql::log_send_sms_generator_work_restored(message_env): ok"),
+                let event = format!("http request completed successfully, an sms message was sent: {:?}",
+                crate::read_env::env::read_str(message_env));
+                info!("{}", event);
+                // Records event to the SQL table 'app_log'.
+                match crate::psql::postgresql::insert_event(&event) {
+                    Ok(_) => info!("insert_event(): {}", event),
                     Err(e) => info!("{}", e)
                 }
             }
