@@ -25,12 +25,12 @@ pub mod postgresql {
         Ok(())
     }
 
-    /// Create SQL table "avr_control_insert"
-    pub fn create_avr_control_insert_table() -> Result<(), PostgresError> {
+    /// Create SQL table "avr_control".
+    pub fn create_avr_control_table() -> Result<(), PostgresError> {
         let mut client = Client::connect(&db_connect(), NoTls)?;
         client.batch_execute(
             "
-                CREATE TABLE IF NOT EXISTS avr_control_insert (
+                CREATE TABLE IF NOT EXISTS avr_control (
                     mains_power_supply int NOT NULL,
                     start_generator int NOT NULL,
                     generator_faulty int NOT NULL,
@@ -43,53 +43,53 @@ pub mod postgresql {
         Ok(())
     }
 
-    /// Create SQL table "журнал_работы_приложения"
-    pub fn create_log_of_work_app_table() -> Result<(), PostgresError> {
+    /// Create SQL table "app_log".
+    pub fn create_app_log_table() -> Result<(), PostgresError> {
         let mut client = Client::connect(&db_connect(), NoTls)?;
         client.batch_execute(
             "
-                CREATE TABLE IF NOT EXISTS журнал_работы_приложения (
-                    событие text NOT NULL,
-                    время_и_дата timestamp default current_timestamp
+                CREATE TABLE IF NOT EXISTS app_log (
+                    event text NOT NULL,
+                    mark timestamp default current_timestamp
                 )
             ",
         )?;
         Ok(())
     }
 
-    /// Create SQL table "зимний_сад"
+    /// Create SQL table "winter_garden".
     pub fn create_winter_garden_table() -> Result<(), PostgresError> {
         let mut client = Client::connect(&db_connect(), NoTls)?;
         client.batch_execute(
             "
-                CREATE TABLE IF NOT EXISTS зимний_сад (
-                    фитоосвещение_1 int NOT NULL,
-                    фитоосвещение_2 int NOT NULL,
-                    фитоосвещение_3 int NOT NULL,
-                    фитоосвещение_4 int NOT NULL,
-                    вентилятор int NOT NULL,
-                    автополив_1 int NOT NULL,
-                    автополив_2 int NOT NULL,
-                    автополив_3 int NOT NULL,
-                    температура int NOT NULL,
-                    влажность int NOT NULL,
-                    освещенность_в_помещении int NOT NULL,
-                    освещенность_на_улице int NOT NULL,
-                    время_и_дата timestamp default current_timestamp
+                CREATE TABLE IF NOT EXISTS winter_garden (
+                    phyto_lighting_1 int NOT NULL,
+                    phyto_lighting_2 int NOT NULL,
+                    phyto_lighting_3 int NOT NULL,
+                    phyto_lighting_4 int NOT NULL,
+                    fan int NOT NULL,
+                    automatic_watering_1 int NOT NULL,
+                    automatic_watering_2 int NOT NULL,
+                    automatic_watering_3 int NOT NULL,
+                    temperature_indoor int NOT NULL,
+                    humidity_indoor int NOT NULL,
+                    illumination_indoor int NOT NULL,
+                    illumination_outdoor int NOT NULL,
+                    mark timestamp default current_timestamp
                 )
             ",
         )?;
         Ok(())
     }
 
-    /// Create SQL table "нагрузка_на_генератор"
+    /// Create SQL table "generator_load".
     pub fn create_generator_load_table() -> Result<(), PostgresError> {
         let mut client = Client::connect(&db_connect(), NoTls)?;
         client.batch_execute(
             "
-                CREATE TABLE IF NOT EXISTS нагрузка_на_генератор (
-                    нагрузка int NOT NULL,
-                    время_и_дата timestamp default current_timestamp
+                CREATE TABLE IF NOT EXISTS generator_load (
+                    load int NOT NULL,
+                    mark timestamp default current_timestamp
                 
                 )
             ",
@@ -97,17 +97,19 @@ pub mod postgresql {
         Ok(())
     }
 
-    /// Create SQL table "события_авр"
-    pub fn create_avr_events_table() -> Result<(), PostgresError> {
+    /// Records some event to the SQL table 'app_log'.
+    pub fn insert_event(event: &str) -> Result<(), PostgresError> {
         let mut client = Client::connect(&db_connect(), NoTls)?;
-        client.batch_execute(
-            "
-                CREATE TABLE IF NOT EXISTS события_авр (
-                    событие text NOT NULL,
-                    время_и_дата timestamp default current_timestamp
-                )
-            ",
-        )?;
+        client.execute("INSERT INTO app_log (event) VALUES ($1)", &[&event])?;
+
+        for row in client.query(
+            "SELECT event, mark FROM app_log ORDER BY mark DESC limit 1",
+            &[],
+        )? {
+            let event: &str = row.get(0);
+
+            info!("entry in the sql table 'app_log': {}", event);
+        }
         Ok(())
     }
 
@@ -668,7 +670,7 @@ pub mod postgresql {
     /// Records log "Питание от электросети восстановлено." in the sql table "журнал_работы_приложения".
     pub fn log_power_restored() -> Result<(), PostgresError> {
         let mut client = Client::connect(&db_connect(), NoTls)?;
-        let event = "Питание от электросети восстановлено.";
+        let event = "power from the power grid has been restored";
         client.execute(
             "INSERT INTO журнал_работы_приложения (событие) VALUES ($1)",
             &[&event],
@@ -683,7 +685,7 @@ pub mod postgresql {
         {
             let event: &str = row.get(0);
 
-            info!("Запись в табл. журнал_работы_приложения: {}", event);
+            info!("entry in the table 'журнал_работы_приложения': {}", event);
         }
         Ok(())
     }
@@ -858,18 +860,18 @@ pub mod postgresql {
     ) -> Result<(), PostgresError> {
         let mut client = Client::connect(&crate::psql::postgresql::db_connect(), NoTls)?;
         client.execute(
-            "INSERT INTO avr_control_insert (mains_power_supply, start_generator, generator_faulty, generator_work, connection) VALUES ($1, $2, $3, $4, $5)",
+            "INSERT INTO avr_control (mains_power_supply, start_generator, generator_faulty, generator_work, connection) VALUES ($1, $2, $3, $4, $5)",
             &[&mains_power_supply, &start_generator, &generator_faulty, &generator_work, &connection],
         )?;
 
-        for row in client.query("SELECT mains_power_supply, start_generator, generator_faulty, generator_work, connection FROM avr_control_insert ORDER BY mark DESC limit 1", &[])? {
+        for row in client.query("SELECT mains_power_supply, start_generator, generator_faulty, generator_work, connection FROM avr_control ORDER BY mark DESC limit 1", &[])? {
             let mains_power_supply: i32 = row.get(0);
             let start_generator: i32 = row.get(1);
             let generator_faulty: i32 = row.get(2);
             let generator_work: i32 = row.get(3);
             let connection: i32 = row.get(4);
             info!(
-                "the following values are read from the plc and written to the avr_control_insert table: mains_power_supply: {}, start_generator: {}, generator_faulty: {}, generator_work: {}, connection: {}",
+                "the following values are read from the plc and written to the 'avr_control' table: mains_power_supply: {}, start_generator: {}, generator_faulty: {}, generator_work: {}, connection: {}",
                 mains_power_supply, start_generator, generator_faulty, generator_work, connection);
         }
         Ok(())
@@ -891,11 +893,11 @@ pub mod postgresql {
     ) -> Result<(), PostgresError> {
         let mut client = Client::connect(&crate::psql::postgresql::db_connect(), NoTls)?;
         client.execute(
-            "INSERT INTO зимний_сад (фитоосвещение_1, фитоосвещение_2, фитоосвещение_3, фитоосвещение_4, вентилятор, автополив_1, автополив_2, автополив_3, температура, влажность, освещенность_в_помещении, освещенность_на_улице) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12)",
+            "INSERT INTO winter_garden (phyto_lighting_1, phyto_lighting_2, phyto_lighting_3, phyto_lighting_4, fan, automatic_watering_1, automatic_watering_2, automatic_watering_3, temperature_indoor, humidity_indoor, illumination_indoor, illumination_outdoor) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12)",
             &[&phyto_lighting_1, &phyto_lighting_2, &phyto_lighting_3, &phyto_lighting_4, &fan, &automatic_watering_1, &automatic_watering_2, &automatic_watering_3, &temperature_indoor, &humidity_indoor, &illumination_indoor, &illumination_outdoor],
         )?;
 
-        for row in client.query("SELECT фитоосвещение_1, фитоосвещение_2, фитоосвещение_3, фитоосвещение_4, вентилятор, автополив_1, автополив_2, автополив_3, температура, влажность, освещенность_в_помещении, освещенность_на_улице FROM зимний_сад ORDER BY время_и_дата DESC limit 1", &[])? {
+        for row in client.query("SELECT phyto_lighting_1, phyto_lighting_2, phyto_lighting_3, phyto_lighting_4, fan, automatic_watering_1, automatic_watering_2, automatic_watering_3, temperature_indoor, humidity_indoor, illumination_indoor, illumination_outdoor FROM winter_garden ORDER BY mark DESC limit 1", &[])? {
             let phyto_lighting_1: i32 = row.get(0);
             let phyto_lighting_2: i32 = row.get(1);
             let phyto_lighting_3: i32 = row.get(2);
@@ -909,7 +911,7 @@ pub mod postgresql {
             let illumination_indoor: i32 = row.get(10);
             let illumination_outdoor: i32 = row.get(11);
             info!(
-                "the following values are read from the plc and written to the avr_control_insert table: зимний_сад: phyto_lighting_1: {}, phyto_lighting_2: {}, phyto_lighting_3: {}, phyto_lighting_4: {}, fan: {}, automatic_watering_1: {}, automatic_watering_2: {}, automatic_watering_3: {}, temperature_indoor: {}, humidity_indoor: {}, illumination_indoor: {}, illumination_outdoor: {}",
+                "the following values are read from the plc and written to the table 'avr_control' зимний_сад: phyto_lighting_1: {}, phyto_lighting_2: {}, phyto_lighting_3: {}, phyto_lighting_4: {}, fan: {}, automatic_watering_1: {}, automatic_watering_2: {}, automatic_watering_3: {}, temperature_indoor: {}, humidity_indoor: {}, illumination_indoor: {}, illumination_outdoor: {}",
                 phyto_lighting_1, phyto_lighting_2, phyto_lighting_3, phyto_lighting_4, fan, automatic_watering_1, automatic_watering_2, automatic_watering_3, temperature_indoor, humidity_indoor, illumination_indoor, illumination_outdoor);
         }
         Ok(())
@@ -918,17 +920,17 @@ pub mod postgresql {
     pub fn insert_generator_load(load: i32) -> Result<(), PostgresError> {
         let mut client = Client::connect(&crate::psql::postgresql::db_connect(), NoTls)?;
         client.execute(
-            "INSERT INTO нагрузка_на_генератор (нагрузка) VALUES ($1)",
+            "INSERT INTO geberator_load (load) VALUES ($1)",
             &[&load],
         )?;
 
         for row in client.query(
-            "SELECT нагрузка FROM нагрузка_на_генератор ORDER BY время_и_дата DESC limit 1",
+            "SELECT load FROM generator_load ORDER BY mark DESC limit 1",
             &[],
         )? {
             let load: i32 = row.get(0);
             info!(
-                "the following values are read from the plc and written to the нагрузка_на_генератор table: load: {}",
+                "the following values are read from the plc and written to the table 'generator_load' load: {}",
                 load);
         }
         Ok(())
@@ -938,11 +940,50 @@ pub mod postgresql {
         let mut client = Client::connect(&crate::psql::postgresql::db_connect(), NoTls)?;
 
         for row in client.query(
-            "SELECT generator_faulty FROM avr_control_insert ORDER BY mark DESC limit 1",
+            "SELECT generator_faulty FROM avr_control ORDER BY mark DESC limit 1",
             &[],
         )? {
             let generator_faulty: i32 = row.get(0);
             return Ok(generator_faulty);
+        }
+        Ok(2)
+    }
+
+    pub fn select_mains_power_supply() -> Result<i32, PostgresError> {
+        let mut client = Client::connect(&crate::psql::postgresql::db_connect(), NoTls)?;
+
+        for row in client.query(
+            "SELECT mains_power_supply FROM avr_control ORDER BY mark DESC limit 1",
+            &[],
+        )? {
+            let mains_power_supply: i32 = row.get(0);
+            return Ok(mains_power_supply);
+        }
+        Ok(2)
+    }
+
+    pub fn select_start_generator() -> Result<i32, PostgresError> {
+        let mut client = Client::connect(&crate::psql::postgresql::db_connect(), NoTls)?;
+
+        for row in client.query(
+            "SELECT start_generator FROM avr_control ORDER BY mark DESC limit 1",
+            &[],
+        )? {
+            let start_generator: i32 = row.get(0);
+            return Ok(start_generator);
+        }
+        Ok(2)
+    }
+
+    pub fn select_generator_work() -> Result<i32, PostgresError> {
+        let mut client = Client::connect(&crate::psql::postgresql::db_connect(), NoTls)?;
+
+        for row in client.query(
+            "SELECT generator_work FROM avr_control ORDER BY mark DESC limit 1",
+            &[],
+        )? {
+            let generator_work: i32 = row.get(0);
+            return Ok(generator_work);
         }
         Ok(2)
     }

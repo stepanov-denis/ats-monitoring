@@ -15,7 +15,7 @@ pub mod postgresql {
 
         // Creating avr_control_insert_table
         // a table containing information about the operation of the generator.
-        match crate::psql::postgresql::create_avr_control_insert_table() {
+        match crate::psql::postgresql::create_avr_control_table() {
             Ok(_) => info!("create_avr_control_insert_table(): ok"),
             Err(e) => {
                 info!("{}", e);
@@ -26,7 +26,7 @@ pub mod postgresql {
         // Creating log_of_work_app_table
         // a table containing information about
         // the operation of the application (intended for the end user).
-        match crate::psql::postgresql::create_log_of_work_app_table() {
+        match crate::psql::postgresql::create_app_log_table() {
             Ok(_) => info!("create_log_of_work_app_table(): ok"),
             Err(e) => {
                 info!("{}", e);
@@ -50,17 +50,6 @@ pub mod postgresql {
         // the load level connected to the generator.
         match crate::psql::postgresql::create_generator_load_table() {
             Ok(_) => info!("create_generator_load_table(): ok"),
-            Err(e) => {
-                info!("{}", e);
-                panic!("{}", e)
-            }
-        }
-
-        // Creating avr_event_table
-        // a table containing information about
-        // automatic reserve entry events.
-        match crate::psql::postgresql::create_avr_events_table() {
-            Ok(_) => info!("create_avr_events_table(): ok"),
             Err(e) => {
                 info!("{}", e);
                 panic!("{}", e)
