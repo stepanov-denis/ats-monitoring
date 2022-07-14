@@ -5,7 +5,7 @@ pub mod avr_control {
     use std::error::Error;
 
     /// Reading variable values from the PLC "trim5" via Modbus TCP and writing the obtained values to the PostgreSQL DBMS.
-    pub fn reading_input_registers(
+    fn reading_input_registers(
         client: &mut TcpClient,
     ) -> Result<(), Box<dyn Error + Send + Sync>> {
         let mains_power_supply_response = client.read_input_registers(00002, 1);
