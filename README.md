@@ -10,18 +10,16 @@ $ curl --proto '=https' --tlsv1.2 https://sh.rustup.rs -sSf | sh
 For Windows, visit [this page](https://www.rust-lang.org/tools/install)
 * Install dependencies
 ```
+# Ubuntu
 $ sudo apt-get install libssl-dev build-essential
-```
-* Install Skytable
-```
-$ git clone --depth 1 --branch v0.7.3 https://github.com/skytable/skytable.git
-$ cd skytable && cargo build --release
+# Fedora
+$ sudo dnf openssl-devel
 ```
 * Install [PostgreSQL](https://www.postgresql.org/download/)
 ## Initial setup
 * Clone the repository
 ```
-$ git clone git@github.com:stepanov-denis/ats-monitoring.git
+$ git clone https://github.com/stepanov-denis/ats-monitoring.git
 ```
 * Edit your sms gateway authentication string in .cargo/config.toml
 ```
