@@ -65,10 +65,7 @@ fn main() -> Result<(), Box<dyn Error + Send + Sync>> {
     // Run the monitoring of the automatic reserve input.
     loop {
         info!("starting up power_supply_monitoring_spawn");
-        match power_supply_monitoring::power_supply::ats_state() {
-            Ok(_) => info!("ats_state(): ok"),
-            Err(e) => info!("{}", e),
-        }
+        power_supply_monitoring::power_supply::ats_state();
         thread::sleep(Duration::from_millis(1000));
     }
 }
