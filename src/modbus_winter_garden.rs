@@ -2,10 +2,10 @@ pub mod winter_garden {
     extern crate modbus_iiot;
     use modbus_iiot::tcp::master::TcpClient;
     use modbus_iiot::tcp::masteraccess::MasterAccess;
-    use postgres::{Client, Error, NoTls};
+    use std::error::Error;
 
     /// Reading variable values from the PLC "trim5" via Modbus TCP and writing the obtained values to the PostgreSQL DBMS.
-    pub fn reading_input_registers(client: &mut TcpClient) -> Result<(), Error> {
+    pub fn reading_input_registers(client: &mut TcpClient) -> Result<(), Box<dyn Error + Send + Sync>> {
         let phyto_lighting_1_response = client.read_input_registers(00007, 1);
         info!(
             "Response IR phyto_lighting_1: {:?}",
@@ -88,64 +88,54 @@ pub mod winter_garden {
             && illumination_indoor_response.len() == 1
             && illumination_outdoor_response.len() == 1
         {
-            let mut client = Client::connect(&crate::psql::postgresql::db_connect(), NoTls)?;
-
-            let phyto_lighting_1: i32 = phyto_lighting_1_response[0] as i32;
-            let phyto_lighting_2: i32 = phyto_lighting_2_response[0] as i32;
-            let phyto_lighting_3: i32 = phyto_lighting_3_response[0] as i32;
-            let phyto_lighting_4: i32 = phyto_lighting_4_response[0] as i32;
-            let fan: i32 = fan_response[0] as i32;
-            let automatic_watering_1: i32 = automatic_watering_1_response[0] as i32;
-            let automatic_watering_2: i32 = automatic_watering_2_response[0] as i32;
-            let automatic_watering_3: i32 = automatic_watering_3_response[0] as i32;
-            let temperature_indoor: i32 = temperature_indoor_response[0] as i32;
-            let humidity_indoor: i32 = humidity_indoor_response[0] as i32;
-            let illumination_indoor: i32 = illumination_indoor_response[0] as i32;
-            let illumination_outdoor: i32 = illumination_outdoor_response[0] as i32;
-            client.execute(
-                "INSERT INTO зимний_сад (фитоосвещение_1, фитоосвещение_2, фитоосвещение_3, фитоосвещение_4, вентилятор, автополив_1, автополив_2, автополив_3, температура, влажность, освещенность_в_помещении, освещенность_на_улице) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12)",
-                &[&phyto_lighting_1, &phyto_lighting_2, &phyto_lighting_3, &phyto_lighting_4, &fan, &automatic_watering_1, &automatic_watering_2, &automatic_watering_3, &temperature_indoor, &humidity_indoor, &illumination_indoor, &illumination_outdoor],
-            )?;
-
-            for row in client.query("SELECT фитоосвещение_1, фитоосвещение_2, фитоосвещение_3, фитоосвещение_4, вентилятор, автополив_1, автополив_2, автополив_3, температура, влажность, освещенность_в_помещении, освещенность_на_улице FROM зимний_сад ORDER BY время_и_дата DESC limit 1", &[])? {
-                let phyto_lighting_1: i32 = row.get(0);
-                let phyto_lighting_2: i32 = row.get(1);
-                let phyto_lighting_3: i32 = row.get(2);
-                let phyto_lighting_4: i32 = row.get(3);
-                let fan: i32 = row.get(4);
-                let automatic_watering_1: i32 = row.get(5);
-                let automatic_watering_2: i32 = row.get(6);
-                let automatic_watering_3: i32 = row.get(7);
-                let temperature_indoor: i32 = row.get(8);
-                let humidity_indoor: i32 = row.get(9);
-                let illumination_indoor: i32 = row.get(10);
-                let illumination_outdoor: i32 = row.get(11);
-                info!(
-                    "Считаны из ПЛК и записаны в табл. зимний_сад следующие значения: phyto_lighting_1: {}, phyto_lighting_2: {}, phyto_lighting_3: {}, phyto_lighting_4: {}, fan: {}, automatic_watering_1: {}, automatic_watering_2: {}, automatic_watering_3: {}, temperature_indoor: {}, humidity_indoor: {}, illumination_indoor: {}, illumination_outdoor: {}",
-                    phyto_lighting_1, phyto_lighting_2, phyto_lighting_3, phyto_lighting_4, fan, automatic_watering_1, automatic_watering_2, automatic_watering_3, temperature_indoor, humidity_indoor, illumination_indoor, illumination_outdoor);
+            match crate::psql::postgresql::insert_winter_garden(
+                phyto_lighting_1_response[0] as i32,
+                phyto_lighting_2_response[0] as i32,
+                phyto_lighting_3_response[0] as i32,
+                phyto_lighting_4_response[0] as i32,
+                fan_response[0] as i32,
+                automatic_watering_1_response[0] as i32,
+                automatic_watering_2_response[0] as i32,
+                automatic_watering_3_response[0] as i32,
+                temperature_indoor_response[0] as i32,
+                humidity_indoor_response[0] as i32,
+                illumination_indoor_response[0] as i32,
+                illumination_outdoor_response[0] as i32)
+            {
+                Ok(_) => info!("crate::psql::postgresql::insert_winter_garden(): ok"),
+                Err(e) => info!("{}", e)
             }
         } else {
-            info!("Ошибка! Не все значения пререданы модулю modbus_winter_garden от ПЛК!")
+            info!("error: not all values are transmitted to the app from the plc")
         }
         Ok(())
     }
 
     /// Communication session with the PLC via Modbus TCP.
-    pub fn winter_garden_insert() -> Result<(), Error> {
+    pub fn winter_garden() -> Result<(), Box<dyn Error + Send + Sync>> {
         let mut client = TcpClient::new("10.54.52.201:502");
         let result = client.connect();
         match result {
             Err(message) => {
                 info!(
-                    "Ошибка! Связь ПЛК с модулем modbus_winter_garden отсутствует! {}",
+                    "error: there is no connection between the app and the plc, {}",
                     message
                 );
-                crate::psql::postgresql::log_timeout_or_host_unreachable_modbus_winter_garden();
+                // Records log
+                // "Ошибка! Связь ПЛК с модулем modbus_ats отсутствует!" in the sql table "журнал_работы_приложения".
+                match crate::psql::postgresql::log_timeout_or_host_unreachable_modbus_ats() {
+                    Ok(_) => info!("crate::psql::postgresql::log_timeout_or_host_unreachable_modbus_ats(): ok"),
+                    Err(e) => info!("{}", e)
+                }
             }
             Ok(_) => {
-                info!("Связь ПЛК с модулем modbus_winter_garden: Ok");
-                reading_input_registers(&mut client);
-
+                info!("app communication with plc: ok");
+                // Reading variable values from the PLC "trim5" via Modbus TCP
+                // and writing the obtained values to the PostgreSQL DBMS.
+                match reading_input_registers(&mut client) {
+                    Ok(_) => info!("reading_input_registers(): ok"),
+                    Err(e) => info!("{}", e),
+                }
                 client.disconnect();
             }
         }

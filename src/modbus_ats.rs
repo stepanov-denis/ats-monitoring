@@ -4,7 +4,7 @@ pub mod avr_control {
     use modbus_iiot::tcp::masteraccess::MasterAccess;
     use std::error::Error;
 
-    /// Reading variable values from the PLC "trim5" via Modbus TCP and writing the obtained values to the PostgreSQL DBMS
+    /// Reading variable values from the PLC "trim5" via Modbus TCP and writing the obtained values to the PostgreSQL DBMS.
     pub fn reading_input_registers(
         client: &mut TcpClient,
     ) -> Result<(), Box<dyn Error + Send + Sync>> {
@@ -51,24 +51,20 @@ pub mod avr_control {
             && connection_response.len() == 1
             && load_response.len() == 1
         {
-            if crate::psql::postgresql::insert_input_registers_ats(
+            match crate::psql::postgresql::insert_ats(
                 mains_power_supply_response[0] as i32,
                 start_generator_response[0] as i32,
                 generator_faulty_response[0] as i32,
                 generator_work_response[0] as i32,
-                connection_response[0] as i32,
-            )
-            .is_ok()
-            {
-                info!("insert_input_registers_ats(): ok");
-            } else {
-                info!("insert_input_registers_ats(): error");
+                connection_response[0] as i32
+            ) {
+                Ok(_) => info!("insert_input_registers_ats(): ok"),
+                Err(e) => info!("{}", e)
             }
 
-            if crate::psql::postgresql::insert_generator_load(load_response[0] as i32).is_ok() {
-                info!("insert_generator_load(): ok");
-            } else {
-                info!("insert_generator_load(): error");
+            match crate::psql::postgresql::insert_generator_load(load_response[0] as i32) {
+                Ok(_) => info!("insert_generator_load(): ok"),
+                Err(e) => info!("{}", e)
             }
         } else {
             info!("error: not all values are transmitted to the app from the plc");
@@ -86,13 +82,17 @@ pub mod avr_control {
                     "error: there is no connection between the app and the plc, {}",
                     message
                 );
-                info!(
-                    "entry in the журнал_работы_приложения table: {:?}",
-                    crate::psql::postgresql::log_timeout_or_host_unreachable_modbus_ats()
-                );
+                // Records log
+                // "Ошибка! Связь ПЛК с модулем modbus_ats отсутствует!" in the sql table "журнал_работы_приложения".
+                match crate::psql::postgresql::log_timeout_or_host_unreachable_modbus_ats() {
+                    Ok(_) => info!("crate::psql::postgresql::log_timeout_or_host_unreachable_modbus_ats(): ok"),
+                    Err(e) => info!("{}", e)
+                }
             }
             Ok(_) => {
                 info!("app communication with plc: ok");
+                // Reading variable values from the PLC "trim5" via Modbus TCP
+                // and writing the obtained values to the PostgreSQL DBMS.
                 match reading_input_registers(&mut client) {
                     Ok(_) => info!("reading_input_registers(): ok"),
                     Err(e) => info!("{}", e),
@@ -113,10 +113,12 @@ pub mod avr_control {
                     "error: there is no connection between the app and the plc, {}",
                     message
                 );
-                info!(
-                    "entry in the журнал_работы_приложения table: {:?}",
-                    crate::psql::postgresql::log_timeout_or_host_unreachable_modbus_ats()
-                );
+                // Records log
+                // "Ошибка! Связь ПЛК с модулем modbus_ats отсутствует!" in the sql table "журнал_работы_приложения".
+                match crate::psql::postgresql::log_timeout_or_host_unreachable_modbus_ats() {
+                    Ok(_) => info!("crate::psql::postgresql::log_timeout_or_host_unreachable_modbus_ats(): ok"),
+                    Err(e) => info!("{}", e)
+                }
             }
             Ok(_) => {
                 info!("app communication with plc: ok");

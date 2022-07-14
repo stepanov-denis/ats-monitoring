@@ -170,7 +170,7 @@ pub mod postgresql {
     }
 
     /// Records log "Ошибка! Связь ПЛК с модулем modbus_ats отсутствует!" in the sql table "журнал_работы_приложения".
-    pub fn log_timeout_or_host_unreachable_modbus_ats() -> Result<String, PostgresError> {
+    pub fn log_timeout_or_host_unreachable_modbus_ats() -> Result<(), PostgresError> {
         let mut client = Client::connect(&db_connect(), NoTls)?;
         let event = "Ошибка! Связь ПЛК с модулем modbus_ats отсутствует!";
         client.execute(
@@ -187,9 +187,12 @@ pub mod postgresql {
         {
             let event: &str = row.get(0);
 
-            return Ok(String::from(event))
+            info!(
+                "entry in the журнал_работы_приложения table: {}",
+                event
+            );
         }
-        Ok(String::from("some event"))
+        Ok(())
     }
 
     /// Records log "Ошибка! Связь ПЛК с модулем modbus_winter_garden отсутствует!" in the sql table "журнал_работы_приложения".
@@ -846,7 +849,7 @@ pub mod postgresql {
         Ok(())
     }
 
-    pub fn insert_input_registers_ats(
+    pub fn insert_ats(
         mains_power_supply: i32,
         start_generator: i32,
         generator_faulty: i32,
@@ -868,6 +871,46 @@ pub mod postgresql {
             info!(
                 "the following values are read from the plc and written to the avr_control_insert table: mains_power_supply: {}, start_generator: {}, generator_faulty: {}, generator_work: {}, connection: {}",
                 mains_power_supply, start_generator, generator_faulty, generator_work, connection);
+        }
+        Ok(())
+    }
+
+    pub fn insert_winter_garden(
+        phyto_lighting_1: i32,
+        phyto_lighting_2: i32,
+        phyto_lighting_3: i32,
+        phyto_lighting_4: i32,
+        fan: i32,
+        automatic_watering_1: i32,
+        automatic_watering_2: i32,
+        automatic_watering_3: i32,
+        temperature_indoor: i32,
+        humidity_indoor: i32,
+        illumination_indoor: i32,
+        illumination_outdoor: i32
+    ) -> Result<(), PostgresError> {
+        let mut client = Client::connect(&crate::psql::postgresql::db_connect(), NoTls)?;
+        client.execute(
+            "INSERT INTO зимний_сад (фитоосвещение_1, фитоосвещение_2, фитоосвещение_3, фитоосвещение_4, вентилятор, автополив_1, автополив_2, автополив_3, температура, влажность, освещенность_в_помещении, освещенность_на_улице) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12)",
+            &[&phyto_lighting_1, &phyto_lighting_2, &phyto_lighting_3, &phyto_lighting_4, &fan, &automatic_watering_1, &automatic_watering_2, &automatic_watering_3, &temperature_indoor, &humidity_indoor, &illumination_indoor, &illumination_outdoor],
+        )?;
+
+        for row in client.query("SELECT фитоосвещение_1, фитоосвещение_2, фитоосвещение_3, фитоосвещение_4, вентилятор, автополив_1, автополив_2, автополив_3, температура, влажность, освещенность_в_помещении, освещенность_на_улице FROM зимний_сад ORDER BY время_и_дата DESC limit 1", &[])? {
+            let phyto_lighting_1: i32 = row.get(0);
+            let phyto_lighting_2: i32 = row.get(1);
+            let phyto_lighting_3: i32 = row.get(2);
+            let phyto_lighting_4: i32 = row.get(3);
+            let fan: i32 = row.get(4);
+            let automatic_watering_1: i32 = row.get(5);
+            let automatic_watering_2: i32 = row.get(6);
+            let automatic_watering_3: i32 = row.get(7);
+            let temperature_indoor: i32 = row.get(8);
+            let humidity_indoor: i32 = row.get(9);
+            let illumination_indoor: i32 = row.get(10);
+            let illumination_outdoor: i32 = row.get(11);
+            info!(
+                "the following values are read from the plc and written to the avr_control_insert table: зимний_сад: phyto_lighting_1: {}, phyto_lighting_2: {}, phyto_lighting_3: {}, phyto_lighting_4: {}, fan: {}, automatic_watering_1: {}, automatic_watering_2: {}, automatic_watering_3: {}, temperature_indoor: {}, humidity_indoor: {}, illumination_indoor: {}, illumination_outdoor: {}",
+                phyto_lighting_1, phyto_lighting_2, phyto_lighting_3, phyto_lighting_4, fan, automatic_watering_1, automatic_watering_2, automatic_watering_3, temperature_indoor, humidity_indoor, illumination_indoor, illumination_outdoor);
         }
         Ok(())
     }

@@ -10,7 +10,6 @@ pub mod env {
     }
 
     pub fn read_u16(s: &str) -> Option<u16> {
-        // Some(env::var(s).unwrap().parse::<u16>().unwrap())
         match env::var(s) {
             Ok(val) => {
                 match val.parse::<u16>() {

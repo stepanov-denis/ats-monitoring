@@ -34,7 +34,7 @@ pub mod postgresql {
             }
         }
 
-        // Creating winter_gaeden_table
+        // Creating winter_garden_table
         // a table containing information about
         // the operation of the automated winter garden management system.
         match crate::psql::postgresql::create_winter_garden_table() {
