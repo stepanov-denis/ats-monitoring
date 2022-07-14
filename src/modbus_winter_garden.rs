@@ -5,102 +5,102 @@ pub mod winter_garden {
     use std::error::Error;
 
     /// Reading variable values from the PLC "trim5" via Modbus TCP and writing the obtained values to the PostgreSQL DBMS.
-    pub fn reading_input_registers(client: &mut TcpClient) -> Result<(), Box<dyn Error + Send + Sync>> {
-        let phyto_lighting_1_response = client.read_input_registers(00007, 1);
+    fn reading_input_registers(client: &mut TcpClient) -> Result<(), Box<dyn Error + Send + Sync>> {
+        let phyto_lighting_1 = client.read_input_registers(00007, 1);
         info!(
             "Response IR phyto_lighting_1: {:?}",
-            phyto_lighting_1_response
+            phyto_lighting_1
         );
 
-        let phyto_lighting_2_response = client.read_input_registers(00008, 1);
+        let phyto_lighting_2 = client.read_input_registers(00008, 1);
         info!(
             "Response IR phyto_lighting_2: {:?}",
-            phyto_lighting_2_response
+            phyto_lighting_2
         );
 
-        let phyto_lighting_3_response = client.read_input_registers(00009, 1);
+        let phyto_lighting_3 = client.read_input_registers(00009, 1);
         info!(
             "Response IR phyto_lighting_3: {:?}",
-            phyto_lighting_3_response
+            phyto_lighting_3
         );
 
-        let phyto_lighting_4_response = client.read_input_registers(00010, 1);
+        let phyto_lighting_4 = client.read_input_registers(00010, 1);
         info!(
             "Response IR phyto_lighting_4: {:?}",
-            phyto_lighting_4_response
+            phyto_lighting_4
         );
 
-        let fan_response = client.read_input_registers(00011, 1);
-        info!("Response IR fan: {:?}", fan_response);
+        let fan = client.read_input_registers(00011, 1);
+        info!("Response IR fan: {:?}", fan);
 
-        let automatic_watering_1_response = client.read_input_registers(00012, 1);
+        let automatic_watering_1 = client.read_input_registers(00012, 1);
         info!(
             "Response IR automatic_watering_1: {:?}",
-            automatic_watering_1_response
+            automatic_watering_1
         );
 
-        let automatic_watering_2_response = client.read_input_registers(00013, 1);
+        let automatic_watering_2 = client.read_input_registers(00013, 1);
         info!(
             "Response IR automatic_watering_2: {:?}",
-            automatic_watering_2_response
+            automatic_watering_2
         );
 
-        let automatic_watering_3_response = client.read_input_registers(00014, 1);
+        let automatic_watering_3 = client.read_input_registers(00014, 1);
         info!(
             "Response IR automatic_watering_3: {:?}",
-            automatic_watering_3_response
+            automatic_watering_3
         );
 
-        let temperature_indoor_response = client.read_input_registers(00015, 1);
+        let temperature_indoor = client.read_input_registers(00015, 1);
         info!(
             "Response IR temperature_indoor: {:?}",
-            temperature_indoor_response
+            temperature_indoor
         );
 
-        let humidity_indoor_response = client.read_input_registers(00016, 1);
+        let humidity_indoor = client.read_input_registers(00016, 1);
         info!(
             "Response IR humidity_indoor: {:?}",
-            humidity_indoor_response
+            humidity_indoor
         );
 
-        let illumination_indoor_response = client.read_input_registers(00017, 1);
+        let illumination_indoor = client.read_input_registers(00017, 1);
         info!(
             "Response IR illumination_indoor: {:?}",
-            illumination_indoor_response
+            illumination_indoor
         );
 
-        let illumination_outdoor_response = client.read_input_registers(00018, 1);
+        let illumination_outdoor = client.read_input_registers(00018, 1);
         info!(
             "Response IR illumination_outdoor: {:?}",
-            illumination_outdoor_response
+            illumination_outdoor
         );
 
-        if phyto_lighting_1_response.len() == 1
-            && phyto_lighting_2_response.len() == 1
-            && phyto_lighting_3_response.len() == 1
-            && phyto_lighting_4_response.len() == 1
-            && fan_response.len() == 1
-            && automatic_watering_1_response.len() == 1
-            && automatic_watering_2_response.len() == 1
-            && automatic_watering_3_response.len() == 1
-            && temperature_indoor_response.len() == 1
-            && humidity_indoor_response.len() == 1
-            && illumination_indoor_response.len() == 1
-            && illumination_outdoor_response.len() == 1
+        if phyto_lighting_1.len() == 1
+            && phyto_lighting_2.len() == 1
+            && phyto_lighting_3.len() == 1
+            && phyto_lighting_4.len() == 1
+            && fan.len() == 1
+            && automatic_watering_1.len() == 1
+            && automatic_watering_2.len() == 1
+            && automatic_watering_3.len() == 1
+            && temperature_indoor.len() == 1
+            && humidity_indoor.len() == 1
+            && illumination_indoor.len() == 1
+            && illumination_outdoor.len() == 1
         {
             match crate::psql::postgresql::insert_winter_garden(
-                phyto_lighting_1_response[0] as i32,
-                phyto_lighting_2_response[0] as i32,
-                phyto_lighting_3_response[0] as i32,
-                phyto_lighting_4_response[0] as i32,
-                fan_response[0] as i32,
-                automatic_watering_1_response[0] as i32,
-                automatic_watering_2_response[0] as i32,
-                automatic_watering_3_response[0] as i32,
-                temperature_indoor_response[0] as i32,
-                humidity_indoor_response[0] as i32,
-                illumination_indoor_response[0] as i32,
-                illumination_outdoor_response[0] as i32)
+                phyto_lighting_1[0] as i32,
+                phyto_lighting_2[0] as i32,
+                phyto_lighting_3[0] as i32,
+                phyto_lighting_4[0] as i32,
+                fan[0] as i32,
+                automatic_watering_1[0] as i32,
+                automatic_watering_2[0] as i32,
+                automatic_watering_3[0] as i32,
+                temperature_indoor[0] as i32,
+                humidity_indoor[0] as i32,
+                illumination_indoor[0] as i32,
+                illumination_outdoor[0] as i32)
             {
                 Ok(_) => info!("crate::psql::postgresql::insert_winter_garden(): ok"),
                 Err(e) => info!("{}", e)
