@@ -52,7 +52,7 @@ dependencies = [
 
 [[package]]
 name = "ats-monitoring"
-version = "1.4.0"
+version = "1.4.1"
 dependencies = [
  "chrono",
  "env_logger",
