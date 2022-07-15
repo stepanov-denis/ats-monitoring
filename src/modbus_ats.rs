@@ -2,23 +2,11 @@ pub mod avr_control {
     extern crate modbus_iiot;
     use modbus_iiot::tcp::master::TcpClient;
     use modbus_iiot::tcp::masteraccess::MasterAccess;
-    use std::error::Error;
-
-    fn log_error_connection(message: &str) {
-        let event = format!("error: there is no connection between the app and the plc, {}",
-        message);
-        info!("{}", event);
-        // Records event to the SQL table 'app_log'.
-        match crate::psql::postgresql::insert_event(&event) {
-            Ok(_) => info!("insert_event(): {}", event),
-            Err(e) => info!("{}", e)
-        }
-    }
 
     /// Reading variable values from the PLC "trim5" via Modbus TCP and writing the obtained values to the PostgreSQL DBMS.
-    fn reading_input_registers(
-        client: &mut TcpClient,
-    ) -> Result<(), Box<dyn Error + Send + Sync>> {
+    pub fn reading_input_registers(
+        client: & mut TcpClient,
+    ) {
         let mains_power_supply_response = client.read_input_registers(00002, 1);
         info!(
             "response reading_input_registers() mains_power_supply: {:?}",
@@ -80,7 +68,6 @@ pub mod avr_control {
         } else {
             info!("error: not all values are transmitted to the app from the plc");
         }
-        Ok(())
     }
 
     /// Communication session with the PLC via Modbus TCP
@@ -89,16 +76,15 @@ pub mod avr_control {
         let result = client.connect();
         match result {
             Err(message) => {
-                log_error_connection(&message);
+                // Create event "app connection error to PLC".
+                // and records the event to the SQL table 'app_log' and outputs it to info! env_logger.
+                crate::alarm::info::event_err_connect_to_plc(&message);
             }
             Ok(_) => {
                 info!("app communication with plc: ok");
                 // Reading variable values from the PLC "trim5" via Modbus TCP
                 // and writing the obtained values to the PostgreSQL DBMS.
-                match reading_input_registers(&mut client) {
-                    Ok(_) => info!("reading_input_registers(): ok"),
-                    Err(e) => info!("{}", e),
-                }
+                reading_input_registers(&mut client);
                 client.disconnect();
             }
         }
@@ -111,7 +97,9 @@ pub mod avr_control {
         let result = client.connect();
         match result {
             Err(message) => {
-                log_error_connection(&message);
+                // Create event "app connection error to PLC".
+                // and records the event to the SQL table 'app_log' and outputs it to info! env_logger.
+                crate::alarm::info::event_err_connect_to_plc(&message);
             }
             Ok(_) => {
                 info!("app communication with plc: ok");
