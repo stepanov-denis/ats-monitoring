@@ -49,5 +49,5 @@ TG_POW_RESTORED_GEN_OK = "Питание от электросети восст�
 # The text of the Telegram-message about the resumption of power supply from the network and the failure of the generator
 TG_POW_RESTORED_GEN_ERR = "Питание от электросети восстановлено.\nГенератор неисправен.\nГенератор не работает."
 
-# mains_power_supply_response
-MAINS_POWER_SUPPLY = "00002"
+# IP adress PLC TRIM5
+IP_TRIM5 = "10.54.52.201:502"
