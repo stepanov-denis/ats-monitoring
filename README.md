@@ -56,10 +56,6 @@ POSTGRES_PORT = "5432"
 * Run PLC Trim5
 ## Run app locally
 * Run PostgreSQL
-* Run Skytable
-```
-$ cd skytable && cargo run --bin skyd --release
-```
 * Run ATS Monitoring
 ```
 $ cd ats-monitoring && cargo run --release
@@ -77,7 +73,7 @@ $ RUST_LOG=trace cargo run --release
 $ RUST_LOG=debug cargo run --release > log.txt
 ```
 ## Run app in docker locally
-* Run app, postgresql, skyd in the background
+* Run app, postgresql, in the background
 ```
 $ docker compose up -d
 ```
