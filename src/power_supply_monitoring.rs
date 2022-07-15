@@ -111,7 +111,7 @@ pub mod power_supply {
     /// successful start of the generator,
     /// generator start failure,
     /// operability/malfunction of the power supply transmission mode from the mains by the generator.
-    pub fn ats_state() {
+    pub fn ats_monitoring() {
         // Checking the connection of the app to the PLC.
         if crate::modbus_ats::avr_control::reading_connection() == Some(true) {
             // Logging a request for a power failure in the power grid.
