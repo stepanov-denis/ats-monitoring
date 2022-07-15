@@ -59,10 +59,10 @@ pub mod bot {
 
                 let illumination_outdoor = "";
 
-                let mut connection = "";
-                connection = "Connection is ok";
-                connection = "Err connecting server to PLC";
-                connection = "Err connecting server to PostgreSQL";
+                // let mut connection = "";
+                let connection = "Connection is ok";
+                // connection = "Err connecting server to PLC";
+                // connection = "Err connecting server to PostgreSQL";
                 let winter_garden_data = format!(
                     "Winter Garden:\n
                 {}\n
@@ -105,7 +105,7 @@ pub mod bot {
         Ok(())
     }
 
-    async fn send_alerts(
+    async fn _send_alerts(
         _bot: AutoSend<Bot>,
         msg: Message,
         s: String,

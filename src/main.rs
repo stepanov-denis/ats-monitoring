@@ -5,8 +5,6 @@ extern crate env_logger;
 extern crate modbus_iiot;
 extern crate timer;
 use env_logger::{Builder, Target};
-use modbus_iiot::tcp::master::TcpClient;
-use modbus_iiot::tcp::masteraccess::MasterAccess;
 use std::error::Error;
 use std::thread;
 use std::time::Duration;

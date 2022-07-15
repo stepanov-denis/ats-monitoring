@@ -1,17 +1,9 @@
 pub mod tcp {
     extern crate modbus_iiot;
     use modbus_iiot::tcp::master::TcpClient;
-    use modbus_iiot::tcp::masteraccess::MasterAccess;
-    use std::error::Error;
 
-    fn this() -> TcpClient {
-        let ip = "IP_TRIM5";
-        let plc_ip = crate::read_env::env::read_str(ip);
-        let mut client = TcpClient::new(&plc_ip.unwrap_or_default());
-        client
-    }
     /// Communication session with the PLC via Modbus TCP
-    pub fn client(client: &mut TcpClient, func: fn(&mut TcpClient)) {
+    pub fn _client(client: &mut TcpClient, func: fn(&mut TcpClient)) {
         let result = client.connect();
         match result {
             Err(message) => {
