@@ -3,13 +3,18 @@ extern crate log;
 extern crate chrono;
 extern crate env_logger;
 extern crate timer;
-use env_logger::{Builder, Target};
+extern crate modbus_iiot;
+use modbus_iiot::tcp::master::TcpClient;
+use modbus_iiot::tcp::masteraccess::MasterAccess;
 use std::error::Error;
+use env_logger::{Builder, Target};
 use std::thread;
 use std::time::Duration;
+mod alarm;
 mod generator_monitoring;
 mod init;
 mod modbus_ats;
+mod modbus_client;
 mod modbus_winter_garden;
 mod power_supply_monitoring;
 mod psql;
@@ -51,7 +56,7 @@ fn main() -> Result<(), Box<dyn Error + Send + Sync>> {
     // Run the monitoring of the generator.
     let _generator_monitoring_thread = thread::spawn(|| loop {
         info!("starting up generator_monitoring_spawn");
-        generator_monitoring::generator::generator_state();
+        generator_monitoring::generator::generator_monitoring();
         thread::sleep(Duration::from_millis(1000));
     });
 
@@ -65,7 +70,7 @@ fn main() -> Result<(), Box<dyn Error + Send + Sync>> {
     // Run the monitoring of the automatic reserve input.
     loop {
         info!("starting up power_supply_monitoring_spawn");
-        power_supply_monitoring::power_supply::ats_state();
+        power_supply_monitoring::power_supply::ats_monitoring();
         thread::sleep(Duration::from_millis(1000));
     }
 }
