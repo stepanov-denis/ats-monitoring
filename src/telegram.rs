@@ -46,19 +46,19 @@ pub mod bot {
                 let phyto_lighting_3 = "";
                 let phyto_lighting_4 = "";
                 let fan = "";
-                let automatic_watering_1 ="";
-                    
-                let automatic_watering_2 ="";
-                    
-                let automatic_watering_3 ="";
-                    
-                let temperature_indoor ="";
-                    
+                let automatic_watering_1 = "";
+
+                let automatic_watering_2 = "";
+
+                let automatic_watering_3 = "";
+
+                let temperature_indoor = "";
+
                 let humidity_indoor = "";
-                let illumination_indoor ="";
-                    
-                let illumination_outdoor ="";
-                    
+                let illumination_indoor = "";
+
+                let illumination_outdoor = "";
+
                 let mut connection = "";
                 connection = "Connection is ok";
                 connection = "Err connecting server to PLC";

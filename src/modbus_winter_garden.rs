@@ -7,28 +7,16 @@ pub mod winter_garden {
     /// Reading variable values from the PLC "trim5" via Modbus TCP and writing the obtained values to the PostgreSQL DBMS.
     fn reading_input_registers(client: &mut TcpClient) -> Result<(), Box<dyn Error + Send + Sync>> {
         let phyto_lighting_1 = client.read_input_registers(00007, 1);
-        info!(
-            "Response IR phyto_lighting_1: {:?}",
-            phyto_lighting_1
-        );
+        info!("Response IR phyto_lighting_1: {:?}", phyto_lighting_1);
 
         let phyto_lighting_2 = client.read_input_registers(00008, 1);
-        info!(
-            "Response IR phyto_lighting_2: {:?}",
-            phyto_lighting_2
-        );
+        info!("Response IR phyto_lighting_2: {:?}", phyto_lighting_2);
 
         let phyto_lighting_3 = client.read_input_registers(00009, 1);
-        info!(
-            "Response IR phyto_lighting_3: {:?}",
-            phyto_lighting_3
-        );
+        info!("Response IR phyto_lighting_3: {:?}", phyto_lighting_3);
 
         let phyto_lighting_4 = client.read_input_registers(00010, 1);
-        info!(
-            "Response IR phyto_lighting_4: {:?}",
-            phyto_lighting_4
-        );
+        info!("Response IR phyto_lighting_4: {:?}", phyto_lighting_4);
 
         let fan = client.read_input_registers(00011, 1);
         info!("Response IR fan: {:?}", fan);
@@ -52,22 +40,13 @@ pub mod winter_garden {
         );
 
         let temperature_indoor = client.read_input_registers(00015, 1);
-        info!(
-            "Response IR temperature_indoor: {:?}",
-            temperature_indoor
-        );
+        info!("Response IR temperature_indoor: {:?}", temperature_indoor);
 
         let humidity_indoor = client.read_input_registers(00016, 1);
-        info!(
-            "Response IR humidity_indoor: {:?}",
-            humidity_indoor
-        );
+        info!("Response IR humidity_indoor: {:?}", humidity_indoor);
 
         let illumination_indoor = client.read_input_registers(00017, 1);
-        info!(
-            "Response IR illumination_indoor: {:?}",
-            illumination_indoor
-        );
+        info!("Response IR illumination_indoor: {:?}", illumination_indoor);
 
         let illumination_outdoor = client.read_input_registers(00018, 1);
         info!(
@@ -100,10 +79,10 @@ pub mod winter_garden {
                 temperature_indoor[0] as i32,
                 humidity_indoor[0] as i32,
                 illumination_indoor[0] as i32,
-                illumination_outdoor[0] as i32)
-            {
+                illumination_outdoor[0] as i32,
+            ) {
                 Ok(_) => info!("crate::psql::postgresql::insert_winter_garden(): ok"),
-                Err(e) => info!("{}", e)
+                Err(e) => info!("{}", e),
             }
         } else {
             info!("error: not all values are transmitted to the app from the plc")

@@ -153,7 +153,7 @@ pub mod postgresql {
         temperature_indoor: i32,
         humidity_indoor: i32,
         illumination_indoor: i32,
-        illumination_outdoor: i32
+        illumination_outdoor: i32,
     ) -> Result<(), PostgresError> {
         let mut client = Client::connect(&crate::psql::postgresql::db_connect(), NoTls)?;
         client.execute(
@@ -183,10 +183,7 @@ pub mod postgresql {
 
     pub fn insert_generator_load(load: i32) -> Result<(), PostgresError> {
         let mut client = Client::connect(&crate::psql::postgresql::db_connect(), NoTls)?;
-        client.execute(
-            "INSERT INTO generator_load (load) VALUES ($1)",
-            &[&load],
-        )?;
+        client.execute("INSERT INTO generator_load (load) VALUES ($1)", &[&load])?;
 
         for row in client.query(
             "SELECT load FROM generator_load ORDER BY mark DESC limit 1",
@@ -213,7 +210,7 @@ pub mod postgresql {
         Ok(2)
     }
 
-    /// Getting the start_generator value 
+    /// Getting the start_generator value
     /// 0 - generator startup failure
     /// 1 - successful generator startup
     pub fn select_mains_power_supply() -> Result<i32, PostgresError> {

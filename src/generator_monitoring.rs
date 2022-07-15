@@ -34,7 +34,8 @@ pub mod generator {
                         break 'inner;
                     }
                     _ => {
-                        let event = "Alarm! The generator is faulty! Urgently perform service work!";
+                        let event =
+                            "Alarm! The generator is faulty! Urgently perform service work!";
                         // Records the event to the SQL table 'app_log' and outputs it to info! env_logger.
                         crate::alarm::info::log_alarm(event);
                     }

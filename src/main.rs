@@ -2,12 +2,12 @@
 extern crate log;
 extern crate chrono;
 extern crate env_logger;
-extern crate timer;
 extern crate modbus_iiot;
+extern crate timer;
+use env_logger::{Builder, Target};
 use modbus_iiot::tcp::master::TcpClient;
 use modbus_iiot::tcp::masteraccess::MasterAccess;
 use std::error::Error;
-use env_logger::{Builder, Target};
 use std::thread;
 use std::time::Duration;
 mod alarm;
@@ -19,8 +19,8 @@ mod modbus_winter_garden;
 mod power_supply_monitoring;
 mod psql;
 mod read_env;
-mod telegram;
 mod sms;
+mod telegram;
 
 /// Application workflows.
 fn main() -> Result<(), Box<dyn Error + Send + Sync>> {

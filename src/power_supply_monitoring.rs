@@ -18,9 +18,7 @@ pub mod power_supply {
 
     /// Logging a request for a power failure in the power grid.
     fn log_request_to_mains_power_supply() {
-        info!(
-            "request for power from the mains"
-        );
+        info!("request for power from the mains");
         info!(
             "response from postgresql: mains_power_supply = {:?}",
             crate::psql::postgresql::select_mains_power_supply()
@@ -34,7 +32,7 @@ pub mod power_supply {
         // Records event to the SQL table 'app_log'.
         match crate::psql::postgresql::insert_event(event) {
             Ok(_) => info!("insert_event(): {}", event),
-            Err(e) => info!("{}", e)
+            Err(e) => info!("{}", e),
         }
     }
 
@@ -63,12 +61,16 @@ pub mod power_supply {
                                 // Records event to the SQL table 'app_log'.
                                 match crate::psql::postgresql::insert_event(event) {
                                     Ok(_) => info!("insert_event(): {}", event),
-                                    Err(e) => info!("{}", e)
+                                    Err(e) => info!("{}", e),
                                 }
                                 // Sending SMS notification.
-                                match crate::sms::gateway::send_notification("SMS_POW_RESTORED_GEN_OK") {
-                                    Ok(_) => info!("send_notification('SMS_POW_RESTORED_GEN_OK'): ok"),
-                                    Err(e) => info!("{}", e)
+                                match crate::sms::gateway::send_notification(
+                                    "SMS_POW_RESTORED_GEN_OK",
+                                ) {
+                                    Ok(_) => {
+                                        info!("send_notification('SMS_POW_RESTORED_GEN_OK'): ok")
+                                    }
+                                    Err(e) => info!("{}", e),
                                 }
                             }
                             Ok(0) => {
@@ -77,16 +79,20 @@ pub mod power_supply {
                                 // Records event to the SQL table 'app_log'.
                                 match crate::psql::postgresql::insert_event(event) {
                                     Ok(_) => info!("insert_event(): {}", event),
-                                    Err(e) => info!("{}", e)
+                                    Err(e) => info!("{}", e),
                                 }
                                 // Sending SMS notification.
-                                match crate::sms::gateway::send_notification("SMS_POW_RESTORED_GEN_ERR") {
-                                    Ok(_) => info!("send_notification('SMS_POW_RESTORED_GEN_ERR'): ok"),
-                                    Err(e) => info!("{}", e)
+                                match crate::sms::gateway::send_notification(
+                                    "SMS_POW_RESTORED_GEN_ERR",
+                                ) {
+                                    Ok(_) => {
+                                        info!("send_notification('SMS_POW_RESTORED_GEN_ERR'): ok")
+                                    }
+                                    Err(e) => info!("{}", e),
                                 }
                             }
                             Err(e) => info!("{}", e),
-                            _ => info!("the generator_work value is not 0 or 1")
+                            _ => info!("the generator_work value is not 0 or 1"),
                         }
                         break 'inner;
                     }
@@ -96,11 +102,11 @@ pub mod power_supply {
                         // Records event to the SQL table 'app_log'.
                         match crate::psql::postgresql::insert_event(event) {
                             Ok(_) => info!("insert_event(): {}", event),
-                            Err(e) => info!("{}", e)
+                            Err(e) => info!("{}", e),
                         }
                     }
                     Err(e) => info!("{}", e),
-                    _ => info!("the mains_power_supply value is not 0 or 1")
+                    _ => info!("the mains_power_supply value is not 0 or 1"),
                 }
             }
         }
@@ -122,13 +128,16 @@ pub mod power_supply {
             match crate::psql::postgresql::select_mains_power_supply() {
                 Ok(0) => {
                     let delay = 90;
-                    let event = format!("there was a power failure from the power grid,
-                    waiting {} seconds for confirmation of the absence of power from the mains", delay);
+                    let event = format!(
+                        "there was a power failure from the power grid,
+                    waiting {} seconds for confirmation of the absence of power from the mains",
+                        delay
+                    );
                     info!("{}", event);
                     // Records event to the SQL table 'app_log'.
                     match crate::psql::postgresql::insert_event(&event) {
                         Ok(_) => info!("insert_event(): {}", event),
-                        Err(e) => info!("{}", e)
+                        Err(e) => info!("{}", e),
                     }
                     // Standby timer to confirm the power off from the mains.
                     timer_for_delay(delay);
@@ -146,9 +155,9 @@ pub mod power_supply {
                                 // Records event to the SQL table 'app_log'.
                                 match crate::psql::postgresql::insert_event(&event) {
                                     Ok(_) => info!("insert_event(): {}", event),
-                                    Err(e) => info!("{}", e)
+                                    Err(e) => info!("{}", e),
                                 }
-                                // Getting the start_generator value 
+                                // Getting the start_generator value
                                 // 0 - generator startup failure
                                 // 1 - successful generator startup
                                 match crate::psql::postgresql::select_start_generator() {
@@ -158,12 +167,16 @@ pub mod power_supply {
                                         // Records event to the SQL table 'app_log'.
                                         match crate::psql::postgresql::insert_event(&event) {
                                             Ok(_) => info!("insert_event(): {}", event),
-                                            Err(e) => info!("{}", e)
+                                            Err(e) => info!("{}", e),
                                         }
                                         // Sending SMS notification.
-                                        match crate::sms::gateway::send_notification("SMS_START_GEN_OK") {
-                                            Ok(_) => info!("send_notification('SMS_START_GEN_OK'): ok"),
-                                            Err(e) => info!("{}", e)
+                                        match crate::sms::gateway::send_notification(
+                                            "SMS_START_GEN_OK",
+                                        ) {
+                                            Ok(_) => {
+                                                info!("send_notification('SMS_START_GEN_OK'): ok")
+                                            }
+                                            Err(e) => info!("{}", e),
                                         }
                                     }
                                     Ok(0) => {
@@ -172,16 +185,20 @@ pub mod power_supply {
                                         // Records event to the SQL table 'app_log'.
                                         match crate::psql::postgresql::insert_event(&event) {
                                             Ok(_) => info!("insert_event(): {}", event),
-                                            Err(e) => info!("{}", e)
+                                            Err(e) => info!("{}", e),
                                         }
                                         // Sending SMS notification.
-                                        match crate::sms::gateway::send_notification("SMS_START_GEN_ERR") {
-                                            Ok(_) => info!("send_notification('SMS_START_GEN_ERR'): ok"),
-                                            Err(e) => info!("{}", e)
+                                        match crate::sms::gateway::send_notification(
+                                            "SMS_START_GEN_ERR",
+                                        ) {
+                                            Ok(_) => {
+                                                info!("send_notification('SMS_START_GEN_ERR'): ok")
+                                            }
+                                            Err(e) => info!("{}", e),
                                         }
                                     }
                                     Err(e) => info!("{}", e),
-                                    _ => info!("the start_generator value is not 0 or 1")
+                                    _ => info!("the start_generator value is not 0 or 1"),
                                 }
                                 // ATS polling cycle after power outage.
                                 inner_loop();
@@ -191,7 +208,7 @@ pub mod power_supply {
                                 power_restored();
                             }
                             Err(e) => info!("{}", e),
-                            _ => info!("the mains_power_supply value is not 0 or 1")
+                            _ => info!("the mains_power_supply value is not 0 or 1"),
                         }
                     }
                 }
@@ -201,12 +218,11 @@ pub mod power_supply {
                     // Records event to the SQL table 'app_log'.
                     match crate::psql::postgresql::insert_event(&event) {
                         Ok(_) => info!("insert_event(): {}", event),
-                        Err(e) => info!("{}", e)
+                        Err(e) => info!("{}", e),
                     }
                 }
                 Err(e) => info!("{}", e),
-                _ => info!("the mains_power_supply value is not 0 or 1")
-
+                _ => info!("the mains_power_supply value is not 0 or 1"),
             }
         }
     }

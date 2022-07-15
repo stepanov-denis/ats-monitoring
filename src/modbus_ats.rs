@@ -4,9 +4,7 @@ pub mod avr_control {
     use modbus_iiot::tcp::masteraccess::MasterAccess;
 
     /// Reading variable values from the PLC "trim5" via Modbus TCP and writing the obtained values to the PostgreSQL DBMS.
-    pub fn reading_input_registers(
-        client: & mut TcpClient,
-    ) {
+    pub fn reading_input_registers(client: &mut TcpClient) {
         let mains_power_supply_response = client.read_input_registers(00002, 1);
         info!(
             "response reading_input_registers() mains_power_supply: {:?}",
@@ -55,15 +53,15 @@ pub mod avr_control {
                 start_generator_response[0] as i32,
                 generator_faulty_response[0] as i32,
                 generator_work_response[0] as i32,
-                connection_response[0] as i32
+                connection_response[0] as i32,
             ) {
                 Ok(_) => info!("insert_input_registers_ats(): ok"),
-                Err(e) => info!("{}", e)
+                Err(e) => info!("{}", e),
             }
 
             match crate::psql::postgresql::insert_generator_load(load_response[0] as i32) {
                 Ok(_) => info!("insert_generator_load(): ok"),
-                Err(e) => info!("{}", e)
+                Err(e) => info!("{}", e),
             }
         } else {
             info!("error: not all values are transmitted to the app from the plc");
