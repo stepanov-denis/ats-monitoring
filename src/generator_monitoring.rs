@@ -73,7 +73,7 @@ pub mod generator {
                 _ => {
                     let event = "generator is working properly in the mode of electricity transmission from the power grid";
                     // Records the event to the SQL table 'app_log' and outputs it to info! env_logger.
-                    crate::alarm::info::log_alarm(&event);
+                    crate::alarm::info::log_alarm(event);
                 }
             }
         }

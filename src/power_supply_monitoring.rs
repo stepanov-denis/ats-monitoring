@@ -153,7 +153,7 @@ pub mod power_supply {
                                 let event = "confirmation of the absence of mains power";
                                 info!("{}", event);
                                 // Records event to the SQL table 'app_log'.
-                                match crate::psql::postgresql::insert_event(&event) {
+                                match crate::psql::postgresql::insert_event(event) {
                                     Ok(_) => info!("insert_event(): {}", event),
                                     Err(e) => info!("{}", e),
                                 }
@@ -165,7 +165,7 @@ pub mod power_supply {
                                         let event = "disconnecting power from the mains, successful start of the generator";
                                         info!("{}", event);
                                         // Records event to the SQL table 'app_log'.
-                                        match crate::psql::postgresql::insert_event(&event) {
+                                        match crate::psql::postgresql::insert_event(event) {
                                             Ok(_) => info!("insert_event(): {}", event),
                                             Err(e) => info!("{}", e),
                                         }
@@ -183,7 +183,7 @@ pub mod power_supply {
                                         let event = "disconnecting power from the mains, the generator startup failed";
                                         info!("{}", event);
                                         // Records event to the SQL table 'app_log'.
-                                        match crate::psql::postgresql::insert_event(&event) {
+                                        match crate::psql::postgresql::insert_event(event) {
                                             Ok(_) => info!("insert_event(): {}", event),
                                             Err(e) => info!("{}", e),
                                         }
@@ -216,7 +216,7 @@ pub mod power_supply {
                     let event = "the power is supplied from the mains";
                     info!("{}", event);
                     // Records event to the SQL table 'app_log'.
-                    match crate::psql::postgresql::insert_event(&event) {
+                    match crate::psql::postgresql::insert_event(event) {
                         Ok(_) => info!("insert_event(): {}", event),
                         Err(e) => info!("{}", e),
                     }

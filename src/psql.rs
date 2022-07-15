@@ -5,13 +5,13 @@ pub mod postgresql {
         // String::from("postgresql://postgres:mysecretpassword@postgresql:5432/postgres")
         let mut s = String::from("postgresql://");
         s.push_str(&crate::read_env::env::read_str("POSTGRES_USERNAME").unwrap_or_default());
-        s.push_str(":");
+        s.push(':');
         s.push_str(&crate::read_env::env::read_str("POSTGRES_PASSWORD").unwrap_or_default());
-        s.push_str("@");
+        s.push('@');
         s.push_str(&crate::read_env::env::read_str("POSTGRES_HOSTNAME").unwrap_or_default());
-        s.push_str(":");
+        s.push(':');
         s.push_str(&crate::read_env::env::read_str("POSTGRES_PORT").unwrap_or_default());
-        s.push_str("/");
+        s.push('/');
         s.push_str(&crate::read_env::env::read_str("POSTGRES_DB").unwrap_or_default());
         s
     }
