@@ -9,7 +9,7 @@ pub mod env {
         None
     }
 
-    pub fn _read_u16(s: &str) -> Option<u16> {
+    pub fn read_u16(s: &str) -> Option<u16> {
         match env::var(s) {
             Ok(val) => match val.parse::<u16>() {
                 Ok(val) => return Some(val),

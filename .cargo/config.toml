@@ -49,5 +49,60 @@ TG_POW_RESTORED_GEN_OK = "Питание от электросети восст�
 # The text of the Telegram-message about the resumption of power supply from the network and the failure of the generator
 TG_POW_RESTORED_GEN_ERR = "Питание от электросети восстановлено.\nГенератор неисправен.\nГенератор не работает."
 
+
 # IP adress PLC TRIM5
 IP_TRIM5 = "10.54.52.201:502"
+
+# mains_power_supply_response
+MAINS_POWER_SUPPLY = "00002"
+
+# start_generator
+START_GENERATOR = "00003"
+
+# generator_faulty
+GENERATOR_FAULTY = "00005"
+
+# generator_work
+GENERATOR_WORK = "00006"
+
+# connection
+CONNECTION = "00019"
+
+# load
+LOAD = "00004"
+
+# phyto_lighting_1
+PHYTO_LIGHTING_1 = "00007"
+
+# phyto_lighting_2
+PHYTO_LIGHTING_2 = "00008"
+
+# phyto_lighting_3
+PHYTO_LIGHTING_3 = "00009"
+
+# phyto_lighting_4
+PHYTO_LIGHTING_4 = "00010"
+
+# fan
+FAN = "00011"
+
+# automatic_watering_1
+AUTOMATIC_WATERING_1 = "00012"
+
+# automatic_watering_2
+AUTOMATIC_WATERING_2 = "00013"
+
+# automatic_watering_3
+AUTOMATIC_WATERING_3 = "00014"
+
+# temperature_indoor
+TEMPERATURE_INDOOR = "00015"
+
+# humidity_indoor
+HUMIDITY_INDOOR = "00016"
+
+# illumination_indoor
+ILLUMINATION_INDOOR = "00017"
+
+# illumination_outdoor
+ILLUMINATION_OUTDOOR = "00018"
