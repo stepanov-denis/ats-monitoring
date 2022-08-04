@@ -1,5 +1,6 @@
 pub mod postgresql {
     use crate::modbus_ats::ats_control::Ats;
+    use crate::modbus_ats::ats_control::GeneratorLoad;
     use crate::modbus_winter_garden::winter_garden_control::WinterGarden;
     use postgres::{Client, Error as PostgresError, NoTls};
 
@@ -175,9 +176,12 @@ pub mod postgresql {
         Ok(())
     }
 
-    pub fn insert_generator_load(load: i32) -> Result<(), PostgresError> {
+    pub fn insert_generator_load(generator_load: GeneratorLoad) -> Result<(), PostgresError> {
         let mut client = Client::connect(&crate::psql::postgresql::db_connect(), NoTls)?;
-        client.execute("INSERT INTO generator_load (load) VALUES ($1)", &[&load])?;
+        client.execute(
+            "INSERT INTO generator_load (load) VALUES ($1)",
+            &[&generator_load.load],
+        )?;
 
         for row in client.query(
             "SELECT load FROM generator_load ORDER BY mark DESC limit 1",

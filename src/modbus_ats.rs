@@ -11,6 +11,10 @@ pub mod ats_control {
         pub connection: i32,
     }
 
+    pub struct GeneratorLoad {
+        pub load: i32,
+    }
+
     fn read(client: &mut TcpClient, adress: &str, quantity: u16) -> Vec<u16> {
         client.read_input_registers(
             crate::read_env::env::read_u16(adress).unwrap_or_default(),
@@ -68,12 +72,16 @@ pub mod ats_control {
                 connection: connection[0] as i32,
             };
 
+            let generator_load: GeneratorLoad = GeneratorLoad {
+                load: load[0] as i32,
+            };
+
             match crate::psql::postgresql::insert_ats(ats) {
                 Ok(_) => info!("insert_input_registers_ats(): ok"),
                 Err(e) => info!("{}", e),
             }
 
-            match crate::psql::postgresql::insert_generator_load(load[0] as i32) {
+            match crate::psql::postgresql::insert_generator_load(generator_load) {
                 Ok(_) => info!("insert_generator_load(): ok"),
                 Err(e) => info!("{}", e),
             }
