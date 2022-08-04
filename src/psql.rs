@@ -1,6 +1,7 @@
 pub mod postgresql {
-    use postgres::{Client, Error as PostgresError, NoTls};
     use crate::modbus_ats::ats_control::Ats;
+    use crate::modbus_winter_garden::winter_garden_control::WinterGarden;
+    use postgres::{Client, Error as PostgresError, NoTls};
 
     pub fn db_connect() -> String {
         // String::from("postgresql://postgres:mysecretpassword@postgresql:5432/postgres")
@@ -115,9 +116,7 @@ pub mod postgresql {
     }
 
     /// Records the values of the variables of the automatic reserve to the SQL table "ats_control".
-    pub fn insert_ats(
-        ats: Ats
-    ) -> Result<(), PostgresError> {
+    pub fn insert_ats(ats: Ats) -> Result<(), PostgresError> {
         let mut client = Client::connect(&crate::psql::postgresql::db_connect(), NoTls)?;
         client.execute(
             "INSERT INTO ats_control (mains_power_supply, start_generator, generator_faulty, transmitted_work, connection) VALUES ($1, $2, $3, $4, $5)",
@@ -138,24 +137,22 @@ pub mod postgresql {
     }
 
     /// Records the values of the variables of the automatic winter garden management system to the SQL table "winter_garden".
-    pub fn insert_winter_garden(
-        phyto_lighting_1: i32,
-        phyto_lighting_2: i32,
-        phyto_lighting_3: i32,
-        phyto_lighting_4: i32,
-        fan: i32,
-        automatic_watering_1: i32,
-        automatic_watering_2: i32,
-        automatic_watering_3: i32,
-        temperature_indoor: i32,
-        humidity_indoor: i32,
-        illumination_indoor: i32,
-        illumination_outdoor: i32,
-    ) -> Result<(), PostgresError> {
+    pub fn insert_winter_garden(winter_garden: WinterGarden) -> Result<(), PostgresError> {
         let mut client = Client::connect(&crate::psql::postgresql::db_connect(), NoTls)?;
         client.execute(
             "INSERT INTO winter_garden (phyto_lighting_1, phyto_lighting_2, phyto_lighting_3, phyto_lighting_4, fan, automatic_watering_1, automatic_watering_2, automatic_watering_3, temperature_indoor, humidity_indoor, illumination_indoor, illumination_outdoor) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12)",
-            &[&phyto_lighting_1, &phyto_lighting_2, &phyto_lighting_3, &phyto_lighting_4, &fan, &automatic_watering_1, &automatic_watering_2, &automatic_watering_3, &temperature_indoor, &humidity_indoor, &illumination_indoor, &illumination_outdoor],
+            &[&winter_garden.phyto_lighting_1,
+            &winter_garden.phyto_lighting_2,
+            &winter_garden.phyto_lighting_3,
+            &winter_garden.phyto_lighting_4,
+            &winter_garden.fan,
+            &winter_garden.automatic_watering_1,
+            &winter_garden.automatic_watering_2,
+            &winter_garden.automatic_watering_3,
+            &winter_garden.temperature_indoor,
+            &winter_garden.humidity_indoor,
+            &winter_garden.illumination_indoor,
+            &winter_garden.illumination_outdoor],
         )?;
 
         for row in client.query("SELECT phyto_lighting_1, phyto_lighting_2, phyto_lighting_3, phyto_lighting_4, fan, automatic_watering_1, automatic_watering_2, automatic_watering_3, temperature_indoor, humidity_indoor, illumination_indoor, illumination_outdoor FROM winter_garden ORDER BY mark DESC limit 1", &[])? {
@@ -197,13 +194,17 @@ pub mod postgresql {
     pub fn select_generator_faulty() -> Result<i32, PostgresError> {
         let mut client = Client::connect(&crate::psql::postgresql::db_connect(), NoTls)?;
 
-        for row in client.query(
+        if let Some(row) = (client.query(
             "SELECT generator_faulty FROM ats_control ORDER BY mark DESC limit 1",
             &[],
-        )? {
+        )?)
+        .into_iter()
+        .next()
+        {
             let generator_faulty: i32 = row.get(0);
             return Ok(generator_faulty);
         }
+
         Ok(2)
     }
 
@@ -213,26 +214,34 @@ pub mod postgresql {
     pub fn select_mains_power_supply() -> Result<i32, PostgresError> {
         let mut client = Client::connect(&crate::psql::postgresql::db_connect(), NoTls)?;
 
-        for row in client.query(
+        if let Some(row) = (client.query(
             "SELECT mains_power_supply FROM ats_control ORDER BY mark DESC limit 1",
             &[],
-        )? {
+        )?)
+        .into_iter()
+        .next()
+        {
             let mains_power_supply: i32 = row.get(0);
             return Ok(mains_power_supply);
         }
+
         Ok(2)
     }
 
     pub fn select_start_generator() -> Result<i32, PostgresError> {
         let mut client = Client::connect(&crate::psql::postgresql::db_connect(), NoTls)?;
 
-        for row in client.query(
+        if let Some(row) = (client.query(
             "SELECT start_generator FROM ats_control ORDER BY mark DESC limit 1",
             &[],
-        )? {
+        )?)
+        .into_iter()
+        .next()
+        {
             let start_generator: i32 = row.get(0);
             return Ok(start_generator);
         }
+
         Ok(2)
     }
 
@@ -242,13 +251,17 @@ pub mod postgresql {
     pub fn select_transmitted_work() -> Result<i32, PostgresError> {
         let mut client = Client::connect(&crate::psql::postgresql::db_connect(), NoTls)?;
 
-        for row in client.query(
+        if let Some(row) = (client.query(
             "SELECT transmitted_work FROM ats_control ORDER BY mark DESC limit 1",
             &[],
-        )? {
+        )?)
+        .into_iter()
+        .next()
+        {
             let transmitted_work: i32 = row.get(0);
             return Ok(transmitted_work);
         }
+
         Ok(2)
     }
 }

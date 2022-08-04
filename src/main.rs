@@ -44,7 +44,7 @@ fn main() -> Result<(), Box<dyn Error + Send + Sync>> {
     // Run polling of the automatic winter garden management system.
     let _modbus_winter_garden_thread = thread::spawn(|| loop {
         info!("starting up modbus_winter_garden_spawn");
-        match modbus_winter_garden::winter_garden::winter_garden() {
+        match modbus_winter_garden::winter_garden_control::winter_garden() {
             Ok(_) => info!("winter_garden_insert(): ok"),
             Err(e) => info!("{}", e),
         }

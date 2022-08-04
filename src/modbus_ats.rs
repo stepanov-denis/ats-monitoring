@@ -12,7 +12,10 @@ pub mod ats_control {
     }
 
     fn read(client: &mut TcpClient, adress: &str, quantity: u16) -> Vec<u16> {
-        client.read_input_registers(crate::read_env::env::read_u16(adress).unwrap_or_default(), quantity)
+        client.read_input_registers(
+            crate::read_env::env::read_u16(adress).unwrap_or_default(),
+            quantity,
+        )
     }
 
     /// Reading variable values from the PLC "trim5" via Modbus TCP and writing the obtained values to the PostgreSQL DBMS.
@@ -48,10 +51,7 @@ pub mod ats_control {
         );
 
         let load: Vec<u16> = read(client, "LOAD", 1);
-        info!(
-            "response reading_input_registers() load: {:?}",
-            load
-        );
+        info!("response reading_input_registers() load: {:?}", load);
 
         if mains_power_supply.len() == 1
             && start_generator.len() == 1
@@ -60,12 +60,12 @@ pub mod ats_control {
             && connection.len() == 1
             && load.len() == 1
         {
-            let ats: Ats = Ats{
+            let ats: Ats = Ats {
                 mains_power_supply: mains_power_supply[0] as i32,
                 start_generator: start_generator[0] as i32,
                 generator_faulty: generator_faulty[0] as i32,
                 transmitted_work: transmitted_work[0] as i32,
-                connection: connection[0] as i32
+                connection: connection[0] as i32,
             };
 
             match crate::psql::postgresql::insert_ats(ats) {
@@ -84,7 +84,8 @@ pub mod ats_control {
 
     /// Communication session with the PLC via Modbus TCP
     pub fn avr_control() {
-        let mut client = TcpClient::new(&crate::read_env::env::read_str("IP_TRIM5").unwrap_or_default());
+        let mut client =
+            TcpClient::new(&crate::read_env::env::read_str("IP_TRIM5").unwrap_or_default());
         let result = client.connect();
         match result {
             Err(message) => {
@@ -105,7 +106,8 @@ pub mod ats_control {
     /// Reading the value of the "connection" variable from the TRIM5 PLC via Modbus TCP
     /// to check the connection of the app to the PLC.
     pub fn reading_connection() -> Option<bool> {
-        let mut client = TcpClient::new(&crate::read_env::env::read_str("IP_TRIM5").unwrap_or_default());
+        let mut client =
+            TcpClient::new(&crate::read_env::env::read_str("IP_TRIM5").unwrap_or_default());
         let result = client.connect();
         match result {
             Err(message) => {

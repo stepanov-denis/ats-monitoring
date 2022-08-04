@@ -1,11 +1,29 @@
-pub mod winter_garden {
+pub mod winter_garden_control {
     extern crate modbus_iiot;
     use modbus_iiot::tcp::master::TcpClient;
     use modbus_iiot::tcp::masteraccess::MasterAccess;
     use std::error::Error;
 
+    pub struct WinterGarden {
+        pub phyto_lighting_1: i32,
+        pub phyto_lighting_2: i32,
+        pub phyto_lighting_3: i32,
+        pub phyto_lighting_4: i32,
+        pub fan: i32,
+        pub automatic_watering_1: i32,
+        pub automatic_watering_2: i32,
+        pub automatic_watering_3: i32,
+        pub temperature_indoor: i32,
+        pub humidity_indoor: i32,
+        pub illumination_indoor: i32,
+        pub illumination_outdoor: i32,
+    }
+
     fn read(client: &mut TcpClient, adress: &str, quantity: u16) -> Vec<u16> {
-        client.read_input_registers(crate::read_env::env::read_u16(adress).unwrap_or_default(), quantity)
+        client.read_input_registers(
+            crate::read_env::env::read_u16(adress).unwrap_or_default(),
+            quantity,
+        )
     }
 
     /// Reading variable values from the PLC "trim5" via Modbus TCP and writing the obtained values to the PostgreSQL DBMS.
@@ -71,20 +89,22 @@ pub mod winter_garden {
             && illumination_indoor.len() == 1
             && illumination_outdoor.len() == 1
         {
-            match crate::psql::postgresql::insert_winter_garden(
-                phyto_lighting_1[0] as i32,
-                phyto_lighting_2[0] as i32,
-                phyto_lighting_3[0] as i32,
-                phyto_lighting_4[0] as i32,
-                fan[0] as i32,
-                automatic_watering_1[0] as i32,
-                automatic_watering_2[0] as i32,
-                automatic_watering_3[0] as i32,
-                temperature_indoor[0] as i32,
-                humidity_indoor[0] as i32,
-                illumination_indoor[0] as i32,
-                illumination_outdoor[0] as i32,
-            ) {
+            let winter_garden: WinterGarden = WinterGarden {
+                phyto_lighting_1: phyto_lighting_1[0] as i32,
+                phyto_lighting_2: phyto_lighting_2[0] as i32,
+                phyto_lighting_3: phyto_lighting_3[0] as i32,
+                phyto_lighting_4: phyto_lighting_4[0] as i32,
+                fan: fan[0] as i32,
+                automatic_watering_1: automatic_watering_1[0] as i32,
+                automatic_watering_2: automatic_watering_2[0] as i32,
+                automatic_watering_3: automatic_watering_3[0] as i32,
+                temperature_indoor: temperature_indoor[0] as i32,
+                humidity_indoor: humidity_indoor[0] as i32,
+                illumination_indoor: illumination_indoor[0] as i32,
+                illumination_outdoor: illumination_outdoor[0] as i32,
+            };
+
+            match crate::psql::postgresql::insert_winter_garden(winter_garden) {
                 Ok(_) => info!("crate::psql::postgresql::insert_winter_garden(): ok"),
                 Err(e) => info!("{}", e),
             }
@@ -96,7 +116,8 @@ pub mod winter_garden {
 
     /// Communication session with the PLC via Modbus TCP.
     pub fn winter_garden() -> Result<(), Box<dyn Error + Send + Sync>> {
-        let mut client = TcpClient::new(&crate::read_env::env::read_str("IP_TRIM5").unwrap_or_default());
+        let mut client =
+            TcpClient::new(&crate::read_env::env::read_str("IP_TRIM5").unwrap_or_default());
         let result = client.connect();
         match result {
             Err(message) => {
