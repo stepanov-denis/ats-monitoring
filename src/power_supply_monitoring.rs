@@ -41,7 +41,7 @@ pub mod power_supply {
         'inner: loop {
             // Reading the value of the "connection" variable from the TRIM5 PLC via Modbus TCP
             // to check the connection of the app to the PLC.
-            if crate::modbus_ats::avr_control::reading_connection() == Some(true) {
+            if crate::modbus_ats::ats_control::reading_connection() == Some(true) {
                 // Logging a request for a power failure in the power grid.
                 log_request_to_mains_power_supply();
                 // Getting the mains_power_supply value
@@ -119,7 +119,7 @@ pub mod power_supply {
     /// operability/malfunction of the power supply transmission mode from the mains by the generator.
     pub fn ats_monitoring() {
         // Checking the connection of the app to the PLC.
-        if crate::modbus_ats::avr_control::reading_connection() == Some(true) {
+        if crate::modbus_ats::ats_control::reading_connection() == Some(true) {
             // Logging a request for a power failure in the power grid.
             log_request_to_mains_power_supply();
             // Getting the mains_power_supply value
@@ -142,7 +142,7 @@ pub mod power_supply {
                     // Standby timer to confirm the power off from the mains.
                     timer_for_delay(delay);
                     // Checking the connection of the app to the PLC.
-                    if crate::modbus_ats::avr_control::reading_connection() == Some(true) {
+                    if crate::modbus_ats::ats_control::reading_connection() == Some(true) {
                         // Request for the availability of power from the mains and request the start status of the generator.
                         log_request_to_mains_power_supply();
                         // Getting the mains_power_supply value

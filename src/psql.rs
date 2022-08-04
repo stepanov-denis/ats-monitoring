@@ -1,5 +1,6 @@
 pub mod postgresql {
     use postgres::{Client, Error as PostgresError, NoTls};
+    use crate::modbus_ats::ats_control::Ats;
 
     pub fn db_connect() -> String {
         // String::from("postgresql://postgres:mysecretpassword@postgresql:5432/postgres")
@@ -115,16 +116,12 @@ pub mod postgresql {
 
     /// Records the values of the variables of the automatic reserve to the SQL table "ats_control".
     pub fn insert_ats(
-        mains_power_supply: i32,
-        start_generator: i32,
-        generator_faulty: i32,
-        transmitted_work: i32,
-        connection: i32,
+        ats: Ats
     ) -> Result<(), PostgresError> {
         let mut client = Client::connect(&crate::psql::postgresql::db_connect(), NoTls)?;
         client.execute(
             "INSERT INTO ats_control (mains_power_supply, start_generator, generator_faulty, transmitted_work, connection) VALUES ($1, $2, $3, $4, $5)",
-            &[&mains_power_supply, &start_generator, &generator_faulty, &transmitted_work, &connection],
+            &[&ats.mains_power_supply, &ats.start_generator, &ats.generator_faulty, &ats.transmitted_work, &ats.connection],
         )?;
 
         for row in client.query("SELECT mains_power_supply, start_generator, generator_faulty, transmitted_work, connection FROM ats_control ORDER BY mark DESC limit 1", &[])? {

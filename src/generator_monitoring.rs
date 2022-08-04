@@ -11,7 +11,7 @@ pub mod generator {
     fn inner_loop_generator_faulty() {
         'inner: loop {
             // Checking the connection of the app to the PLC.
-            if crate::modbus_ats::avr_control::reading_connection() == Some(true) {
+            if crate::modbus_ats::ats_control::reading_connection() == Some(true) {
                 // Create a request event for the operation of the generator
                 // in the mode of transmission of electricity from the power grid.
                 let event = log_request_to_generator();
@@ -48,7 +48,7 @@ pub mod generator {
     /// of the generator and notifying about it by SMS using the gateway API.
     pub fn generator_monitoring() {
         // Checking the connection of the app to the PLC.
-        if crate::modbus_ats::avr_control::reading_connection() == Some(true) {
+        if crate::modbus_ats::ats_control::reading_connection() == Some(true) {
             // Create a request event for the operation of the generator
             // in the mode of transmission of electricity from the power grid.
             let event = log_request_to_generator();

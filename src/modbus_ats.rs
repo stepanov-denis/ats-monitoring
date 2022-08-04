@@ -1,7 +1,15 @@
-pub mod avr_control {
+pub mod ats_control {
     extern crate modbus_iiot;
     use modbus_iiot::tcp::master::TcpClient;
     use modbus_iiot::tcp::masteraccess::MasterAccess;
+
+    pub struct Ats {
+        pub mains_power_supply: i32,
+        pub start_generator: i32,
+        pub generator_faulty: i32,
+        pub transmitted_work: i32,
+        pub connection: i32,
+    }
 
     fn read(client: &mut TcpClient, adress: &str, quantity: u16) -> Vec<u16> {
         client.read_input_registers(crate::read_env::env::read_u16(adress).unwrap_or_default(), quantity)
@@ -9,37 +17,37 @@ pub mod avr_control {
 
     /// Reading variable values from the PLC "trim5" via Modbus TCP and writing the obtained values to the PostgreSQL DBMS.
     pub fn reading_input_registers(client: &mut TcpClient) {
-        let mains_power_supply = read(client, "MAINS_POWER_SUPPLY", 1);
+        let mains_power_supply: Vec<u16> = read(client, "MAINS_POWER_SUPPLY", 1);
         info!(
             "response reading_input_registers() mains_power_supply: {:?}",
             mains_power_supply
         );
 
-        let start_generator = read(client, "START_GENERATOR", 1);
+        let start_generator: Vec<u16> = read(client, "START_GENERATOR", 1);
         info!(
             "response reading_input_registers() start_generator: {:?}",
             start_generator
         );
 
-        let generator_faulty = read(client, "GENERATOR_FAULTY", 1);
+        let generator_faulty: Vec<u16> = read(client, "GENERATOR_FAULTY", 1);
         info!(
             "response reading_input_registers() generator_faulty: {:?}",
             generator_faulty
         );
 
-        let generator_work = read(client, "GENERATOR_WORK", 1);
+        let transmitted_work: Vec<u16> = read(client, "TRANSMITTED_WORK", 1);
         info!(
             "response reading_input_registers() generator_work: {:?}",
-            generator_work
+            transmitted_work
         );
 
-        let connection = read(client, "CONNECTION", 1);
+        let connection: Vec<u16> = read(client, "CONNECTION", 1);
         info!(
             "response reading_input_registers() connection: {:?}",
             connection
         );
 
-        let load = read(client, "LOAD", 1);
+        let load: Vec<u16> = read(client, "LOAD", 1);
         info!(
             "response reading_input_registers() load: {:?}",
             load
@@ -48,17 +56,19 @@ pub mod avr_control {
         if mains_power_supply.len() == 1
             && start_generator.len() == 1
             && generator_faulty.len() == 1
-            && generator_work.len() == 1
+            && transmitted_work.len() == 1
             && connection.len() == 1
             && load.len() == 1
         {
-            match crate::psql::postgresql::insert_ats(
-                mains_power_supply[0] as i32,
-                start_generator[0] as i32,
-                generator_faulty[0] as i32,
-                generator_work[0] as i32,
-                connection[0] as i32,
-            ) {
+            let ats: Ats = Ats{
+                mains_power_supply: mains_power_supply[0] as i32,
+                start_generator: start_generator[0] as i32,
+                generator_faulty: generator_faulty[0] as i32,
+                transmitted_work: transmitted_work[0] as i32,
+                connection: connection[0] as i32
+            };
+
+            match crate::psql::postgresql::insert_ats(ats) {
                 Ok(_) => info!("insert_input_registers_ats(): ok"),
                 Err(e) => info!("{}", e),
             }

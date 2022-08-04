@@ -37,7 +37,7 @@ fn main() -> Result<(), Box<dyn Error + Send + Sync>> {
     // Run polling of the automatic reserve input.
     let _modbus_ats_thread = thread::spawn(|| loop {
         info!("starting up modbus_ats_spawn");
-        modbus_ats::avr_control::avr_control();
+        modbus_ats::ats_control::avr_control();
         thread::sleep(Duration::from_millis(1000));
     });
 

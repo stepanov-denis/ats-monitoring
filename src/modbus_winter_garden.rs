@@ -10,49 +10,49 @@ pub mod winter_garden {
 
     /// Reading variable values from the PLC "trim5" via Modbus TCP and writing the obtained values to the PostgreSQL DBMS.
     fn reading_input_registers(client: &mut TcpClient) -> Result<(), Box<dyn Error + Send + Sync>> {
-        let phyto_lighting_1 = read(client, "PHYTO_LIGHTING_1", 1);
+        let phyto_lighting_1: Vec<u16> = read(client, "PHYTO_LIGHTING_1", 1);
         info!("Response IR phyto_lighting_1: {:?}", phyto_lighting_1);
 
-        let phyto_lighting_2 = read(client, "PHYTO_LIGHTING_2", 1);
+        let phyto_lighting_2: Vec<u16> = read(client, "PHYTO_LIGHTING_2", 1);
         info!("Response IR phyto_lighting_2: {:?}", phyto_lighting_2);
 
-        let phyto_lighting_3 = read(client, "PHYTO_LIGHTING_3", 1);
+        let phyto_lighting_3: Vec<u16> = read(client, "PHYTO_LIGHTING_3", 1);
         info!("Response IR phyto_lighting_3: {:?}", phyto_lighting_3);
 
-        let phyto_lighting_4 = read(client, "PHYTO_LIGHTING_4", 1);
+        let phyto_lighting_4: Vec<u16> = read(client, "PHYTO_LIGHTING_4", 1);
         info!("Response IR phyto_lighting_4: {:?}", phyto_lighting_4);
 
-        let fan = read(client, "FAN", 1);
+        let fan: Vec<u16> = read(client, "FAN", 1);
         info!("Response IR fan: {:?}", fan);
 
-        let automatic_watering_1 = read(client, "AUTOMATIC_WATERING_1", 1);
+        let automatic_watering_1: Vec<u16> = read(client, "AUTOMATIC_WATERING_1", 1);
         info!(
             "Response IR automatic_watering_1: {:?}",
             automatic_watering_1
         );
 
-        let automatic_watering_2 = read(client, "AUTOMATIC_WATERING_2", 1);
+        let automatic_watering_2: Vec<u16> = read(client, "AUTOMATIC_WATERING_2", 1);
         info!(
             "Response IR automatic_watering_2: {:?}",
             automatic_watering_2
         );
 
-        let automatic_watering_3 = read(client, "AUTOMATIC_WATERING_3", 1);
+        let automatic_watering_3: Vec<u16> = read(client, "AUTOMATIC_WATERING_3", 1);
         info!(
             "Response IR automatic_watering_3: {:?}",
             automatic_watering_3
         );
 
-        let temperature_indoor = read(client, "TEMPERATURE_INDOOR", 1);
+        let temperature_indoor: Vec<u16> = read(client, "TEMPERATURE_INDOOR", 1);
         info!("Response IR temperature_indoor: {:?}", temperature_indoor);
 
-        let humidity_indoor = read(client, "HUMIDITY_INDOOR", 1);
+        let humidity_indoor: Vec<u16> = read(client, "HUMIDITY_INDOOR", 1);
         info!("Response IR humidity_indoor: {:?}", humidity_indoor);
 
-        let illumination_indoor = read(client, "ILLUMINATION_INDOOR", 1);
+        let illumination_indoor: Vec<u16> = read(client, "ILLUMINATION_INDOOR", 1);
         info!("Response IR illumination_indoor: {:?}", illumination_indoor);
 
-        let illumination_outdoor = read(client, "ILLUMINATION_OUTDOOR", 1);
+        let illumination_outdoor: Vec<u16> = read(client, "ILLUMINATION_OUTDOOR", 1);
         info!(
             "Response IR illumination_outdoor: {:?}",
             illumination_outdoor
