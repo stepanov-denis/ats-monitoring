@@ -18,9 +18,7 @@ timer = "0.2.0"
 chrono = "0.4.19"
 reqwest = { version = "0.11.4", features = ["blocking"] }
 error-chain = "0.12.4"
-online = { version = "3.0.1",  default-features = false, features = ["sync"] }
 modbus-iiot = "0.2.0"
-skytable = "0.6.2"
 log = "0.4.14"
 env_logger = "0.9.0"
 teloxide = { version = "0.9", features = ["macros", "auto-send"] }
