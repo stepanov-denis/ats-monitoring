@@ -54,55 +54,55 @@ TG_POW_RESTORED_GEN_ERR = "Питание от электросети восст
 IP_TRIM5 = "10.54.52.201:502"
 
 # mains_power_supply_response
-MAINS_POWER_SUPPLY = "00002"
+MAINS_POWER_SUPPLY = "2"
 
 # start_generator
-START_GENERATOR = "00003"
+START_GENERATOR = "3"
 
 # generator_faulty
-GENERATOR_FAULTY = "00005"
+GENERATOR_FAULTY = "5"
 
 # generator_work
-TRANSMITTED_WORK = "00006"
+TRANSMITTED_WORK = "6"
 
 # connection
-CONNECTION = "00019"
+CONNECTION = "19"
 
 # load
-LOAD = "00004"
+LOAD = "4"
 
 # phyto_lighting_1
-PHYTO_LIGHTING_1 = "00007"
+PHYTO_LIGHTING_1 = "7"
 
 # phyto_lighting_2
-PHYTO_LIGHTING_2 = "00008"
+PHYTO_LIGHTING_2 = "8"
 
 # phyto_lighting_3
-PHYTO_LIGHTING_3 = "00009"
+PHYTO_LIGHTING_3 = "9"
 
 # phyto_lighting_4
-PHYTO_LIGHTING_4 = "00010"
+PHYTO_LIGHTING_4 = "10"
 
 # fan
-FAN = "00011"
+FAN = "11"
 
 # automatic_watering_1
-AUTOMATIC_WATERING_1 = "00012"
+AUTOMATIC_WATERING_1 = "12"
 
 # automatic_watering_2
-AUTOMATIC_WATERING_2 = "00013"
+AUTOMATIC_WATERING_2 = "13"
 
 # automatic_watering_3
-AUTOMATIC_WATERING_3 = "00014"
+AUTOMATIC_WATERING_3 = "14"
 
 # temperature_indoor
-TEMPERATURE_INDOOR = "00015"
+TEMPERATURE_INDOOR = "15"
 
 # humidity_indoor
-HUMIDITY_INDOOR = "00016"
+HUMIDITY_INDOOR = "16"
 
 # illumination_indoor
-ILLUMINATION_INDOOR = "00017"
+ILLUMINATION_INDOOR = "17"
 
 # illumination_outdoor
-ILLUMINATION_OUTDOOR = "00018"
+ILLUMINATION_OUTDOOR = "18"
