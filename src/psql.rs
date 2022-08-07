@@ -4,6 +4,7 @@ pub mod postgresql {
     use crate::modbus_winter_garden::winter_garden_control::WinterGarden;
     use postgres::{Client, Error as PostgresError, NoTls};
 
+    /// rRturns the database connection string.
     pub fn db_connect() -> String {
         // String::from("postgresql://postgres:mysecretpassword@postgresql:5432/postgres")
         let mut s = String::from("postgresql://");
@@ -141,7 +142,8 @@ pub mod postgresql {
         Ok(())
     }
 
-    /// Records the values of the variables of the automatic winter garden management system to the SQL table "winter_garden".
+    /// Records the values of the variables of the automatic winter garden management system
+    /// to the SQL table "winter_garden".
     pub fn insert_winter_garden(winter_garden: WinterGarden) -> Result<(), PostgresError> {
         let mut client = Client::connect(&crate::psql::postgresql::db_connect(), NoTls)?;
         client.execute(
@@ -180,6 +182,7 @@ pub mod postgresql {
         Ok(())
     }
 
+    /// Records the value of the load level variable connected to the generator.
     pub fn insert_generator_load(generator_load: GeneratorLoad) -> Result<(), PostgresError> {
         let mut client = Client::connect(&crate::psql::postgresql::db_connect(), NoTls)?;
         client.execute(
@@ -199,6 +202,10 @@ pub mod postgresql {
         Ok(())
     }
 
+    /// Getting generator_faulty value
+    /// 0 - generator is working properly in the mode of electricity transmission from the power grid
+    /// 1 - the generator does not work in the mode of transmission of electricity from the power grid
+    /// 2 - the generator_faulty value is not 0 or 1.
     pub fn select_generator_faulty() -> Result<i32, PostgresError> {
         let mut client = Client::connect(&crate::psql::postgresql::db_connect(), NoTls)?;
 
@@ -216,9 +223,10 @@ pub mod postgresql {
         Ok(2)
     }
 
-    /// Getting the start_generator value
-    /// 0 - generator startup failure
-    /// 1 - successful generator startup
+    /// Getting the mains_power_supply value
+    /// 0 - there is no power supply from the city power grid
+    /// 1 - there is power from the city power grid
+    /// 2 - the mains_power_supply value is not 0 or 1.
     pub fn select_mains_power_supply() -> Result<i32, PostgresError> {
         let mut client = Client::connect(&crate::psql::postgresql::db_connect(), NoTls)?;
 
@@ -236,6 +244,10 @@ pub mod postgresql {
         Ok(2)
     }
 
+    /// Getting the start_generator value
+    /// 0 - generator start failure
+    /// 1 - the generator has started
+    /// 2 - the start_generator value is not 0 or 1.
     pub fn select_start_generator() -> Result<i32, PostgresError> {
         let mut client = Client::connect(&crate::psql::postgresql::db_connect(), NoTls)?;
 
@@ -253,9 +265,10 @@ pub mod postgresql {
         Ok(2)
     }
 
-    /// Getting the generator_work value
+    /// Getting the transmitted_work value
     /// 0 - mains power is transmitted via ATS
     /// 1- mains power is not transmitted via ATS.
+    /// 2 - the transmitted_work value is not 0 or 1.
     pub fn select_transmitted_work() -> Result<i32, PostgresError> {
         let mut client = Client::connect(&crate::psql::postgresql::db_connect(), NoTls)?;
 
