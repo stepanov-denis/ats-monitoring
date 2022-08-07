@@ -133,14 +133,14 @@ pub mod winter_garden_control {
             Ok(_) => {
                 let event = "app communication with plc: ok";
                 // Records the event to the SQL table 'app_log' and outputs it to info! env_logger.
-                crate::logger::log::record(&event);
+                crate::logger::log::record(event);
                 // Reading variable values from the PLC "trim5" via Modbus TCP
                 // and writing the obtained values to the PostgreSQL DBMS.
                 match reading_input_registers(&mut client) {
                     Ok(_) => {
                         let event = "reading_input_registers(): ok";
                         // Records the event to the SQL table 'app_log' and outputs it to info! env_logger.
-                        crate::logger::log::record(&event);
+                        crate::logger::log::record(event);
                     }
                     Err(e) => {
                         let event = format!(
