@@ -34,11 +34,12 @@ pub mod postgresql {
         client.batch_execute(
             "
                 CREATE TABLE IF NOT EXISTS ats_control (
-                    mains_power_supply int NOT NULL,
-                    start_generator int NOT NULL,
-                    generator_faulty int NOT NULL,
-                    transmitted_work int NOT NULL,
-                    connection int NOT NULL,
+                    id serial primary key
+                    mains_power_supply int not null,
+                    start_generator int not null,
+                    generator_faulty int not null,
+                    transmitted_work int not null,
+                    connection int not null,
                     mark timestamptz default current_timestamp
                 )
             ",
@@ -52,7 +53,8 @@ pub mod postgresql {
         client.batch_execute(
             "
                 CREATE TABLE IF NOT EXISTS app_log (
-                    event text NOT NULL,
+                    id serial primary key
+                    event text not null,
                     mark timestamp default current_timestamp
                 )
             ",
@@ -66,18 +68,19 @@ pub mod postgresql {
         client.batch_execute(
             "
                 CREATE TABLE IF NOT EXISTS winter_garden (
-                    phyto_lighting_1 int NOT NULL,
-                    phyto_lighting_2 int NOT NULL,
-                    phyto_lighting_3 int NOT NULL,
-                    phyto_lighting_4 int NOT NULL,
-                    fan int NOT NULL,
-                    automatic_watering_1 int NOT NULL,
-                    automatic_watering_2 int NOT NULL,
-                    automatic_watering_3 int NOT NULL,
-                    temperature_indoor int NOT NULL,
-                    humidity_indoor int NOT NULL,
-                    illumination_indoor int NOT NULL,
-                    illumination_outdoor int NOT NULL,
+                    id serial primary key
+                    phyto_lighting_1 int not null,
+                    phyto_lighting_2 int not null,
+                    phyto_lighting_3 int not null,
+                    phyto_lighting_4 int not null,
+                    fan int not null,
+                    automatic_watering_1 int not null,
+                    automatic_watering_2 int not null,
+                    automatic_watering_3 int not null,
+                    temperature_indoor int not null,
+                    humidity_indoor int not null,
+                    illumination_indoor int not null,
+                    illumination_outdoor int not null,
                     mark timestamp default current_timestamp
                 )
             ",
@@ -91,7 +94,8 @@ pub mod postgresql {
         client.batch_execute(
             "
                 CREATE TABLE IF NOT EXISTS generator_load (
-                    load int NOT NULL,
+                    id serial primary key
+                    load int not null,
                     mark timestamp default current_timestamp
                 
                 )
