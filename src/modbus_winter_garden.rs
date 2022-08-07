@@ -109,7 +109,9 @@ pub mod winter_garden_control {
                 Err(e) => info!("{}", e),
             }
         } else {
-            info!("error: not all values are transmitted to the app from the plc")
+            let event = "winter_garden control error: not all values are transmitted to the app from the plc";
+            // Records the event to the SQL table 'app_log' and outputs it to info! env_logger.
+            crate::logger::log::record(event);
         }
         Ok(())
     }
