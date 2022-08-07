@@ -24,7 +24,7 @@ pub mod env {
                     // Records the event to the SQL table 'app_log' and outputs it to info! env_logger.
                     crate::logger::log::record(&event);
                 }
-            }
+            },
             Err(e) => {
                 let event = format!("read_u16() error: couldn't interpret {s}: {e}");
                 // Records the event to the SQL table 'app_log' and outputs it to info! env_logger.

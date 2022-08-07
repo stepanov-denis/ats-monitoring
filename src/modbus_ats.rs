@@ -28,7 +28,9 @@ pub mod ats_control {
     }
 
     /// Reading variable values from the PLC "trim5" via Modbus TCP and writing the obtained values to the PostgreSQL DBMS.
-    pub fn reading_input_registers(client: &mut TcpClient) -> Result<(), Box<dyn Error + Send + Sync>> {
+    pub fn reading_input_registers(
+        client: &mut TcpClient,
+    ) -> Result<(), Box<dyn Error + Send + Sync>> {
         let mains_power_supply: Vec<u16> = read(client, "MAINS_POWER_SUPPLY", 1);
         info!(
             "response reading_input_registers() mains_power_supply: {:?}",
@@ -123,7 +125,8 @@ pub mod ats_control {
                         crate::logger::log::record(&event);
                     }
                     Err(e) => {
-                        let event = format!("ats_control::ats() reading_input_registers() error: {}", e);
+                        let event =
+                            format!("ats_control::ats() reading_input_registers() error: {}", e);
                         // Records the event to the SQL table 'app_log' and outputs it to info! env_logger.
                         crate::logger::log::record(&event);
                     }
@@ -154,8 +157,8 @@ pub mod ats_control {
                 match connection.len() {
                     1 => match connection[0] {
                         1 => return Some(true),
-                        _ => return Some(false)
-                    }
+                        _ => return Some(false),
+                    },
                     _ => {
                         let event = "reading_connection() error: the value is not transmitted to the app from the plc";
                         // Records the event to the SQL table 'app_log' and outputs it to info! env_logger.

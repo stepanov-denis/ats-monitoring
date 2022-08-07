@@ -66,9 +66,12 @@ pub mod power_supply {
                                         info!("send_notification('SMS_POW_RESTORED_GEN_OK'): ok")
                                     }
                                     Err(e) => {
-                                        let event = format!("send_notification(
+                                        let event = format!(
+                                            "send_notification(
                                             'SMS_POW_RESTORED_GEN_OK',
-                                        ) error: {}", e);
+                                        ) error: {}",
+                                            e
+                                        );
                                         // Records the event to the SQL table 'app_log' and outputs it to info! env_logger.
                                         crate::logger::log::record(&event);
                                     }
@@ -86,9 +89,12 @@ pub mod power_supply {
                                         info!("send_notification('SMS_POW_RESTORED_GEN_ERR'): ok")
                                     }
                                     Err(e) => {
-                                        let event = format!("send_notification(
+                                        let event = format!(
+                                            "send_notification(
                                             'SMS_POW_RESTORED_GEN_ERR',
-                                        ) error: {}", e);
+                                        ) error: {}",
+                                            e
+                                        );
                                         // Records the event to the SQL table 'app_log' and outputs it to info! env_logger.
                                         crate::logger::log::record(&event);
                                     }
@@ -197,9 +203,12 @@ pub mod power_supply {
                                                 info!("send_notification('SMS_START_GEN_OK'): ok")
                                             }
                                             Err(e) => {
-                                                let event = format!("send_notification(
+                                                let event = format!(
+                                                    "send_notification(
                                                     'SMS_START_GEN_OK',
-                                                ) error: {}", e);
+                                                ) error: {}",
+                                                    e
+                                                );
                                                 // Records the event to the SQL table 'app_log' and outputs it to info! env_logger.
                                                 crate::logger::log::record(&event);
                                             }
@@ -217,26 +226,32 @@ pub mod power_supply {
                                                 info!("send_notification('SMS_START_GEN_ERR'): ok")
                                             }
                                             Err(e) => {
-                                                let event = format!("send_notification(
+                                                let event = format!(
+                                                    "send_notification(
                                                     'SMS_START_GEN_ERR',
-                                                ) error: {}", e);
+                                                ) error: {}",
+                                                    e
+                                                );
                                                 // Records the event to the SQL table 'app_log' and outputs it to info! env_logger.
                                                 crate::logger::log::record(&event);
                                             }
                                         }
                                     }
                                     Ok(2) => {
-                                        let event = format!("the start_generator() value is not 0 or 1");
+                                        let event =
+                                            format!("the start_generator() value is not 0 or 1");
                                         // Records the event to the SQL table 'app_log' and outputs it to info! env_logger.
                                         crate::logger::log::record(&event);
                                     }
                                     Err(e) => {
-                                        let event = format!("select_start_generator() error: {}", e);
+                                        let event =
+                                            format!("select_start_generator() error: {}", e);
                                         // Records the event to the SQL table 'app_log' and outputs it to info! env_logger.
                                         crate::logger::log::record(&event);
                                     }
                                     _ => {
-                                        let event = format!("error: the start_generator value is _");
+                                        let event =
+                                            format!("error: the start_generator value is _");
                                         // Records the event to the SQL table 'app_log' and outputs it to info! env_logger.
                                         crate::logger::log::record(&event);
                                     }
@@ -270,7 +285,6 @@ pub mod power_supply {
                     let event = "the power is supplied from the mains";
                     // Records the event to the SQL table 'app_log' and outputs it to info! env_logger.
                     crate::logger::log::record(&event);
-
                 }
                 Ok(2) => {
                     let event = format!("the mains_power_supply value is not 0 or 1");

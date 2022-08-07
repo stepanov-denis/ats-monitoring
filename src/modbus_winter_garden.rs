@@ -143,7 +143,10 @@ pub mod winter_garden_control {
                         crate::logger::log::record(&event);
                     }
                     Err(e) => {
-                        let event = format!("ats_control::winter_garden() reading_input_registers() error: {}", e);
+                        let event = format!(
+                            "ats_control::winter_garden() reading_input_registers() error: {}",
+                            e
+                        );
                         // Records the event to the SQL table 'app_log' and outputs it to info! env_logger.
                         crate::logger::log::record(&event);
                     }
