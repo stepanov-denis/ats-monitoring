@@ -34,7 +34,7 @@ pub mod postgresql {
         client.batch_execute(
             "
                 CREATE TABLE IF NOT EXISTS ats_control (
-                    id serial primary key
+                    id serial primary key,
                     mains_power_supply int not null,
                     start_generator int not null,
                     generator_faulty int not null,
@@ -53,7 +53,7 @@ pub mod postgresql {
         client.batch_execute(
             "
                 CREATE TABLE IF NOT EXISTS app_log (
-                    id serial primary key
+                    id serial primary key,
                     event text not null,
                     mark timestamp default current_timestamp
                 )
@@ -68,7 +68,7 @@ pub mod postgresql {
         client.batch_execute(
             "
                 CREATE TABLE IF NOT EXISTS winter_garden (
-                    id serial primary key
+                    id serial primary key,
                     phyto_lighting_1 int not null,
                     phyto_lighting_2 int not null,
                     phyto_lighting_3 int not null,
@@ -94,7 +94,7 @@ pub mod postgresql {
         client.batch_execute(
             "
                 CREATE TABLE IF NOT EXISTS generator_load (
-                    id serial primary key
+                    id serial primary key,
                     load int not null,
                     mark timestamp default current_timestamp
                 
