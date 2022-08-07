@@ -11,7 +11,7 @@ For Windows, visit [this page](https://www.rust-lang.org/tools/install)
 * Install dependencies
 ```
 # Ubuntu
-$ sudo apt-get install libssl-dev build-essential
+$ sudo apt-get install libssl-dev
 # Fedora
 $ sudo dnf openssl-devel
 ```
@@ -23,7 +23,7 @@ $ git clone https://github.com/stepanov-denis/ats-monitoring.git
 ```
 * Edit your sms gateway authentication string in .cargo/config.toml
 ```
-GATEWAY_STR_CONNECTION= "URI with your token"
+GATEWAY_STR_CONNECTION= "URL with your token"
 ```
 * Edit your alert messages text in .cargo/config.toml
 ```
@@ -44,6 +44,14 @@ POSTGRES_PASSWORD = "mysecretpassword"
 POSTGRES_DB = "postgres"
 POSTGRES_HOSTNAME = "postgresql"
 POSTGRES_PORT = "5432"
+```
+* Edit PLC settings in .cargo/config.toml
+```
+# IP adress PLC TRIM5
+IP_TRIM5 = "10.54.52.201:502"
+
+# connection modbus adress
+CONNECTION = "19"
 ```
 ## Setting up the environment
 * Install [SMLogix](https://segnetics.com/ru/smlogix)
