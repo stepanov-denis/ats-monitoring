@@ -86,12 +86,14 @@ pub mod ats_control {
                 Err(e) => info!("{}", e),
             }
         } else {
-            info!("error: not all values are transmitted to the app from the plc");
+            let event = "ats control error: not all values are transmitted to the app from the plc";
+            // Records the event to the SQL table 'app_log' and outputs it to info! env_logger.
+            crate::logger::log::record(event);
         }
     }
 
     /// Communication session with the PLC via Modbus TCP
-    pub fn avr_control() {
+    pub fn ats() {
         let mut client =
             TcpClient::new(&crate::read_env::env::read_str("IP_TRIM5").unwrap_or_default());
         let result = client.connect();
@@ -126,16 +128,18 @@ pub mod ats_control {
             Ok(_) => {
                 info!("app communication with plc: ok");
                 let connection = read(&mut client, "CONNECTION", 1);
-                let event = format!("response reading_connection(): {:?}", connection);
-                // Records the event to the SQL table 'app_log' and outputs it to info! env_logger.
-                crate::logger::log::record(&event);
+                info!("response reading_connection(): {:?}", connection);
                 client.disconnect();
                 match connection.len() {
                     1 => match connection[0] {
                         1 => return Some(true),
                         _ => return Some(false)
                     }
-                    _ => info!("reading_connection() error: the value is not transmitted to the app from the plc")
+                    _ => {
+                        let event = "reading_connection() error: the value is not transmitted to the app from the plc";
+                        // Records the event to the SQL table 'app_log' and outputs it to info! env_logger.
+                        crate::logger::log::record(&event);
+                    }
                 }
             }
         }
