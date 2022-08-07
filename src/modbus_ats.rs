@@ -99,7 +99,7 @@ pub mod ats_control {
             Err(message) => {
                 // Create event "app connection error to PLC".
                 // and records the event to the SQL table 'app_log' and outputs it to info! env_logger.
-                crate::alarm::info::event_err_connect_to_plc(&message);
+                crate::logger::log::event_err_connect_to_plc(&message);
             }
             Ok(_) => {
                 info!("app communication with plc: ok");
@@ -121,12 +121,14 @@ pub mod ats_control {
             Err(message) => {
                 // Create event "app connection error to PLC".
                 // and records the event to the SQL table 'app_log' and outputs it to info! env_logger.
-                crate::alarm::info::event_err_connect_to_plc(&message);
+                crate::logger::log::event_err_connect_to_plc(&message);
             }
             Ok(_) => {
                 info!("app communication with plc: ok");
-                let connection = read(&mut client, "IP_TRIM5", 1);
-                info!("response reading_connection(): {:?}", connection);
+                let connection = read(&mut client, "CONNECTION", 1);
+                let event = format!("response reading_connection(): {:?}", connection);
+                // Records the event to the SQL table 'app_log' and outputs it to info! env_logger.
+                crate::logger::log::record(&event);
                 client.disconnect();
                 match connection.len() {
                     1 => match connection[0] {

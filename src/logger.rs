@@ -1,6 +1,6 @@
-pub mod info {
+pub mod log {
     /// Records the event to the SQL table 'app_log' and outputs it to info! env_logger.
-    pub fn log_alarm(event: &str) {
+    pub fn record(event: &str) {
         info!("{}", event);
         // Records event to the SQL table 'app_log'.
         match crate::psql::postgresql::insert_event(event) {
@@ -16,6 +16,6 @@ pub mod info {
             "error: there is no connection between the app and the plc, {}",
             message
         );
-        crate::alarm::info::log_alarm(&event);
+        record(&event);
     }
 }

@@ -16,7 +16,7 @@ pub mod generator {
                 // in the mode of transmission of electricity from the power grid.
                 let event = log_request_to_generator();
                 // Records the event to the SQL table 'app_log' and outputs it to info! env_logger.
-                crate::alarm::info::log_alarm(&event);
+                crate::logger::log::record(&event);
                 // Checking the faulty condition of the generator
                 // 0 => the generator is working properly
                 // 1 => the generator is faulty.
@@ -25,7 +25,7 @@ pub mod generator {
                         let event = "the efficiency of the generator in the mode 
                         of transmission of electricity from the power grid has been restored";
                         // Records the event to the SQL table 'app_log' and outputs it to info! env_logger.
-                        crate::alarm::info::log_alarm(event);
+                        crate::logger::log::record(event);
                         // Sending SMS notification.
                         match crate::sms::gateway::send_notification("SMS_GEN_WORK_RESTORED") {
                             Ok(_) => info!("send_sms('SMS_GEN_WORK_RESTORED'): ok"),
@@ -37,7 +37,7 @@ pub mod generator {
                         let event =
                             "Alarm! The generator is faulty! Urgently perform service work!";
                         // Records the event to the SQL table 'app_log' and outputs it to info! env_logger.
-                        crate::alarm::info::log_alarm(event);
+                        crate::logger::log::record(event);
                     }
                 }
             }
@@ -53,7 +53,7 @@ pub mod generator {
             // in the mode of transmission of electricity from the power grid.
             let event = log_request_to_generator();
             // Records the event to the SQL table 'app_log' and outputs it to info! env_logger.
-            crate::alarm::info::log_alarm(&event);
+            crate::logger::log::record(&event);
             // Checking the faulty condition of the generator
             // 0 => the generator is working properly
             // 1 => the generator is faulty.
@@ -61,7 +61,7 @@ pub mod generator {
                 Ok(1) => {
                     let event = "Alarm! The generator is faulty! Urgently perform service work!";
                     // Records the event to the SQL table 'app_log' and outputs it to info! env_logger.
-                    crate::alarm::info::log_alarm(event);
+                    crate::logger::log::record(event);
                     // Sending SMS notification.
                     match crate::sms::gateway::send_notification("SMS_GEN_WORK_ERR") {
                         Ok(_) => info!("send_sms('SMS_GEN_WORK_ERR'): ok"),
@@ -73,7 +73,7 @@ pub mod generator {
                 _ => {
                     let event = "generator is working properly in the mode of electricity transmission from the power grid";
                     // Records the event to the SQL table 'app_log' and outputs it to info! env_logger.
-                    crate::alarm::info::log_alarm(event);
+                    crate::logger::log::record(event);
                 }
             }
         }

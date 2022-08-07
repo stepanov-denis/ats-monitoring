@@ -8,7 +8,7 @@ use env_logger::{Builder, Target};
 use std::error::Error;
 use std::thread;
 use std::time::Duration;
-mod alarm;
+mod logger;
 mod generator_monitoring;
 mod init;
 mod modbus_ats;

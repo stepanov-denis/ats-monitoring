@@ -9,7 +9,7 @@ pub mod tcp {
             Err(message) => {
                 // Create event "app connection error to PLC".
                 // and records the event to the SQL table 'app_log' and outputs it to info! env_logger.
-                crate::alarm::info::event_err_connect_to_plc(&message);
+                crate::logger::log::event_err_connect_to_plc(&message);
             }
             Ok(_) => {
                 info!("app communication with plc: ok");

@@ -40,7 +40,7 @@ pub mod postgresql {
                     generator_faulty int not null,
                     transmitted_work int not null,
                     connection int not null,
-                    mark timestamptz default current_timestamp
+                    date timestamptz default current_timestamp
                 )
             ",
         )?;
@@ -55,7 +55,7 @@ pub mod postgresql {
                 CREATE TABLE IF NOT EXISTS app_log (
                     id serial primary key,
                     event text not null,
-                    mark timestamp default current_timestamp
+                    date timestamp default current_timestamp
                 )
             ",
         )?;
@@ -81,7 +81,7 @@ pub mod postgresql {
                     humidity_indoor int not null,
                     illumination_indoor int not null,
                     illumination_outdoor int not null,
-                    mark timestamp default current_timestamp
+                    date timestamp default current_timestamp
                 )
             ",
         )?;
@@ -96,7 +96,7 @@ pub mod postgresql {
                 CREATE TABLE IF NOT EXISTS generator_load (
                     id serial primary key,
                     load int not null,
-                    mark timestamp default current_timestamp
+                    date timestamp default current_timestamp
                 
                 )
             ",
@@ -110,7 +110,7 @@ pub mod postgresql {
         client.execute("INSERT INTO app_log (event) VALUES ($1)", &[&event])?;
 
         for row in client.query(
-            "SELECT event, mark FROM app_log ORDER BY mark DESC limit 1",
+            "SELECT event, date FROM app_log ORDER BY date DESC limit 1",
             &[],
         )? {
             let event: &str = row.get(0);
@@ -128,7 +128,7 @@ pub mod postgresql {
             &[&ats.mains_power_supply, &ats.start_generator, &ats.generator_faulty, &ats.transmitted_work, &ats.connection],
         )?;
 
-        for row in client.query("SELECT mains_power_supply, start_generator, generator_faulty, transmitted_work, connection FROM ats_control ORDER BY mark DESC limit 1", &[])? {
+        for row in client.query("SELECT mains_power_supply, start_generator, generator_faulty, transmitted_work, connection FROM ats_control ORDER BY date DESC limit 1", &[])? {
             let mains_power_supply: i32 = row.get(0);
             let start_generator: i32 = row.get(1);
             let generator_faulty: i32 = row.get(2);
@@ -160,7 +160,7 @@ pub mod postgresql {
             &winter_garden.illumination_outdoor],
         )?;
 
-        for row in client.query("SELECT phyto_lighting_1, phyto_lighting_2, phyto_lighting_3, phyto_lighting_4, fan, automatic_watering_1, automatic_watering_2, automatic_watering_3, temperature_indoor, humidity_indoor, illumination_indoor, illumination_outdoor FROM winter_garden ORDER BY mark DESC limit 1", &[])? {
+        for row in client.query("SELECT phyto_lighting_1, phyto_lighting_2, phyto_lighting_3, phyto_lighting_4, fan, automatic_watering_1, automatic_watering_2, automatic_watering_3, temperature_indoor, humidity_indoor, illumination_indoor, illumination_outdoor FROM winter_garden ORDER BY date DESC limit 1", &[])? {
             let phyto_lighting_1: i32 = row.get(0);
             let phyto_lighting_2: i32 = row.get(1);
             let phyto_lighting_3: i32 = row.get(2);
@@ -188,7 +188,7 @@ pub mod postgresql {
         )?;
 
         for row in client.query(
-            "SELECT load FROM generator_load ORDER BY mark DESC limit 1",
+            "SELECT load FROM generator_load ORDER BY date DESC limit 1",
             &[],
         )? {
             let load: i32 = row.get(0);
@@ -203,7 +203,7 @@ pub mod postgresql {
         let mut client = Client::connect(&crate::psql::postgresql::db_connect(), NoTls)?;
 
         if let Some(row) = (client.query(
-            "SELECT generator_faulty FROM ats_control ORDER BY mark DESC limit 1",
+            "SELECT generator_faulty FROM ats_control ORDER BY date DESC limit 1",
             &[],
         )?)
         .into_iter()
@@ -223,7 +223,7 @@ pub mod postgresql {
         let mut client = Client::connect(&crate::psql::postgresql::db_connect(), NoTls)?;
 
         if let Some(row) = (client.query(
-            "SELECT mains_power_supply FROM ats_control ORDER BY mark DESC limit 1",
+            "SELECT mains_power_supply FROM ats_control ORDER BY date DESC limit 1",
             &[],
         )?)
         .into_iter()
@@ -240,7 +240,7 @@ pub mod postgresql {
         let mut client = Client::connect(&crate::psql::postgresql::db_connect(), NoTls)?;
 
         if let Some(row) = (client.query(
-            "SELECT start_generator FROM ats_control ORDER BY mark DESC limit 1",
+            "SELECT start_generator FROM ats_control ORDER BY date DESC limit 1",
             &[],
         )?)
         .into_iter()
@@ -260,7 +260,7 @@ pub mod postgresql {
         let mut client = Client::connect(&crate::psql::postgresql::db_connect(), NoTls)?;
 
         if let Some(row) = (client.query(
-            "SELECT transmitted_work FROM ats_control ORDER BY mark DESC limit 1",
+            "SELECT transmitted_work FROM ats_control ORDER BY date DESC limit 1",
             &[],
         )?)
         .into_iter()
