@@ -9,7 +9,7 @@ pub mod gateway {
         }
     }
 
-    /// Returns the uri for the http post request
+    /// Returns the URL for the http post request
     /// for the sms gateway API to send an sms message.
     fn sms_message(s: &str) -> Option<String> {
         let mut message =
