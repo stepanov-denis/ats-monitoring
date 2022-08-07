@@ -2,7 +2,10 @@ pub mod ats_control {
     extern crate modbus_iiot;
     use modbus_iiot::tcp::master::TcpClient;
     use modbus_iiot::tcp::masteraccess::MasterAccess;
+    use std::error::Error;
 
+    /// Data structure for variables of the automatic emergency reserve
+    /// entry control system.
     pub struct Ats {
         pub mains_power_supply: i32,
         pub start_generator: i32,
@@ -11,10 +14,12 @@ pub mod ats_control {
         pub connection: i32,
     }
 
+    /// Data structure for the load level variable connected to the generator.
     pub struct GeneratorLoad {
         pub load: i32,
     }
 
+    /// Reading the value of a variable from modbus registers.
     fn read(client: &mut TcpClient, adress: &str, quantity: u16) -> Vec<u16> {
         client.read_input_registers(
             crate::read_env::env::read_u16(adress).unwrap_or_default(),
@@ -23,7 +28,7 @@ pub mod ats_control {
     }
 
     /// Reading variable values from the PLC "trim5" via Modbus TCP and writing the obtained values to the PostgreSQL DBMS.
-    pub fn reading_input_registers(client: &mut TcpClient) {
+    pub fn reading_input_registers(client: &mut TcpClient) -> Result<(), Box<dyn Error + Send + Sync>> {
         let mains_power_supply: Vec<u16> = read(client, "MAINS_POWER_SUPPLY", 1);
         info!(
             "response reading_input_registers() mains_power_supply: {:?}",
@@ -86,10 +91,11 @@ pub mod ats_control {
                 Err(e) => info!("{}", e),
             }
         } else {
-            let event = "ats control error: not all values are transmitted to the app from the plc";
+            let event = "ats_control::ats() reading_input_registers() error: not all values are transmitted to the app from the plc";
             // Records the event to the SQL table 'app_log' and outputs it to info! env_logger.
             crate::logger::log::record(event);
         }
+        Ok(())
     }
 
     /// Communication session with the PLC via Modbus TCP
@@ -99,15 +105,29 @@ pub mod ats_control {
         let result = client.connect();
         match result {
             Err(message) => {
+                let event = format!("ats() error: {}", message);
                 // Create event "app connection error to PLC".
                 // and records the event to the SQL table 'app_log' and outputs it to info! env_logger.
-                crate::logger::log::event_err_connect_to_plc(&message);
+                crate::logger::log::event_err_connect_to_plc(&event);
             }
             Ok(_) => {
-                info!("app communication with plc: ok");
+                let event = "app communication with plc: ok";
+                // Records the event to the SQL table 'app_log' and outputs it to info! env_logger.
+                crate::logger::log::record(&event);
                 // Reading variable values from the PLC "trim5" via Modbus TCP
                 // and writing the obtained values to the PostgreSQL DBMS.
-                reading_input_registers(&mut client);
+                match reading_input_registers(&mut client) {
+                    Ok(_) => {
+                        let event = "reading_input_registers(): ok";
+                        // Records the event to the SQL table 'app_log' and outputs it to info! env_logger.
+                        crate::logger::log::record(&event);
+                    }
+                    Err(e) => {
+                        let event = format!("ats_control::ats() reading_input_registers() error: {}", e);
+                        // Records the event to the SQL table 'app_log' and outputs it to info! env_logger.
+                        crate::logger::log::record(&event);
+                    }
+                }
                 client.disconnect();
             }
         }
@@ -121,9 +141,10 @@ pub mod ats_control {
         let result = client.connect();
         match result {
             Err(message) => {
+                let event = format!("reading_connection() error: {}", message);
                 // Create event "app connection error to PLC".
                 // and records the event to the SQL table 'app_log' and outputs it to info! env_logger.
-                crate::logger::log::event_err_connect_to_plc(&message);
+                crate::logger::log::event_err_connect_to_plc(&event);
             }
             Ok(_) => {
                 info!("app communication with plc: ok");

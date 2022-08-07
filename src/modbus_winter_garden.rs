@@ -4,6 +4,7 @@ pub mod winter_garden_control {
     use modbus_iiot::tcp::masteraccess::MasterAccess;
     use std::error::Error;
 
+    /// Data structure for variables of the automatic winter garden management system.
     pub struct WinterGarden {
         pub phyto_lighting_1: i32,
         pub phyto_lighting_2: i32,
@@ -19,6 +20,7 @@ pub mod winter_garden_control {
         pub illumination_outdoor: i32,
     }
 
+    /// Reading the value of a variable from modbus registers.
     fn read(client: &mut TcpClient, adress: &str, quantity: u16) -> Vec<u16> {
         client.read_input_registers(
             crate::read_env::env::read_u16(adress).unwrap_or_default(),
@@ -123,17 +125,28 @@ pub mod winter_garden_control {
         let result = client.connect();
         match result {
             Err(message) => {
+                let event = format!("winter_garden() error: {}", message);
                 // Create event "app connection error to PLC".
                 // and records the event to the SQL table 'app_log' and outputs it to info! env_logger.
-                crate::logger::log::event_err_connect_to_plc(&message);
+                crate::logger::log::event_err_connect_to_plc(&event);
             }
             Ok(_) => {
-                info!("app communication with plc: ok");
+                let event = "app communication with plc: ok";
+                // Records the event to the SQL table 'app_log' and outputs it to info! env_logger.
+                crate::logger::log::record(&event);
                 // Reading variable values from the PLC "trim5" via Modbus TCP
                 // and writing the obtained values to the PostgreSQL DBMS.
                 match reading_input_registers(&mut client) {
-                    Ok(_) => info!("reading_input_registers(): ok"),
-                    Err(e) => info!("{}", e),
+                    Ok(_) => {
+                        let event = "reading_input_registers(): ok";
+                        // Records the event to the SQL table 'app_log' and outputs it to info! env_logger.
+                        crate::logger::log::record(&event);
+                    }
+                    Err(e) => {
+                        let event = format!("ats_control::winter_garden() reading_input_registers() error: {}", e);
+                        // Records the event to the SQL table 'app_log' and outputs it to info! env_logger.
+                        crate::logger::log::record(&event);
+                    }
                 }
                 client.disconnect();
             }

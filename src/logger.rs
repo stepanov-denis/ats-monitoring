@@ -5,7 +5,7 @@ pub mod log {
         // Records event to the SQL table 'app_log'.
         match crate::psql::postgresql::insert_event(event) {
             Ok(_) => info!("insert_event() ok: {}", event),
-            Err(e) => info!("{}", e),
+            Err(e) => info!("{}", e)
         }
     }
 
