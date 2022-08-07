@@ -18,20 +18,6 @@ pub mod gateway {
         Some(message)
     }
 
-    /// Logging event "server error the sms notification was not sent".
-    fn log_sms_gateway_server_error(response: reqwest::blocking::Response) {
-        let event = format!(
-            "error: the sms notification was not sent, status http request: {}",
-            response.status()
-        );
-        info!("{}", event);
-        // Records event to the SQL table 'app_log'.
-        match crate::psql::postgresql::insert_event(&event) {
-            Ok(_) => info!("insert_event(): {}", event),
-            Err(e) => info!("{}", e),
-        }
-    }
-
     /// Sending SMS notification.
     pub fn send_notification(message_env: &str) -> Result<()> {
         info!("executing an http request to an sms notification service provider");
@@ -42,14 +28,17 @@ pub mod gateway {
                     "http request completed successfully, an sms message was sent: {:?}",
                     crate::read_env::env::read_str(message_env)
                 );
-                info!("{}", event);
-                // Records event to the SQL table 'app_log'.
-                match crate::psql::postgresql::insert_event(&event) {
-                    Ok(_) => info!("insert_event(): {}", event),
-                    Err(e) => info!("{}", e),
-                }
+                // Records the event to the SQL table 'app_log' and outputs it to info! env_logger.
+                crate::logger::log::record(&event);
             }
-            _ => log_sms_gateway_server_error(resp),
+            _ => {
+                let event = format!(
+                    "error: the sms notification was not sent, status http request: {}",
+                    resp.status()
+                );
+                // Records the event to the SQL table 'app_log' and outputs it to info! env_logger.
+                crate::logger::log::record(&event);
+            }
         }
         Ok(())
     }
