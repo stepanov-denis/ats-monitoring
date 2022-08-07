@@ -50,59 +50,60 @@ TG_POW_RESTORED_GEN_OK = "Питание от электросети восст�
 TG_POW_RESTORED_GEN_ERR = "Питание от электросети восстановлено.\nГенератор неисправен.\nГенератор не работает."
 
 
+# PLC settings
 # IP adress PLC TRIM5
 IP_TRIM5 = "10.54.52.201:502"
 
-# mains_power_supply_response
+# mains_power_supply modbus adress
 MAINS_POWER_SUPPLY = "2"
 
-# start_generator
+# start_generator modbus adress
 START_GENERATOR = "3"
 
-# generator_faulty
+# generator_faulty modbus adress
 GENERATOR_FAULTY = "5"
 
-# generator_work
+# generator_work modbus adress
 TRANSMITTED_WORK = "6"
 
-# connection
+# connection modbus adress
 CONNECTION = "19"
 
-# load
+# load modbus adress
 LOAD = "4"
 
-# phyto_lighting_1
+# phyto_lighting_1 modbus adress
 PHYTO_LIGHTING_1 = "7"
 
-# phyto_lighting_2
+# phyto_lighting_2 modbus adress
 PHYTO_LIGHTING_2 = "8"
 
-# phyto_lighting_3
+# phyto_lighting_3 modbus adress
 PHYTO_LIGHTING_3 = "9"
 
-# phyto_lighting_4
+# phyto_lighting_4 modbus adress
 PHYTO_LIGHTING_4 = "10"
 
-# fan
+# fan modbus adress
 FAN = "11"
 
-# automatic_watering_1
+# automatic_watering_1 modbus adress
 AUTOMATIC_WATERING_1 = "12"
 
-# automatic_watering_2
+# automatic_watering_2 modbus adress
 AUTOMATIC_WATERING_2 = "13"
 
-# automatic_watering_3
+# automatic_watering_3 modbus adress
 AUTOMATIC_WATERING_3 = "14"
 
-# temperature_indoor
+# temperature_indoor modbus adress
 TEMPERATURE_INDOOR = "15"
 
-# humidity_indoor
+# humidity_indoor modbus adress
 HUMIDITY_INDOOR = "16"
 
-# illumination_indoor
+# illumination_indoor modbus adress
 ILLUMINATION_INDOOR = "17"
 
-# illumination_outdoor
+# illumination_outdoor modbus adress
 ILLUMINATION_OUTDOOR = "18"
