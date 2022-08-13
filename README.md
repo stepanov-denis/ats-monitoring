@@ -21,24 +21,19 @@ $ sudo dnf openssl-devel
 ```
 $ git clone https://github.com/stepanov-denis/ats-monitoring.git
 ```
-* Edit your sms gateway authentication string in .cargo/config.toml
+* Edit your sms gateway settings in .cargo/config.toml
 ```
+# For example:
 GATEWAY_STR_CONNECTION= "URL with your token"
 ```
-* Edit your alert messages text in .cargo/config.toml
+* Edit your Telegram-bot settings in .cargo/config.toml
 ```
 # For example:
-# Alert messages for sms gateway
-# The text of the SMS-message about the generator operation error
-SMS_GEN_WORK_ERR = "your message"
-
+TG_BOT_TOKEN = "your token"
+```
+* Edit PostgreSQL settings in .cargo/config.toml
+```
 # For example:
-# Alert messages for Telegram-bot
-# The text of the Telegram-message about the generator operation error
-TG_GEN_WORK_ERR = "your message"
-```
-* Edit the connection configuration to PostgreSQL in .cargo/config.toml
-```
 POSTGRES_USERNAME = "postgres"
 POSTGRES_PASSWORD = "mysecretpassword"
 POSTGRES_DB = "postgres"
@@ -47,8 +42,12 @@ POSTGRES_PORT = "5432"
 ```
 * Edit PLC settings in .cargo/config.toml
 ```
+# For example:
 # IP adress PLC TRIM5
-IP_TRIM5 = "10.54.52.201:502"
+IP_TRIM5 = "ip_adress:port"
+
+# generator_work modbus adress
+TRANSMITTED_WORK = "6"
 
 # connection modbus adress
 CONNECTION = "19"
@@ -60,21 +59,18 @@ CONNECTION = "19"
 * Install [Orange Data Mining](https://orangedatamining.com/download/#linux)
 * [Сonfigure](https://orangedatamining.com/widget-catalog/data/sqltable/) data reading from SQL database
 * Create an account on [ClickSend](https://www.clicksend.com/) and top up your balance
+* Create Telegram-bot
 * Run PLC Pixel
 * Run PLC Trim5
 ## Run app locally
-* Run PostgreSQL
 * Run ATS Monitoring
 ```
 $ cd ats-monitoring && cargo run --release
 ```
 * For run ATS Monitoring with env_logger
 ```
-$ RUST_LOG=error cargo run --release
-$ RUST_LOG=warn cargo run --release
-$ RUST_LOG=info cargo run --release
+# For example:
 $ RUST_LOG=debug cargo run --release
-$ RUST_LOG=trace cargo run --release
 ```
 * For write log's to file
 ```
@@ -96,4 +92,44 @@ $ docker compose down --volumes
 ## Use
 * Сreate and save the report in the form you need in Orange Data Mining
 * Check your phone for SMS messages from ClickSend
-* Enjoy [Ats Monitoring Bot]("https://t.me/AtsMonitoringBot")
+* Check your Telegram for messages from your bot
+## Notification
+#### Telegram bot sends messages in the following cases:
+* Errors when working with the database
+* Modbus tcp operation errors
+* Other critical errors of the application
+#### Telegram bot and sms gateway sends messages in the following cases:
+* Disconnecting the power supply from the mains
+```
+# For example:
+disconnecting power from the mains,
+successful start of the generator
+```
+or
+```
+# For example:
+disconnecting power from the mains,
+the generator startup failed
+```
+* Restoration of power supply from the power grid
+```
+# For example:
+the power supply from the power grid has been restored,
+the generator is working fine
+```
+or
+```
+# For example:
+the power supply has not been restored,
+the generator is faulty
+```
+* Failure of the generator in the transmission mode of power supply from the city power grid
+```
+# For example:
+Alarm! The generator is faulty! Urgently perform service work!
+```
+* Restoring the operation of the generator in the mode of electricity transmission from the city power grid
+```
+the efficiency of the generator in the mode 
+of transmission of electricity from the power grid has been restored
+```
