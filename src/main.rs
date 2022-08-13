@@ -19,6 +19,7 @@ mod psql;
 mod read_env;
 mod sms;
 mod telegram;
+mod tg;
 
 /// Application workflows.
 fn main() -> Result<(), Box<dyn Error + Send + Sync>> {
@@ -36,38 +37,35 @@ fn main() -> Result<(), Box<dyn Error + Send + Sync>> {
 
     // Run polling of the automatic reserve input.
     let _modbus_ats_thread = thread::spawn(|| loop {
-        info!("starting up modbus_ats_spawn");
+        info!("starting up modbus_ats_thread");
         modbus_ats::ats_control::ats();
         thread::sleep(Duration::from_millis(1000));
     });
 
     // Run polling of the automatic winter garden management system.
     let _modbus_winter_garden_thread = thread::spawn(|| loop {
-        info!("starting up modbus_winter_garden_spawn");
-        match modbus_winter_garden::winter_garden_control::winter_garden() {
-            Ok(_) => info!("winter_garden_insert(): ok"),
-            Err(e) => info!("{}", e),
-        }
+        info!("starting up modbus_winter_garden_thread");
+        crate::modbus_winter_garden::winter_garden_control::winter_garden();
         thread::sleep(Duration::from_millis(1000));
     });
 
     // Run the monitoring of the generator.
     let _generator_monitoring_thread = thread::spawn(|| loop {
-        info!("starting up generator_monitoring_spawn");
+        info!("starting up generator_monitoring_thread");
         generator_monitoring::generator::generator_monitoring();
         thread::sleep(Duration::from_millis(1000));
     });
 
     // Run Telegram-bot.
-    let _ats_monitoring_bot = thread::spawn(|| loop {
-        info!("starting up ats_monitoring_bot");
+    let _ats_monitoring_bot_thread = thread::spawn(|| loop {
+        info!("starting up ats_monitoring_bot_thread");
         telegram::bot::bot_commands();
         thread::sleep(Duration::from_millis(1))
     });
 
     // Run the monitoring of the automatic reserve input.
     loop {
-        info!("starting up power_supply_monitoring_spawn");
+        info!("starting up power_supply_monitoring_thread");
         power_supply_monitoring::power_supply::ats_monitoring();
         thread::sleep(Duration::from_millis(1000));
     }

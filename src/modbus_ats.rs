@@ -84,13 +84,23 @@ pub mod ats_control {
             };
 
             match crate::psql::postgresql::insert_ats(ats) {
-                Ok(_) => info!("insert_input_registers_ats(): ok"),
-                Err(e) => info!("{}", e),
+                Ok(_) => info!("insert_ats(): ok"),
+                Err(e) => {
+                    let message = format!("insert_ats() error: {}", e);
+                    info!("{}", message);
+                    // Sending telegram notification.
+                    crate::tg::api::send_notification(&message);
+                }
             }
 
             match crate::psql::postgresql::insert_generator_load(generator_load) {
                 Ok(_) => info!("insert_generator_load(): ok"),
-                Err(e) => info!("{}", e),
+                Err(e) => {
+                    let message = format!("insert_generator_load() error: {}", e);
+                    info!("{}", message);
+                    // Sending telegram notification.
+                    crate::tg::api::send_notification(&message);
+                }
             }
         } else {
             let event = "ats_control::ats() reading_input_registers() error: not all values are transmitted to the app from the plc";
@@ -111,6 +121,8 @@ pub mod ats_control {
                 // Create event "app connection error to PLC".
                 // and records the event to the SQL table 'app_log' and outputs it to info! env_logger.
                 crate::logger::log::event_err_connect_to_plc(&event);
+                // Sending telegram notification.
+                crate::tg::api::send_notification(&event);
             }
             Ok(_) => {
                 let event = "app communication with plc: ok";
@@ -129,6 +141,8 @@ pub mod ats_control {
                             format!("ats_control::ats() reading_input_registers() error: {}", e);
                         // Records the event to the SQL table 'app_log' and outputs it to info! env_logger.
                         crate::logger::log::record(&event);
+                        // Sending telegram notification.
+                        crate::tg::api::send_notification(&event);
                     }
                 }
                 client.disconnect();
@@ -148,6 +162,8 @@ pub mod ats_control {
                 // Create event "app connection error to PLC".
                 // and records the event to the SQL table 'app_log' and outputs it to info! env_logger.
                 crate::logger::log::event_err_connect_to_plc(&event);
+                // Sending telegram notification.
+                crate::tg::api::send_notification(&event);
             }
             Ok(_) => {
                 info!("app communication with plc: ok");

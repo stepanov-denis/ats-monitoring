@@ -19,7 +19,7 @@ pub mod gateway {
     }
 
     /// Sending SMS notification.
-    pub fn send_notification(message_env: &str) -> Result<()> {
+    fn send_message(message_env: &str) -> Result<()> {
         info!("executing an http request to an sms notification service provider");
         let resp = reqwest::blocking::get(sms_message(message_env).unwrap_or_default())?;
         match resp.status() {
@@ -41,5 +41,26 @@ pub mod gateway {
             }
         }
         Ok(())
+    }
+
+    /// Sending telegram notification.
+    pub fn send_notification(message_env: &str) {
+        match send_message(message_env) {
+            Ok(_) => {
+                info!("send_notification('{}'): ok", message_env);
+            }
+            Err(e) => {
+                let event = format!(
+                    "send_notification(
+                    '{}',
+                ) error: {}",
+                    message_env, e
+                );
+                // Records the event to the SQL table 'app_log' and outputs it to info! env_logger.
+                crate::logger::log::record(&event);
+                // Sending telegram notification.
+                crate::tg::api::send_notification(&event);
+            }
+        }
     }
 }

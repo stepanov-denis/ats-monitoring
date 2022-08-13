@@ -58,62 +58,40 @@ pub mod power_supply {
                                 let event = "the power supply from the power grid has been restored, the generator is working fine";
                                 // Records the event to the SQL table 'app_log' and outputs it to info! env_logger.
                                 crate::logger::log::record(event);
+                                // Sending telegram notification.
+                                crate::tg::api::send_notification(event);
                                 // Sending SMS notification.
-                                match crate::sms::gateway::send_notification(
-                                    "SMS_POW_RESTORED_GEN_OK",
-                                ) {
-                                    Ok(_) => {
-                                        info!("send_notification('SMS_POW_RESTORED_GEN_OK'): ok")
-                                    }
-                                    Err(e) => {
-                                        let event = format!(
-                                            "send_notification(
-                                            'SMS_POW_RESTORED_GEN_OK',
-                                        ) error: {}",
-                                            e
-                                        );
-                                        // Records the event to the SQL table 'app_log' and outputs it to info! env_logger.
-                                        crate::logger::log::record(&event);
-                                    }
-                                }
+                                crate::sms::gateway::send_notification("SMS_POW_RESTORED_GEN_OK");
                             }
                             Ok(0) => {
                                 let event = "the power supply has not been restored, the generator is faulty";
                                 // Records the event to the SQL table 'app_log' and outputs it to info! env_logger.
                                 crate::logger::log::record(event);
+                                // Sending telegram notification.
+                                crate::tg::api::send_notification(event);
                                 // Sending SMS notification.
-                                match crate::sms::gateway::send_notification(
-                                    "SMS_POW_RESTORED_GEN_ERR",
-                                ) {
-                                    Ok(_) => {
-                                        info!("send_notification('SMS_POW_RESTORED_GEN_ERR'): ok")
-                                    }
-                                    Err(e) => {
-                                        let event = format!(
-                                            "send_notification(
-                                            'SMS_POW_RESTORED_GEN_ERR',
-                                        ) error: {}",
-                                            e
-                                        );
-                                        // Records the event to the SQL table 'app_log' and outputs it to info! env_logger.
-                                        crate::logger::log::record(&event);
-                                    }
-                                }
+                                crate::sms::gateway::send_notification("SMS_POW_RESTORED_GEN_ERR");
                             }
                             Ok(2) => {
                                 let event = "the transmitted_work value is not 0 or 1";
                                 // Records the event to the SQL table 'app_log' and outputs it to info! env_logger.
                                 crate::logger::log::record(event);
+                                // Sending telegram notification.
+                                crate::tg::api::send_notification(event);
                             }
                             Err(e) => {
                                 let event = format!("select_transmitted_work() error: {}", e);
                                 // Records the event to the SQL table 'app_log' and outputs it to info! env_logger.
                                 crate::logger::log::record(&event);
+                                // Sending telegram notification.
+                                crate::tg::api::send_notification(&event);
                             }
                             _ => {
                                 let event = "the transmitted_work value is _";
                                 // Records the event to the SQL table 'app_log' and outputs it to info! env_logger.
                                 crate::logger::log::record(event);
+                                // Sending telegram notification.
+                                crate::tg::api::send_notification(event);
                             }
                         }
                         break 'inner;
@@ -127,16 +105,22 @@ pub mod power_supply {
                         let event = "the mains_power_supply value is not 0 or 1";
                         // Records the event to the SQL table 'app_log' and outputs it to info! env_logger.
                         crate::logger::log::record(event);
+                        // Sending telegram notification.
+                        crate::tg::api::send_notification(event);
                     }
                     Err(e) => {
                         let event = format!("select_mains_power_supply() error: {}", e);
                         // Records the event to the SQL table 'app_log' and outputs it to info! env_logger.
                         crate::logger::log::record(&event);
+                        // Sending telegram notification.
+                        crate::tg::api::send_notification(&event);
                     }
                     _ => {
                         let event = "error: the mains_power_supply value is _";
                         // Records the event to the SQL table 'app_log' and outputs it to info! env_logger.
                         crate::logger::log::record(event);
+                        // Sending telegram notification.
+                        crate::tg::api::send_notification(event);
                     }
                 }
             }
@@ -195,47 +179,19 @@ pub mod power_supply {
                                         let event = "disconnecting power from the mains, successful start of the generator";
                                         // Records the event to the SQL table 'app_log' and outputs it to info! env_logger.
                                         crate::logger::log::record(event);
+                                        // Sending telegram notification.
+                                        crate::tg::api::send_notification(event);
                                         // Sending SMS notification.
-                                        match crate::sms::gateway::send_notification(
-                                            "SMS_START_GEN_OK",
-                                        ) {
-                                            Ok(_) => {
-                                                info!("send_notification('SMS_START_GEN_OK'): ok")
-                                            }
-                                            Err(e) => {
-                                                let event = format!(
-                                                    "send_notification(
-                                                    'SMS_START_GEN_OK',
-                                                ) error: {}",
-                                                    e
-                                                );
-                                                // Records the event to the SQL table 'app_log' and outputs it to info! env_logger.
-                                                crate::logger::log::record(&event);
-                                            }
-                                        }
+                                        crate::sms::gateway::send_notification("SMS_START_GEN_OK");
                                     }
                                     Ok(0) => {
                                         let event = "disconnecting power from the mains, the generator startup failed";
                                         // Records the event to the SQL table 'app_log' and outputs it to info! env_logger.
                                         crate::logger::log::record(event);
+                                        // Sending telegram notification.
+                                        crate::tg::api::send_notification(event);
                                         // Sending SMS notification.
-                                        match crate::sms::gateway::send_notification(
-                                            "SMS_START_GEN_ERR",
-                                        ) {
-                                            Ok(_) => {
-                                                info!("send_notification('SMS_START_GEN_ERR'): ok")
-                                            }
-                                            Err(e) => {
-                                                let event = format!(
-                                                    "send_notification(
-                                                    'SMS_START_GEN_ERR',
-                                                ) error: {}",
-                                                    e
-                                                );
-                                                // Records the event to the SQL table 'app_log' and outputs it to info! env_logger.
-                                                crate::logger::log::record(&event);
-                                            }
-                                        }
+                                        crate::sms::gateway::send_notification("SMS_START_GEN_ERR");
                                     }
                                     Ok(2) => {
                                         let event = "the start_generator() value is not 0 or 1";
@@ -247,11 +203,15 @@ pub mod power_supply {
                                             format!("select_start_generator() error: {}", e);
                                         // Records the event to the SQL table 'app_log' and outputs it to info! env_logger.
                                         crate::logger::log::record(&event);
+                                        // Sending telegram notification.
+                                        crate::tg::api::send_notification(&event);
                                     }
                                     _ => {
                                         let event = "error: the start_generator value is _";
                                         // Records the event to the SQL table 'app_log' and outputs it to info! env_logger.
                                         crate::logger::log::record(event);
+                                        // Sending telegram notification.
+                                        crate::tg::api::send_notification(event);
                                     }
                                 }
                                 // ATS polling cycle after power outage.
@@ -265,16 +225,22 @@ pub mod power_supply {
                                 let event = "the mains_power_supply value is not 0 or 1";
                                 // Records the event to the SQL table 'app_log' and outputs it to info! env_logger.
                                 crate::logger::log::record(event);
+                                // Sending telegram notification.
+                                crate::tg::api::send_notification(event);
                             }
                             Err(e) => {
                                 let event = format!("select_mains_power_supply() error: {}", e);
                                 // Records the event to the SQL table 'app_log' and outputs it to info! env_logger.
                                 crate::logger::log::record(&event);
+                                // Sending telegram notification.
+                                crate::tg::api::send_notification(&event);
                             }
                             _ => {
                                 let event = "error: the mains_power_supply value is _";
                                 // Records the event to the SQL table 'app_log' and outputs it to info! env_logger.
                                 crate::logger::log::record(event);
+                                // Sending telegram notification.
+                                crate::tg::api::send_notification(event);
                             }
                         }
                     }
@@ -288,16 +254,22 @@ pub mod power_supply {
                     let event = "the mains_power_supply value is not 0 or 1";
                     // Records the event to the SQL table 'app_log' and outputs it to info! env_logger.
                     crate::logger::log::record(event);
+                    // Sending telegram notification.
+                    crate::tg::api::send_notification(event);
                 }
                 Err(e) => {
                     let event = format!("select_mains_power_supply() error: {}", e);
                     // Records the event to the SQL table 'app_log' and outputs it to info! env_logger.
                     crate::logger::log::record(&event);
+                    // Sending telegram notification.
+                    crate::tg::api::send_notification(&event);
                 }
                 _ => {
                     let event = "error: the mains_power_supply value is _";
                     // Records the event to the SQL table 'app_log' and outputs it to info! env_logger.
                     crate::logger::log::record(event);
+                    // Sending telegram notification.
+                    crate::tg::api::send_notification(event);
                 }
             }
         }

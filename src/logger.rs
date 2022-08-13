@@ -5,7 +5,12 @@ pub mod log {
         // Records event to the SQL table 'app_log'.
         match crate::psql::postgresql::insert_event(event) {
             Ok(_) => info!("insert_event() ok: {}", event),
-            Err(e) => info!("{}", e),
+            Err(e) => {
+                let message = format!("insert_event() '{}' error: {}", event, e);
+                info!("{}", message);
+                // Sending telegram notification.
+                crate::tg::api::send_notification(event);
+            }
         }
     }
 
