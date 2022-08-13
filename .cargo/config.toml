@@ -7,10 +7,11 @@ POSTGRES_HOSTNAME = "postgresql"
 POSTGRES_PORT = "5432"
 
 
-# Alert messages for sms gateway
+# Sms gateway settings
 # Sms gateway string connection
 GATEWAY_STR_CONNECTION = "https://api-mapper.clicksend.com/http/v2/send.php?method=http&username=development-service@yandex.ru&key=1E82A334-89D8-985C-526B-712DB70A713D&to=+79139402913&message="
 
+# Alert messages for sms gateway
 # The text of the SMS-message about the generator operation error
 SMS_GEN_WORK_ERR = "Авария!+Генератор+неисправен!+Срочно+произведите+сервисные+работы!"
 
@@ -30,25 +31,12 @@ SMS_POW_RESTORED_GEN_OK = "Питание+от+электросети+восст
 SMS_POW_RESTORED_GEN_ERR = "Питание+от+электросети+восстановлено.+Генератор+неисправен.+Генератор+не+работает."
 
 
-# Alert messages for Telegram-bot
-# The text of the Telegram-message about the generator operation error
-TG_GEN_WORK_ERR = "Авария! Генератор неисправен! Срочно произведите сервисные работы!"
+# Telegram-bot settings
+# Token
+TG_BOT_TOKEN = "5554390902:AAHlRMql--ZbLHEybzEY1MK_r19b9EEU6_I"
 
-# The text of the Telegram-message about the resumption of the generator operation
-TG_GEN_WORK_RESTORED = "Работоспособность генератора в режиме трансляции питания от электросети восстановлена.\nГенератор+исправен.\nГенератор работает."
-
-# The text of the Telegram-message about the successful start of the generator
-TG_START_GEN_OK = "Сбой питания от электросети.\nУспешный старт генератора."
-
-# Text of Telegram-message about generator start error
-TG_START_GEN_ERR = "Сбой питания от электросети.\nСбой старта генератора."
-
-# The text of the Telegram-message about the resumption of power supply from the network and the serviceability of the generator
-TG_POW_RESTORED_GEN_OK = "Питание от электросети восстановлено.\nГенератор исправен.\nГенератор работает."
-
-# The text of the Telegram-message about the resumption of power supply from the network and the failure of the generator
-TG_POW_RESTORED_GEN_ERR = "Питание от электросети восстановлено.\nГенератор неисправен.\nГенератор не работает."
-
+# chat id
+CHAT_ID = "@ats_monitoring_bot_channel"
 
 # PLC settings
 # IP adress PLC TRIM5
