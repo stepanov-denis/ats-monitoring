@@ -20,6 +20,7 @@ mod read_env;
 mod sms;
 mod telegram;
 mod tg;
+mod json;
 
 /// Application workflows.
 fn main() -> Result<(), Box<dyn Error + Send + Sync>> {
@@ -59,8 +60,9 @@ fn main() -> Result<(), Box<dyn Error + Send + Sync>> {
     // Run Telegram-bot.
     let _ats_monitoring_bot_thread = thread::spawn(|| loop {
         info!("starting up ats_monitoring_bot_thread");
-        telegram::bot::bot_commands();
-        thread::sleep(Duration::from_millis(1))
+        crate::tg::api::callback_winter_garden();
+        // telegram::bot::bot_commands();
+        thread::sleep(Duration::from_millis(1000));
     });
 
     // Run the monitoring of the automatic reserve input.

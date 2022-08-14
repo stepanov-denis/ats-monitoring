@@ -105,6 +105,21 @@ pub mod postgresql {
         Ok(())
     }
 
+    pub fn create_tg_message_table() -> Result<(), PostgresError> {
+        let mut client = Client::connect(&db_connect(), NoTls)?;
+        client.batch_execute(
+            "
+                CREATE TABLE IF NOT EXISTS tg_message (
+                    id serial primary key,
+                    time int not null,
+                    date timestamp default current_timestamp
+                
+                )
+            ",
+        )?;
+        Ok(())
+    }
+
     /// Records some event to the SQL table "app_log".
     pub fn insert_event(event: &str) -> Result<(), PostgresError> {
         let mut client = Client::connect(&db_connect(), NoTls)?;
@@ -202,6 +217,21 @@ pub mod postgresql {
         Ok(())
     }
 
+    pub fn insert_message_time(message_time: i32) -> Result<(), PostgresError> {
+        let mut client = Client::connect(&db_connect(), NoTls)?;
+        client.execute("INSERT INTO tg_message (time) VALUES ($1)", &[&message_time])?;
+
+        for row in client.query(
+            "SELECT time, date FROM tg_message ORDER BY date DESC limit 1",
+            &[],
+        )? {
+            let message_time: &str = row.get(0);
+
+            info!("entry in the sql table 'tg_message': {}", message_time);
+        }
+        Ok(())
+    }
+
     /// Getting generator_faulty value
     /// 0 - generator is working properly in the mode of electricity transmission from the power grid
     /// 1 - the generator does not work in the mode of transmission of electricity from the power grid
@@ -281,6 +311,52 @@ pub mod postgresql {
         {
             let transmitted_work: i32 = row.get(0);
             return Ok(transmitted_work);
+        }
+
+        Ok(2)
+    }
+
+    pub fn select_winter_garden() -> Result<WinterGarden, PostgresError> {
+        let mut client = Client::connect(&crate::psql::postgresql::db_connect(), NoTls)?;
+
+        if let Some(row) = (client.query("SELECT phyto_lighting_1, phyto_lighting_2, phyto_lighting_3, phyto_lighting_4, fan, automatic_watering_1, automatic_watering_2, automatic_watering_3, temperature_indoor, humidity_indoor, illumination_indoor, illumination_outdoor FROM winter_garden ORDER BY date DESC limit 1", &[])?)
+        .into_iter()
+        .next()
+        {
+            let winter_garden = WinterGarden {
+                phyto_lighting_1: row.get(0),
+                phyto_lighting_2: row.get(1),
+                phyto_lighting_3: row.get(2),
+                phyto_lighting_4 : row.get(3),
+                fan: row.get(4),
+                automatic_watering_1: row.get(5),
+                automatic_watering_2: row.get(6),
+                automatic_watering_3: row.get(7),
+                temperature_indoor: row.get(8),
+                humidity_indoor: row.get(9),
+                illumination_indoor: row.get(10),
+                illumination_outdoor: row.get(11),
+            };
+
+            return Ok(winter_garden)
+        }
+
+        let winter_garden: WinterGarden = WinterGarden::default();
+        Ok(winter_garden)
+    }
+
+    pub fn select_message_time() -> Result<i32, PostgresError> {
+        let mut client = Client::connect(&crate::psql::postgresql::db_connect(), NoTls)?;
+
+        if let Some(row) = (client.query(
+            "SELECT time, date FROM tg_message ORDER BY date DESC limit 1",
+            &[],
+        )?)
+        .into_iter()
+        .next()
+        {
+            let message_time: i32 = row.get(0);
+            return Ok(message_time);
         }
 
         Ok(2)

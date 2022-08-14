@@ -5,6 +5,7 @@ pub mod winter_garden_control {
     use std::error::Error;
 
     /// Data structure for variables of the automatic winter garden management system.
+    #[derive(Default)]
     pub struct WinterGarden {
         pub phyto_lighting_1: i32,
         pub phyto_lighting_2: i32,

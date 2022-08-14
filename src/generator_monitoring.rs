@@ -2,7 +2,7 @@ pub mod generator {
     /// Create a request event for the operation of the generator
     /// in the mode of transmission of electricity from the power grid.
     fn log_request_to_generator() -> String {
-        format!("request for operation of the generator 
+        format!("request for operation of the generator
         in the mode of transmission of electricity from the power grid\nresponse from postgresql: generator_faulty = {:?}",
         crate::psql::postgresql::select_generator_faulty())
     }

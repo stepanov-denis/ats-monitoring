@@ -55,5 +55,13 @@ pub mod postgresql {
                 panic!("{}", e)
             }
         }
+
+        match crate::psql::postgresql::create_tg_message_table() {
+            Ok(_) => info!("create_tg_message_table(): ok"),
+            Err(e) => {
+                info!("{}", e);
+                panic!("{}", e)
+            }
+        }
     }
 }
