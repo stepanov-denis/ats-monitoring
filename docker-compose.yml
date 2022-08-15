@@ -3,7 +3,7 @@ services:
   app:
     image: rust:1.62.0
     restart: always
-    command: sh -c "export TELOXIDE_TOKEN=5554390902:AAHlRMql--ZbLHEybzEY1MK_r19b9EEU6_I && RUST_LOG=info cargo run --release"
+    command: sh -c "RUST_LOG=info cargo run --release"
     working_dir: /app
     volumes:
       - ./:/app

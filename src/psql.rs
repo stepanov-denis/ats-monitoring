@@ -219,13 +219,16 @@ pub mod postgresql {
 
     pub fn insert_message_time(message_time: i32) -> Result<(), PostgresError> {
         let mut client = Client::connect(&db_connect(), NoTls)?;
-        client.execute("INSERT INTO tg_message (time) VALUES ($1)", &[&message_time])?;
+        client.execute(
+            "INSERT INTO tg_message (time) VALUES ($1)",
+            &[&message_time],
+        )?;
 
         for row in client.query(
-            "SELECT time, date FROM tg_message ORDER BY date DESC limit 1",
+            "SELECT time FROM tg_message ORDER BY date DESC limit 1",
             &[],
         )? {
-            let message_time: &str = row.get(0);
+            let message_time: i32 = row.get(0);
 
             info!("entry in the sql table 'tg_message': {}", message_time);
         }
@@ -349,7 +352,7 @@ pub mod postgresql {
         let mut client = Client::connect(&crate::psql::postgresql::db_connect(), NoTls)?;
 
         if let Some(row) = (client.query(
-            "SELECT time, date FROM tg_message ORDER BY date DESC limit 1",
+            "SELECT time FROM tg_message ORDER BY date DESC limit 1",
             &[],
         )?)
         .into_iter()
@@ -359,6 +362,6 @@ pub mod postgresql {
             return Ok(message_time);
         }
 
-        Ok(2)
+        Ok(0)
     }
 }

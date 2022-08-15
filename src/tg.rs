@@ -21,10 +21,10 @@ pub mod api {
 
     /// Sending teleagram-bot update.
     pub fn update() -> Result<String> {
-        println!("executing an http request to an telegram bot api");
+        info!("executing an http request to an telegram bot api for update");
         let resp = reqwest::blocking::get(update_url())?;
         let text = resp.text();
-        let result = text.unwrap_or_default();      
+        let result = text.unwrap_or_default();
         Ok(result)
     }
 
@@ -41,7 +41,7 @@ pub mod api {
 
     /// Sending SMS notification.
     fn send_message(message: &str) -> Result<()> {
-        info!("executing an http request to an telegram bot api");
+        info!("executing an http request to an telegram bot api for send message");
         let resp = reqwest::blocking::get(message_url(message))?;
         match resp.status() {
             StatusCode::OK => {
@@ -67,39 +67,16 @@ pub mod api {
     /// Match send_message(message: &str).
     pub fn send_notification(message: &str) {
         match send_message(message) {
-            Ok(_) => {
-                let event = format!(
-                    "send_notification(): ok, the message has been sent: {}",
-                    message
-                );
-                // Records the event to the SQL table 'app_log' and outputs it to info! env_logger.
-                crate::logger::log::record(&event);
-            }
-            Err(e) => {
-                let event = format!("send_notification(): error, the telegram notification was not sent, status http request: {}", e);
-                // Records the event to the SQL table 'app_log' and outputs it to info! env_logger.
-                crate::logger::log::record(&event);
-            }
+            Ok(_) => info!("send_message(message): ok"),
+            Err(e) => info!("send_message(message) error: {}", e),
         }
     }
 
     fn send_winter_garden() {
-                let winter_garden: WinterGarden = crate::psql::postgresql::select_winter_garden().unwrap_or_default();
-                let winter_garden_data = format!(
-                    "Winter Garden:\n
-                    phyto_lighting_1: {}\n
-                    phyto_lighting_2: {}\n
-                    phyto_lighting_3: {}\n
-                    phyto_lighting_4: {}\n
-                    fan: {}\n
-                    automatic_watering_1: {}\n
-                    automatic_watering_2: {}\n
-                    automatic_watering_3: {}\n
-                    temperature_indoor: {}\n
-                    humidity_indoor: {}\n
-                    illumination_indoor: {}\n
-                    illumination_outdoor: {}\n
-                ",
+        let winter_garden: WinterGarden =
+            crate::psql::postgresql::select_winter_garden().unwrap_or_default();
+        let winter_garden_data = format!(
+                    "Winter Garden: %0Aphyto_lighting_1: {} %0Aphyto_lighting_2: {} %0Aphyto_lighting_3: {} %0Aphyto_lighting_4: {} %0Afan: {} %0Aautomatic_watering_1: {} %0Aautomatic_watering_2: {} %0Aautomatic_watering_3: {} %0Atemperature_indoor: {} %0Ahumidity_indoor: {} %0Aillumination_indoor: {} %0Aillumination_outdoor: {}",
                     winter_garden.phyto_lighting_1,
                     winter_garden.phyto_lighting_2,
                     winter_garden.phyto_lighting_3,
@@ -113,26 +90,29 @@ pub mod api {
                     winter_garden.illumination_indoor,
                     winter_garden.illumination_outdoor
                 );
-                send_notification(&winter_garden_data);
+        send_notification(&winter_garden_data);
     }
 
     pub fn callback_winter_garden() {
         match crate::json::deserialize::last_message() {
             Ok((message, message_time)) => {
                 if message == "/wintergarden" {
-                    let message_time_cash = crate::psql::postgresql::select_message_time().unwrap_or_default();
-                    if message_time > message_time_cash {
-                        info!("message_time = {}, message_time_cash = {}", message_time, message_time_cash);
-                        info!("сейчас отправлю...");
+                    let message_time_cache =
+                        crate::psql::postgresql::select_message_time().unwrap_or_default();
+                    info!(
+                        "message = {}, message_time = {}, message_time_cache = {}",
+                        message, message_time, message_time_cache
+                    );
+                    if message_time > message_time_cache {
                         send_winter_garden();
-                        info!("отправил");
-                        info!("сейчас запишу в постгрес");
-                        crate::psql::postgresql::insert_message_time(message_time);
-                        info!("записал");
+                        match crate::psql::postgresql::insert_message_time(message_time) {
+                            Ok(_) => info!("insert_message_time(message_time): ok"),
+                            Err(e) => info!("insert_message_time(message_time) error: {}", e),
+                        }
                     }
                 }
             }
-            Err(e) => info!("callback_winter_garden() error: {}", e)
+            Err(e) => info!("callback_winter_garden() error: {}", e),
         }
     }
 }

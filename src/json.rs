@@ -2,7 +2,6 @@ pub mod deserialize {
     use serde::{Deserialize, Serialize};
     use serde_json::Result;
 
-
     #[derive(Serialize, Deserialize, Debug)]
     struct Update {
         pub ok: bool,
@@ -53,13 +52,36 @@ pub mod deserialize {
 
     pub fn last_message() -> Result<(String, i32)> {
         let data = crate::tg::api::update().unwrap_or_default();
+
+        // r#""# required according to the serde_json documentation:
+        // Some JSON input data as a &str. Maybe this comes from the user.
+        // let data = r#"
+        // {
+        //     "name": "John Doe",
+        //     "age": 43,
+        //     "phones": [
+        //         "+44 1234567",
+        //         "+44 2345678"
+        //     ]
+        // }"#;
+        // Parse the string of data into a Person object. This is exactly the
+        // same function as the one that produced serde_json::Value above, but
+        // now we are asking it for a Person as output.
+        // let p: Person = serde_json::from_str(data)?;
+
+        // So clippy thinks it's useless_format:
+        // There is no point of doing that. format!("foo") can be replaced by "foo".to_owned()
+        // if you really need a String. The even worse &format!("foo") is often encountered in the wild.
+        // format!("{}", foo) can be replaced by foo.clone() if foo: String or foo.to_owned() if foo: &str.
+
+        #[allow(clippy::useless_format)]
         let format_data = format!(r#"{}"#, data);
         let update: Update = serde_json::from_str(&format_data)?;
         let len = update.result.len();
         if len > 0 {
-            let message = &update.result[len-1].message.text;
-            let message_time = &update.result[len-1].message.date;
-            return Ok((message.to_string(), *message_time))
+            let message = &update.result[len - 1].message.text;
+            let message_time = &update.result[len - 1].message.date;
+            return Ok((message.to_string(), *message_time));
         }
         Ok(("empty string".to_string(), 0))
     }

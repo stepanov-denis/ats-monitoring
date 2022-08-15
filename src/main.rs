@@ -10,6 +10,7 @@ use std::thread;
 use std::time::Duration;
 mod generator_monitoring;
 mod init;
+mod json;
 mod logger;
 mod modbus_ats;
 mod modbus_client;
@@ -18,9 +19,7 @@ mod power_supply_monitoring;
 mod psql;
 mod read_env;
 mod sms;
-mod telegram;
 mod tg;
-mod json;
 
 /// Application workflows.
 fn main() -> Result<(), Box<dyn Error + Send + Sync>> {
