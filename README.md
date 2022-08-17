@@ -90,10 +90,15 @@ $ docker compose down
 $ docker compose down --volumes
 ```
 ## Use
-* Сreate and save the report in the form you need in Orange Data Mining
-* Check your phone for SMS messages from ClickSend
-* Check your Telegram for messages from your bot
-## Notification
+#### Orange Data Mining
+Сreate and save the report in the form you need in Orange Data Mining
+#### SMS
+Check your phone for SMS messages from ClickSend
+#### Telegram-bot monitoring
+To track the instantaneous values of the variables of the automatic winter garden management system, enter the command (or select an item in the menu)
+```
+/wintergarden
+```
 #### Telegram bot sends messages in the following cases:
 * Errors when working with the database
 * Modbus tcp operation errors
