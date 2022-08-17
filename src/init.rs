@@ -63,5 +63,13 @@ pub mod postgresql {
                 panic!("{}", e)
             }
         }
+
+        match crate::psql::postgresql::create_tg_chat_table() {
+            Ok(_) => info!("create_tg_chat_table(): ok"),
+            Err(e) => {
+                info!("{}", e);
+                panic!("{}", e)
+            }
+        }
     }
 }

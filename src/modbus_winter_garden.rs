@@ -113,7 +113,7 @@ pub mod winter_garden_control {
                     let message = format!("insert_winter_garden() error: {}", e);
                     info!("{}", message);
                     // Sending telegram notification.
-                    crate::tg::api::send_notification(&message);
+                    crate::tg::api::send_alarm(&message);
                 }
             }
         } else {
@@ -136,7 +136,7 @@ pub mod winter_garden_control {
                 // and records the event to the SQL table 'app_log' and outputs it to info! env_logger.
                 crate::logger::log::event_err_connect_to_plc(&event);
                 // Sending telegram notification.
-                crate::tg::api::send_notification(&event);
+                crate::tg::api::send_alarm(&event);
             }
             Ok(_) => {
                 let event = "app communication with plc: ok";
@@ -158,7 +158,7 @@ pub mod winter_garden_control {
                         // Records the event to the SQL table 'app_log' and outputs it to info! env_logger.
                         crate::logger::log::record(&event);
                         // Sending telegram notification.
-                        crate::tg::api::send_notification(&event);
+                        crate::tg::api::send_alarm(&event);
                     }
                 }
                 client.disconnect();
@@ -175,7 +175,7 @@ pub mod winter_garden_control {
                 // Records the event to the SQL table 'app_log' and outputs it to info! env_logger.
                 crate::logger::log::record(&event);
                 // Sending telegram notification.
-                crate::tg::api::send_notification(&event);
+                crate::tg::api::send_alarm(&event);
             }
         }
     }

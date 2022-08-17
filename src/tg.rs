@@ -29,20 +29,20 @@ pub mod api {
     }
 
     /// Create url for telegram bot api, with sendMessage method.
-    fn message_url(message: &str) -> String {
+    fn message_url(message: &str, chat_id: i32) -> String {
         let mut s = String::from("https://api.telegram.org/bot");
         s.push_str(&crate::read_env::env::read_str("TG_BOT_TOKEN").unwrap_or_default());
         s.push_str("/sendMessage?chat_id=");
-        s.push_str(&crate::read_env::env::read_str("CHAT_ID").unwrap_or_default());
+        s.push_str(&chat_id.to_string());
         s.push_str("&text=");
         s.push_str(message);
         s
     }
 
     /// Sending SMS notification.
-    fn send_message(message: &str) -> Result<()> {
+    fn send_message(message: &str, chat_id: i32) -> Result<()> {
         info!("executing an http request to an telegram bot api for send message");
-        let resp = reqwest::blocking::get(message_url(message))?;
+        let resp = reqwest::blocking::get(message_url(message, chat_id))?;
         match resp.status() {
             StatusCode::OK => {
                 let event = format!(
@@ -65,14 +65,14 @@ pub mod api {
     }
 
     /// Match send_message(message: &str).
-    pub fn send_notification(message: &str) {
-        match send_message(message) {
+    pub fn send_notification(message: &str, chat_id: i32) {
+        match send_message(message, chat_id) {
             Ok(_) => info!("send_message(message): ok"),
             Err(e) => info!("send_message(message) error: {}", e),
         }
     }
 
-    fn send_winter_garden() {
+    fn send_winter_garden(chat_id: i32) {
         let winter_garden: WinterGarden =
             crate::psql::postgresql::select_winter_garden().unwrap_or_default();
         let winter_garden_data = format!(
@@ -90,12 +90,19 @@ pub mod api {
                     winter_garden.illumination_indoor,
                     winter_garden.illumination_outdoor
                 );
-        send_notification(&winter_garden_data);
+        send_notification(&winter_garden_data, chat_id);
+    }
+
+    pub fn send_alarm(message: &str) {
+        let vec_chat_id = crate::psql::postgresql::select_chat_id().unwrap_or_default();
+        for id in vec_chat_id {
+            send_notification(message, id);
+        }
     }
 
     pub fn callback_winter_garden() {
         match crate::json::deserialize::last_message() {
-            Ok((message, message_time)) => {
+            Ok((message, message_time, chat_id)) => {
                 if message == "/wintergarden" {
                     let message_time_cache =
                         crate::psql::postgresql::select_message_time().unwrap_or_default();
@@ -104,7 +111,7 @@ pub mod api {
                         message, message_time, message_time_cache
                     );
                     if message_time > message_time_cache {
-                        send_winter_garden();
+                        send_winter_garden(chat_id);
                         match crate::psql::postgresql::insert_message_time(message_time) {
                             Ok(_) => info!("insert_message_time(message_time): ok"),
                             Err(e) => info!("insert_message_time(message_time) error: {}", e),
@@ -113,6 +120,13 @@ pub mod api {
                 }
             }
             Err(e) => info!("callback_winter_garden() error: {}", e),
+        }
+    }
+
+    pub fn update_chat_id() {
+        match crate::json::deserialize::chat_id() {
+            Ok(_) => info!("crate::json::deserialize::chat_id() ok"),
+            Err(e) => info!("crate::json::deserialize::chat_id() error: {}", e),
         }
     }
 }

@@ -13,7 +13,6 @@ mod init;
 mod json;
 mod logger;
 mod modbus_ats;
-mod modbus_client;
 mod modbus_winter_garden;
 mod power_supply_monitoring;
 mod psql;
@@ -36,37 +35,42 @@ fn main() -> Result<(), Box<dyn Error + Send + Sync>> {
     init::postgresql::init_postgres();
 
     // Run polling of the automatic reserve input.
-    let _modbus_ats_thread = thread::spawn(|| loop {
-        info!("starting up modbus_ats_thread");
+    let _ats = thread::spawn(|| loop {
+        info!("starting up ats thread");
         modbus_ats::ats_control::ats();
         thread::sleep(Duration::from_millis(1000));
     });
 
     // Run polling of the automatic winter garden management system.
-    let _modbus_winter_garden_thread = thread::spawn(|| loop {
-        info!("starting up modbus_winter_garden_thread");
+    let _winter_garden = thread::spawn(|| loop {
+        info!("starting up winter_garden thread");
         crate::modbus_winter_garden::winter_garden_control::winter_garden();
         thread::sleep(Duration::from_millis(1000));
     });
 
     // Run the monitoring of the generator.
-    let _generator_monitoring_thread = thread::spawn(|| loop {
-        info!("starting up generator_monitoring_thread");
+    let _generator_monitoring = thread::spawn(|| loop {
+        info!("starting up generator_monitoring thread");
         generator_monitoring::generator::generator_monitoring();
         thread::sleep(Duration::from_millis(1000));
     });
 
     // Run Telegram-bot.
-    let _ats_monitoring_bot_thread = thread::spawn(|| loop {
-        info!("starting up ats_monitoring_bot_thread");
+    let _callback_winter_garden = thread::spawn(|| loop {
+        info!("starting up callback_winter_garden thread");
         crate::tg::api::callback_winter_garden();
-        // telegram::bot::bot_commands();
+        thread::sleep(Duration::from_millis(1000));
+    });
+
+    let _update_chat_id = thread::spawn(|| loop {
+        info!("starting up update_chat_id thread");
+        crate::tg::api::update_chat_id();
         thread::sleep(Duration::from_millis(1000));
     });
 
     // Run the monitoring of the automatic reserve input.
     loop {
-        info!("starting up power_supply_monitoring_thread");
+        info!("starting up ats_monitoring thread");
         power_supply_monitoring::power_supply::ats_monitoring();
         thread::sleep(Duration::from_millis(1000));
     }

@@ -35,8 +35,6 @@ SMS_POW_RESTORED_GEN_ERR = "Питание+от+электросети+восс�
 # Token
 TG_BOT_TOKEN = "5554390902:AAHlRMql--ZbLHEybzEY1MK_r19b9EEU6_I"
 
-# chat id
-CHAT_ID = "@ats_monitoring_bot_channel"
 
 # PLC settings
 # IP adress PLC TRIM5

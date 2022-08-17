@@ -120,6 +120,21 @@ pub mod postgresql {
         Ok(())
     }
 
+    pub fn create_tg_chat_table() -> Result<(), PostgresError> {
+        let mut client = Client::connect(&db_connect(), NoTls)?;
+        client.batch_execute(
+            "
+                CREATE TABLE IF NOT EXISTS tg_chat (
+                    id serial primary key,
+                    chat_id int[] not null,
+                    date timestamp default current_timestamp
+                
+                )
+            ",
+        )?;
+        Ok(())
+    }
+
     /// Records some event to the SQL table "app_log".
     pub fn insert_event(event: &str) -> Result<(), PostgresError> {
         let mut client = Client::connect(&db_connect(), NoTls)?;
@@ -231,6 +246,21 @@ pub mod postgresql {
             let message_time: i32 = row.get(0);
 
             info!("entry in the sql table 'tg_message': {}", message_time);
+        }
+        Ok(())
+    }
+
+    pub fn insert_chat_id(chat_id: Vec<i32>) -> Result<(), PostgresError> {
+        let mut client = Client::connect(&db_connect(), NoTls)?;
+        client.execute("INSERT INTO tg_chat (chat_id) VALUES ($1)", &[&chat_id])?;
+
+        for row in client.query(
+            "SELECT chat_id FROM tg_chat ORDER BY date DESC limit 1",
+            &[],
+        )? {
+            let chat_id: Vec<i32> = row.get(0);
+
+            info!("entry in the sql table 'tg_chat': {:?}", chat_id);
         }
         Ok(())
     }
@@ -363,5 +393,22 @@ pub mod postgresql {
         }
 
         Ok(0)
+    }
+
+    pub fn select_chat_id() -> Result<Vec<i32>, PostgresError> {
+        let mut client = Client::connect(&crate::psql::postgresql::db_connect(), NoTls)?;
+
+        if let Some(row) = (client.query(
+            "SELECT chat_id FROM tg_chat ORDER BY date DESC limit 1",
+            &[],
+        )?)
+        .into_iter()
+        .next()
+        {
+            let chat_id: Vec<i32> = row.get(0);
+            return Ok(chat_id);
+        }
+
+        Ok(vec![])
     }
 }

@@ -9,7 +9,7 @@ pub mod log {
                 let message = format!("insert_event() '{}' error: {}", event, e);
                 info!("{}", message);
                 // Sending telegram notification.
-                crate::tg::api::send_notification(event);
+                crate::tg::api::send_alarm(event);
             }
         }
     }

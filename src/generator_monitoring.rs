@@ -28,7 +28,7 @@ pub mod generator {
                         // Records the event to the SQL table 'app_log' and outputs it to info! env_logger.
                         crate::logger::log::record(event);
                         // Sending telegram notification.
-                        crate::tg::api::send_notification(event);
+                        crate::tg::api::send_alarm(event);
                         // Sending SMS notification.
                         crate::sms::gateway::send_notification("SMS_GEN_WORK_RESTORED");
                         break 'inner;
@@ -44,21 +44,21 @@ pub mod generator {
                         // Records the event to the SQL table 'app_log' and outputs it to info! env_logger.
                         crate::logger::log::record(event);
                         // Sending telegram notification.
-                        crate::tg::api::send_notification(event);
+                        crate::tg::api::send_alarm(event);
                     }
                     Err(e) => {
                         let event = format!("generator_faulty() error: {}", e);
                         // Records the event to the SQL table 'app_log' and outputs it to info! env_logger.
                         crate::logger::log::record(&event);
                         // Sending telegram notification.
-                        crate::tg::api::send_notification(&event);
+                        crate::tg::api::send_alarm(&event);
                     }
                     _ => {
                         let event = "error: the generator_faulty value is _";
                         // Records the event to the SQL table 'app_log' and outputs it to info! env_logger.
                         crate::logger::log::record(event);
                         // Sending telegram notification.
-                        crate::tg::api::send_notification(event);
+                        crate::tg::api::send_alarm(event);
                     }
                 }
             }
@@ -90,7 +90,7 @@ pub mod generator {
                     // Records the event to the SQL table 'app_log' and outputs it to info! env_logger.
                     crate::logger::log::record(event);
                     // Sending telegram notification.
-                    crate::tg::api::send_notification(event);
+                    crate::tg::api::send_alarm(event);
                     // Sending SMS notification.
                     crate::sms::gateway::send_notification("SMS_GEN_WORK_ERR");
                     // Entering the generator polling cycle when a fault is detected.
@@ -101,21 +101,21 @@ pub mod generator {
                     // Records the event to the SQL table 'app_log' and outputs it to info! env_logger.
                     crate::logger::log::record(event);
                     // Sending telegram notification.
-                    crate::tg::api::send_notification(event);
+                    crate::tg::api::send_alarm(event);
                 }
                 Err(e) => {
                     let event = format!("generator_faulty() error: {}", e);
                     // Records the event to the SQL table 'app_log' and outputs it to info! env_logger.
                     crate::logger::log::record(&event);
                     // Sending telegram notification.
-                    crate::tg::api::send_notification(&event);
+                    crate::tg::api::send_alarm(&event);
                 }
                 _ => {
                     let event = "error: the generator_faulty value is _";
                     // Records the event to the SQL table 'app_log' and outputs it to info! env_logger.
                     crate::logger::log::record(event);
                     // Sending telegram notification.
-                    crate::tg::api::send_notification(event);
+                    crate::tg::api::send_alarm(event);
                 }
             }
         }

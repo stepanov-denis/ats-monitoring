@@ -10,7 +10,7 @@ pub mod env {
                 // Records the event to the SQL table 'app_log' and outputs it to info! env_logger.
                 crate::logger::log::record(&event);
                 // Sending telegram notification.
-                crate::tg::api::send_notification(&event);
+                crate::tg::api::send_alarm(&event);
             }
         }
         None
@@ -26,7 +26,7 @@ pub mod env {
                     // Records the event to the SQL table 'app_log' and outputs it to info! env_logger.
                     crate::logger::log::record(&event);
                     // Sending telegram notification.
-                    crate::tg::api::send_notification(&event);
+                    crate::tg::api::send_alarm(&event);
                 }
             },
             Err(e) => {
@@ -34,7 +34,7 @@ pub mod env {
                 // Records the event to the SQL table 'app_log' and outputs it to info! env_logger.
                 crate::logger::log::record(&event);
                 // Sending telegram notification.
-                crate::tg::api::send_notification(&event);
+                crate::tg::api::send_alarm(&event);
             }
         }
         None

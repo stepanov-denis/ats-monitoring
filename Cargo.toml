@@ -1,6 +1,6 @@
 [package]
 name = "ats-monitoring"
-version = "1.5.1"
+version = "1.5.2"
 edition = "2021"
 authors = ["Stepanov Denis <stepanov.d.m@yandex.ru>"]
 description = "Application for monitoring and reporting of engineering systems, sending notifications via Telegram-bot, API SMS gateway."
