@@ -56,16 +56,16 @@ fn main() -> Result<(), Box<dyn Error + Send + Sync>> {
     });
 
     // Run Telegram-bot.
-    let _callback_winter_garden = thread::spawn(|| loop {
-        info!("starting up callback_winter_garden thread");
-        crate::tg::api::callback_winter_garden();
-        thread::sleep(Duration::from_millis(1000));
+    let _callback = thread::spawn(|| loop {
+        info!("starting up callback thread");
+        crate::tg::api::callback();
+        thread::sleep(Duration::from_millis(1));
     });
 
     let _update_chat_id = thread::spawn(|| loop {
         info!("starting up update_chat_id thread");
         crate::tg::api::update_chat_id();
-        thread::sleep(Duration::from_millis(1000));
+        thread::sleep(Duration::from_millis(1));
     });
 
     // Run the monitoring of the automatic reserve input.

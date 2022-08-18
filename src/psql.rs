@@ -282,7 +282,6 @@ pub mod postgresql {
             let generator_faulty: i32 = row.get(0);
             return Ok(generator_faulty);
         }
-
         Ok(2)
     }
 
@@ -303,7 +302,6 @@ pub mod postgresql {
             let mains_power_supply: i32 = row.get(0);
             return Ok(mains_power_supply);
         }
-
         Ok(2)
     }
 
@@ -324,7 +322,6 @@ pub mod postgresql {
             let start_generator: i32 = row.get(0);
             return Ok(start_generator);
         }
-
         Ok(2)
     }
 
@@ -345,8 +342,44 @@ pub mod postgresql {
             let transmitted_work: i32 = row.get(0);
             return Ok(transmitted_work);
         }
-
         Ok(2)
+    }
+
+    pub fn select_ats() -> Result<Ats, PostgresError> {
+        let mut client = Client::connect(&crate::psql::postgresql::db_connect(), NoTls)?;
+
+        if let Some(row) = (client.query("SELECT mains_power_supply, start_generator, generator_faulty, transmitted_work, connection FROM ats_control ORDER BY date DESC limit 1", &[])?)
+        .into_iter()
+        .next()
+        {
+            let ats = Ats {
+                mains_power_supply: row.get(0),
+                start_generator: row.get(1),
+                generator_faulty: row.get(2),
+                transmitted_work : row.get(3),
+                connection: row.get(4),
+            };
+            return Ok(ats)
+        }
+        let ats: Ats = Ats::default();
+        Ok(ats)
+    }
+
+    pub fn select_generator_load() -> Result<GeneratorLoad, PostgresError> {
+        let mut client = Client::connect(&crate::psql::postgresql::db_connect(), NoTls)?;
+
+        if let Some(row) = (client.query(
+            "SELECT load FROM generator_load ORDER BY date DESC limit 1",
+            &[],
+        )?)
+        .into_iter()
+        .next()
+        {
+            let generator_load: GeneratorLoad = GeneratorLoad { load: row.get(0) };
+            return Ok(generator_load);
+        }
+        let generator_load: GeneratorLoad = GeneratorLoad::default();
+        Ok(generator_load)
     }
 
     pub fn select_winter_garden() -> Result<WinterGarden, PostgresError> {
@@ -370,10 +403,8 @@ pub mod postgresql {
                 illumination_indoor: row.get(10),
                 illumination_outdoor: row.get(11),
             };
-
             return Ok(winter_garden)
         }
-
         let winter_garden: WinterGarden = WinterGarden::default();
         Ok(winter_garden)
     }
@@ -391,7 +422,6 @@ pub mod postgresql {
             let message_time: i32 = row.get(0);
             return Ok(message_time);
         }
-
         Ok(0)
     }
 
@@ -408,7 +438,6 @@ pub mod postgresql {
             let chat_id: Vec<i32> = row.get(0);
             return Ok(chat_id);
         }
-
         Ok(vec![])
     }
 }

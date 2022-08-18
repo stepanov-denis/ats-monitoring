@@ -95,6 +95,10 @@ $ docker compose down --volumes
 #### SMS
 Check your phone for SMS messages from ClickSend
 #### Telegram-bot monitoring
+To track the instantaneous values of the variables of the automatic reserve input control system, enter the command (or select an item in the menu).
+```
+/ats
+```
 To track the instantaneous values of the variables of the automatic winter garden management system, enter the command (or select an item in the menu)
 ```
 /wintergarden

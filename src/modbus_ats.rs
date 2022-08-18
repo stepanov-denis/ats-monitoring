@@ -6,6 +6,8 @@ pub mod ats_control {
 
     /// Data structure for variables of the automatic emergency reserve
     /// entry control system.
+
+    #[derive(Default)]
     pub struct Ats {
         pub mains_power_supply: i32,
         pub start_generator: i32,
@@ -14,6 +16,7 @@ pub mod ats_control {
         pub connection: i32,
     }
 
+    #[derive(Default)]
     /// Data structure for the load level variable connected to the generator.
     pub struct GeneratorLoad {
         pub load: i32,
