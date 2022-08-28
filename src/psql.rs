@@ -7,7 +7,7 @@ pub mod postgresql {
     /// rRturns the database connection string.
     pub fn db_connect() -> String {
         // String::from("postgresql://postgres:mysecretpassword@postgresql:5432/postgres")
-        let mut s = String::from("postgresql://");
+        let mut s: String = String::from("postgresql://");
         s.push_str(&crate::read_env::env::read_str("POSTGRES_USERNAME").unwrap_or_default());
         s.push(':');
         s.push_str(&crate::read_env::env::read_str("POSTGRES_PASSWORD").unwrap_or_default());
@@ -22,7 +22,7 @@ pub mod postgresql {
 
     /// Set default transaction isolation level for database
     pub fn set_transaction_isolation() -> Result<(), PostgresError> {
-        let mut client = Client::connect(&db_connect(), NoTls)?;
+        let mut client: Client = Client::connect(&db_connect(), NoTls)?;
         client.batch_execute(
             "alter database postgres set default_transaction_isolation to serializable",
         )?;
@@ -31,7 +31,7 @@ pub mod postgresql {
 
     /// Create SQL table "avr_control".
     pub fn create_ats_control_table() -> Result<(), PostgresError> {
-        let mut client = Client::connect(&db_connect(), NoTls)?;
+        let mut client: Client = Client::connect(&db_connect(), NoTls)?;
         client.batch_execute(
             "
                 CREATE TABLE IF NOT EXISTS ats_control (
@@ -50,7 +50,7 @@ pub mod postgresql {
 
     /// Create SQL table "app_log".
     pub fn create_app_log_table() -> Result<(), PostgresError> {
-        let mut client = Client::connect(&db_connect(), NoTls)?;
+        let mut client: Client = Client::connect(&db_connect(), NoTls)?;
         client.batch_execute(
             "
                 CREATE TABLE IF NOT EXISTS app_log (
@@ -65,7 +65,7 @@ pub mod postgresql {
 
     /// Create SQL table "winter_garden".
     pub fn create_winter_garden_table() -> Result<(), PostgresError> {
-        let mut client = Client::connect(&db_connect(), NoTls)?;
+        let mut client: Client = Client::connect(&db_connect(), NoTls)?;
         client.batch_execute(
             "
                 CREATE TABLE IF NOT EXISTS winter_garden (
@@ -91,7 +91,7 @@ pub mod postgresql {
 
     /// Create SQL table "generator_load".
     pub fn create_generator_load_table() -> Result<(), PostgresError> {
-        let mut client = Client::connect(&db_connect(), NoTls)?;
+        let mut client: Client = Client::connect(&db_connect(), NoTls)?;
         client.batch_execute(
             "
                 CREATE TABLE IF NOT EXISTS generator_load (
@@ -106,7 +106,7 @@ pub mod postgresql {
     }
 
     pub fn create_tg_message_table() -> Result<(), PostgresError> {
-        let mut client = Client::connect(&db_connect(), NoTls)?;
+        let mut client: Client = Client::connect(&db_connect(), NoTls)?;
         client.batch_execute(
             "
                 CREATE TABLE IF NOT EXISTS tg_message (
@@ -121,7 +121,7 @@ pub mod postgresql {
     }
 
     pub fn create_tg_chat_table() -> Result<(), PostgresError> {
-        let mut client = Client::connect(&db_connect(), NoTls)?;
+        let mut client: Client = Client::connect(&db_connect(), NoTls)?;
         client.batch_execute(
             "
                 CREATE TABLE IF NOT EXISTS tg_chat (
@@ -137,7 +137,7 @@ pub mod postgresql {
 
     /// Records some event to the SQL table "app_log".
     pub fn insert_event(event: &str) -> Result<(), PostgresError> {
-        let mut client = Client::connect(&db_connect(), NoTls)?;
+        let mut client: Client = Client::connect(&db_connect(), NoTls)?;
         client.execute("INSERT INTO app_log (event) VALUES ($1)", &[&event])?;
 
         for row in client.query(
@@ -153,7 +153,7 @@ pub mod postgresql {
 
     /// Records the values of the variables of the automatic reserve to the SQL table "ats_control".
     pub fn insert_ats(ats: Ats) -> Result<(), PostgresError> {
-        let mut client = Client::connect(&crate::psql::postgresql::db_connect(), NoTls)?;
+        let mut client: Client = Client::connect(&crate::psql::postgresql::db_connect(), NoTls)?;
         client.execute(
             "INSERT INTO ats_control (mains_power_supply, start_generator, generator_faulty, transmitted_work, connection) VALUES ($1, $2, $3, $4, $5)",
             &[&ats.mains_power_supply, &ats.start_generator, &ats.generator_faulty, &ats.transmitted_work, &ats.connection],
@@ -175,7 +175,7 @@ pub mod postgresql {
     /// Records the values of the variables of the automatic winter garden management system
     /// to the SQL table "winter_garden".
     pub fn insert_winter_garden(winter_garden: WinterGarden) -> Result<(), PostgresError> {
-        let mut client = Client::connect(&crate::psql::postgresql::db_connect(), NoTls)?;
+        let mut client: Client = Client::connect(&crate::psql::postgresql::db_connect(), NoTls)?;
         client.execute(
             "INSERT INTO winter_garden (phyto_lighting_1, phyto_lighting_2, phyto_lighting_3, phyto_lighting_4, fan, automatic_watering_1, automatic_watering_2, automatic_watering_3, temperature_indoor, humidity_indoor, illumination_indoor, illumination_outdoor) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12)",
             &[&winter_garden.phyto_lighting_1,
@@ -214,7 +214,7 @@ pub mod postgresql {
 
     /// Records the value of the load level variable connected to the generator.
     pub fn insert_generator_load(generator_load: GeneratorLoad) -> Result<(), PostgresError> {
-        let mut client = Client::connect(&crate::psql::postgresql::db_connect(), NoTls)?;
+        let mut client: Client = Client::connect(&crate::psql::postgresql::db_connect(), NoTls)?;
         client.execute(
             "INSERT INTO generator_load (load) VALUES ($1)",
             &[&generator_load.load],
@@ -233,7 +233,7 @@ pub mod postgresql {
     }
 
     pub fn insert_message_time(message_time: i32) -> Result<(), PostgresError> {
-        let mut client = Client::connect(&db_connect(), NoTls)?;
+        let mut client: Client = Client::connect(&db_connect(), NoTls)?;
         client.execute(
             "INSERT INTO tg_message (time) VALUES ($1)",
             &[&message_time],
@@ -251,7 +251,7 @@ pub mod postgresql {
     }
 
     pub fn insert_chat_id(chat_id: Vec<i32>) -> Result<(), PostgresError> {
-        let mut client = Client::connect(&db_connect(), NoTls)?;
+        let mut client: Client = Client::connect(&db_connect(), NoTls)?;
         client.execute("INSERT INTO tg_chat (chat_id) VALUES ($1)", &[&chat_id])?;
 
         for row in client.query(
@@ -270,7 +270,7 @@ pub mod postgresql {
     /// 1 - the generator does not work in the mode of transmission of electricity from the power grid
     /// 2 - the generator_faulty value is not 0 or 1.
     pub fn select_generator_faulty() -> Result<i32, PostgresError> {
-        let mut client = Client::connect(&crate::psql::postgresql::db_connect(), NoTls)?;
+        let mut client: Client = Client::connect(&crate::psql::postgresql::db_connect(), NoTls)?;
 
         if let Some(row) = (client.query(
             "SELECT generator_faulty FROM ats_control ORDER BY date DESC limit 1",
@@ -290,7 +290,7 @@ pub mod postgresql {
     /// 1 - there is power from the city power grid
     /// 2 - the mains_power_supply value is not 0 or 1.
     pub fn select_mains_power_supply() -> Result<i32, PostgresError> {
-        let mut client = Client::connect(&crate::psql::postgresql::db_connect(), NoTls)?;
+        let mut client: Client = Client::connect(&crate::psql::postgresql::db_connect(), NoTls)?;
 
         if let Some(row) = (client.query(
             "SELECT mains_power_supply FROM ats_control ORDER BY date DESC limit 1",
@@ -310,7 +310,7 @@ pub mod postgresql {
     /// 1 - the generator has started
     /// 2 - the start_generator value is not 0 or 1.
     pub fn select_start_generator() -> Result<i32, PostgresError> {
-        let mut client = Client::connect(&crate::psql::postgresql::db_connect(), NoTls)?;
+        let mut client: Client = Client::connect(&crate::psql::postgresql::db_connect(), NoTls)?;
 
         if let Some(row) = (client.query(
             "SELECT start_generator FROM ats_control ORDER BY date DESC limit 1",
@@ -330,7 +330,7 @@ pub mod postgresql {
     /// 1- mains power is not transmitted via ATS.
     /// 2 - the transmitted_work value is not 0 or 1.
     pub fn select_transmitted_work() -> Result<i32, PostgresError> {
-        let mut client = Client::connect(&crate::psql::postgresql::db_connect(), NoTls)?;
+        let mut client: Client = Client::connect(&crate::psql::postgresql::db_connect(), NoTls)?;
 
         if let Some(row) = (client.query(
             "SELECT transmitted_work FROM ats_control ORDER BY date DESC limit 1",
@@ -346,7 +346,7 @@ pub mod postgresql {
     }
 
     pub fn select_ats() -> Result<Ats, PostgresError> {
-        let mut client = Client::connect(&crate::psql::postgresql::db_connect(), NoTls)?;
+        let mut client: Client = Client::connect(&crate::psql::postgresql::db_connect(), NoTls)?;
 
         if let Some(row) = (client.query("SELECT mains_power_supply, start_generator, generator_faulty, transmitted_work, connection FROM ats_control ORDER BY date DESC limit 1", &[])?)
         .into_iter()
@@ -366,7 +366,7 @@ pub mod postgresql {
     }
 
     pub fn select_generator_load() -> Result<GeneratorLoad, PostgresError> {
-        let mut client = Client::connect(&crate::psql::postgresql::db_connect(), NoTls)?;
+        let mut client: Client = Client::connect(&crate::psql::postgresql::db_connect(), NoTls)?;
 
         if let Some(row) = (client.query(
             "SELECT load FROM generator_load ORDER BY date DESC limit 1",
@@ -383,7 +383,7 @@ pub mod postgresql {
     }
 
     pub fn select_winter_garden() -> Result<WinterGarden, PostgresError> {
-        let mut client = Client::connect(&crate::psql::postgresql::db_connect(), NoTls)?;
+        let mut client: Client = Client::connect(&crate::psql::postgresql::db_connect(), NoTls)?;
 
         if let Some(row) = (client.query("SELECT phyto_lighting_1, phyto_lighting_2, phyto_lighting_3, phyto_lighting_4, fan, automatic_watering_1, automatic_watering_2, automatic_watering_3, temperature_indoor, humidity_indoor, illumination_indoor, illumination_outdoor FROM winter_garden ORDER BY date DESC limit 1", &[])?)
         .into_iter()
@@ -410,7 +410,7 @@ pub mod postgresql {
     }
 
     pub fn select_message_time() -> Result<i32, PostgresError> {
-        let mut client = Client::connect(&crate::psql::postgresql::db_connect(), NoTls)?;
+        let mut client: Client = Client::connect(&crate::psql::postgresql::db_connect(), NoTls)?;
 
         if let Some(row) = (client.query(
             "SELECT time FROM tg_message ORDER BY date DESC limit 1",
@@ -426,7 +426,7 @@ pub mod postgresql {
     }
 
     pub fn select_chat_id() -> Result<Vec<i32>, PostgresError> {
-        let mut client = Client::connect(&crate::psql::postgresql::db_connect(), NoTls)?;
+        let mut client: Client = Client::connect(&crate::psql::postgresql::db_connect(), NoTls)?;
 
         if let Some(row) = (client.query(
             "SELECT chat_id FROM tg_chat ORDER BY date DESC limit 1",

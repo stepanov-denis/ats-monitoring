@@ -23,7 +23,7 @@ mod tg;
 /// Application workflows.
 fn main() -> Result<(), Box<dyn Error + Send + Sync>> {
     // Initializing a Logger.
-    let mut builder = Builder::from_default_env();
+    let mut builder: Builder = Builder::from_default_env();
     builder.target(Target::Stdout);
     builder.init();
 

@@ -6,7 +6,7 @@ pub mod env {
         match env::var(s) {
             Ok(val) => return Some(val),
             Err(e) => {
-                let event = format!("read_str() error: couldn't interpret {s}: {e}");
+                let event: String = format!("read_str() error: couldn't interpret {s}: {e}");
                 // Records the event to the SQL table 'app_log' and outputs it to info! env_logger.
                 crate::logger::log::record(&event);
                 // Sending telegram notification.
@@ -22,7 +22,8 @@ pub mod env {
             Ok(val) => match val.parse::<u16>() {
                 Ok(val) => return Some(val),
                 Err(e) => {
-                    let event = format!("val.parse::<u16>() error: couldn't interpret {s}: {e}");
+                    let event: String =
+                        format!("val.parse::<u16>() error: couldn't interpret {s}: {e}");
                     // Records the event to the SQL table 'app_log' and outputs it to info! env_logger.
                     crate::logger::log::record(&event);
                     // Sending telegram notification.
@@ -30,7 +31,7 @@ pub mod env {
                 }
             },
             Err(e) => {
-                let event = format!("read_u16() error: couldn't interpret {s}: {e}");
+                let event: String = format!("read_u16() error: couldn't interpret {s}: {e}");
                 // Records the event to the SQL table 'app_log' and outputs it to info! env_logger.
                 crate::logger::log::record(&event);
                 // Sending telegram notification.

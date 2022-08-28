@@ -110,14 +110,14 @@ pub mod winter_garden_control {
             match crate::psql::postgresql::insert_winter_garden(winter_garden) {
                 Ok(_) => info!("insert_winter_garden(): ok"),
                 Err(e) => {
-                    let message = format!("insert_winter_garden() error: {}", e);
+                    let message: String = format!("insert_winter_garden() error: {}", e);
                     info!("{}", message);
                     // Sending telegram notification.
                     crate::tg::api::send_alarm(&message);
                 }
             }
         } else {
-            let event = "winter_garden control error: not all values are transmitted to the app from the plc";
+            let event: &str = "winter_garden control error: not all values are transmitted to the app from the plc";
             // Records the event to the SQL table 'app_log' and outputs it to info! env_logger.
             crate::logger::log::record(event);
         }
@@ -126,12 +126,12 @@ pub mod winter_garden_control {
 
     /// Communication session with the PLC via Modbus TCP.
     fn modbus_client() -> Result<(), Box<dyn Error + Send + Sync>> {
-        let mut client =
+        let mut client: TcpClient =
             TcpClient::new(&crate::read_env::env::read_str("IP_TRIM5").unwrap_or_default());
-        let result = client.connect();
+        let result: Result<(), String> = client.connect();
         match result {
             Err(message) => {
-                let event = format!("winter_garden() error: {}", message);
+                let event: String = format!("winter_garden() error: {}", message);
                 // Create event "app connection error to PLC".
                 // and records the event to the SQL table 'app_log' and outputs it to info! env_logger.
                 crate::logger::log::event_err_connect_to_plc(&event);
@@ -139,19 +139,19 @@ pub mod winter_garden_control {
                 crate::tg::api::send_alarm(&event);
             }
             Ok(_) => {
-                let event = "app communication with plc: ok";
+                let event: &str = "app communication with plc: ok";
                 // Records the event to the SQL table 'app_log' and outputs it to info! env_logger.
                 crate::logger::log::record(event);
                 // Reading variable values from the PLC "trim5" via Modbus TCP
                 // and writing the obtained values to the PostgreSQL DBMS.
                 match reading_input_registers(&mut client) {
                     Ok(_) => {
-                        let event = "reading_input_registers(): ok";
+                        let event: &str = "reading_input_registers(): ok";
                         // Records the event to the SQL table 'app_log' and outputs it to info! env_logger.
                         crate::logger::log::record(event);
                     }
                     Err(e) => {
-                        let event = format!(
+                        let event: String = format!(
                             "ats_control::winter_garden() reading_input_registers() error: {}",
                             e
                         );
@@ -171,7 +171,7 @@ pub mod winter_garden_control {
         match modbus_client() {
             Ok(_) => info!("winter_garden(): ok"),
             Err(e) => {
-                let event = format!("winter_garden() error: {}", e);
+                let event: String = format!("winter_garden() error: {}", e);
                 // Records the event to the SQL table 'app_log' and outputs it to info! env_logger.
                 crate::logger::log::record(&event);
                 // Sending telegram notification.

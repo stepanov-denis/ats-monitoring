@@ -3,6 +3,7 @@ pub mod api {
     use crate::modbus_ats::ats_control::GeneratorLoad;
     use crate::modbus_winter_garden::winter_garden_control::WinterGarden;
     use error_chain::error_chain;
+    use reqwest::blocking::Response;
     use reqwest::StatusCode;
 
     error_chain! {
@@ -14,7 +15,7 @@ pub mod api {
 
     /// Create url for telegram bot api, with getUpdates method.
     fn update_url() -> String {
-        let mut s = String::from("https://api.telegram.org/bot");
+        let mut s: String = String::from("https://api.telegram.org/bot");
         s.push_str(&crate::read_env::env::read_str("TG_BOT_TOKEN").unwrap_or_default());
         s.push_str("/getUpdates");
         s
@@ -23,15 +24,15 @@ pub mod api {
     /// Sending teleagram-bot update.
     pub fn update() -> Result<String> {
         info!("executing an http request to an telegram bot api for update");
-        let resp = reqwest::blocking::get(update_url())?;
+        let resp: Response = reqwest::blocking::get(update_url())?;
         let text = resp.text();
-        let result = text.unwrap_or_default();
+        let result: String = text.unwrap_or_default();
         Ok(result)
     }
 
     /// Create url for telegram bot api, with sendMessage method.
     fn message_url(message: &str, chat_id: i32) -> String {
-        let mut s = String::from("https://api.telegram.org/bot");
+        let mut s: String = String::from("https://api.telegram.org/bot");
         s.push_str(&crate::read_env::env::read_str("TG_BOT_TOKEN").unwrap_or_default());
         s.push_str("/sendMessage?chat_id=");
         s.push_str(&chat_id.to_string());
@@ -43,10 +44,10 @@ pub mod api {
     /// Sending SMS notification.
     fn send_message(message: &str, chat_id: i32) -> Result<()> {
         info!("executing an http request to an telegram bot api for send message");
-        let resp = reqwest::blocking::get(message_url(message, chat_id))?;
+        let resp: Response = reqwest::blocking::get(message_url(message, chat_id))?;
         match resp.status() {
             StatusCode::OK => {
-                let event = format!(
+                let event: String = format!(
                     "http request completed successfully, an telegram message was sent: {}",
                     message
                 );
@@ -54,7 +55,7 @@ pub mod api {
                 crate::logger::log::record(&event);
             }
             _ => {
-                let event = format!(
+                let event: String = format!(
                     "error: the telegram notification was not sent, status http request: {}",
                     resp.status()
                 );
@@ -74,43 +75,43 @@ pub mod api {
     }
 
     fn send_from_start(chat_id: i32) {
-        let message = "You have subscribed to the event notifications of the automatic ATS management system and the ATS monitoring application";
+        let message: &str = "You have subscribed to the event notifications of the automatic ATS management system and the ATS monitoring application";
         send_notification(message, chat_id);
     }
 
     fn send_from_help(chat_id: i32) {
-        let message = "/start - Subscribe to notifications of the automatic ATS management system and the ATS monitoring application%0A/help - Background information%0A/ats - ATS monitoring%0A/wintergarden - Winter Garden monitoring";
+        let message: &str = "/start - Subscribe to notifications of the automatic ATS management system and the ATS monitoring application%0A/help - Background information%0A/ats - ATS monitoring%0A/wintergarden - Winter Garden monitoring";
         send_notification(message, chat_id);
     }
 
     fn send_ats(chat_id: i32) {
         let ats: Ats = crate::psql::postgresql::select_ats().unwrap_or_default();
 
-        let mains_power_supply = match ats.mains_power_supply {
+        let mains_power_supply: &str = match ats.mains_power_supply {
             1 => "on",
             0 => "off",
             _ => "error",
         };
 
-        let start_generator = match ats.start_generator {
+        let start_generator: &str = match ats.start_generator {
             1 => "successful start",
             0 => "no start",
             _ => "error",
         };
 
-        let generator_faulty = match ats.generator_faulty {
+        let generator_faulty: &str = match ats.generator_faulty {
             1 => "faulty",
             0 => "no faulty",
             _ => "error",
         };
 
-        let transmitted_work = match ats.transmitted_work {
+        let transmitted_work: &str = match ats.transmitted_work {
             1 => "ok",
             0 => "no work",
             _ => "error",
         };
 
-        let connection = match ats.connection {
+        let connection: &str = match ats.connection {
             1 => "ok",
             0 => "no connection",
             _ => "error",
@@ -118,15 +119,15 @@ pub mod api {
 
         let generator_load: GeneratorLoad =
             crate::psql::postgresql::select_generator_load().unwrap_or_default();
-        let ats_data = format!(
-                    "Ats: %0Amains_power_supply: {} %0Astart_generator: {} %0Agenerator_faulty: {} %0Atransmitted_work: {} %0Aconnection: {} %0Agenerator_load: {}A",
-                    mains_power_supply,
-                    start_generator,
-                    generator_faulty,
-                    transmitted_work,
-                    connection,
-                    generator_load.load
-                );
+        let ats_data: String = format!(
+            "Ats: %0Amains power supply: {} %0Astart generator: {} %0Agenerator faulty: {} %0Atransmitted work: {} %0Aconnection: {} %0Agenerator load: {}A",
+            mains_power_supply,
+            start_generator,
+            generator_faulty,
+            transmitted_work,
+            connection,
+            generator_load.load
+        );
         send_notification(&ats_data, chat_id);
     }
 
@@ -134,74 +135,74 @@ pub mod api {
         let winter_garden: WinterGarden =
             crate::psql::postgresql::select_winter_garden().unwrap_or_default();
 
-        let phyto_lighting_1 = match winter_garden.phyto_lighting_1 {
+        let phyto_lighting_1: &str = match winter_garden.phyto_lighting_1 {
             1 => "on",
             0 => "off",
             _ => "error",
         };
 
-        let phyto_lighting_2 = match winter_garden.phyto_lighting_2 {
+        let phyto_lighting_2: &str = match winter_garden.phyto_lighting_2 {
             1 => "on",
             0 => "off",
             _ => "error",
         };
 
-        let phyto_lighting_3 = match winter_garden.phyto_lighting_3 {
+        let phyto_lighting_3: &str = match winter_garden.phyto_lighting_3 {
             1 => "on",
             0 => "off",
             _ => "error",
         };
 
-        let phyto_lighting_4 = match winter_garden.phyto_lighting_4 {
+        let phyto_lighting_4: &str = match winter_garden.phyto_lighting_4 {
             1 => "on",
             0 => "off",
             _ => "error",
         };
 
-        let fan = match winter_garden.fan {
+        let fan: &str = match winter_garden.fan {
             1 => "on",
             0 => "off",
             _ => "error",
         };
 
-        let automatic_watering_1 = match winter_garden.automatic_watering_1 {
+        let automatic_watering_1: &str = match winter_garden.automatic_watering_1 {
             1 => "on",
             0 => "off",
             _ => "error",
         };
 
-        let automatic_watering_2 = match winter_garden.automatic_watering_2 {
+        let automatic_watering_2: &str = match winter_garden.automatic_watering_2 {
             1 => "on",
             0 => "off",
             _ => "error",
         };
 
-        let automatic_watering_3 = match winter_garden.automatic_watering_3 {
+        let automatic_watering_3: &str = match winter_garden.automatic_watering_3 {
             1 => "on",
             0 => "off",
             _ => "error",
         };
 
-        let winter_garden_data = format!(
-                    "Winter Garden: %0Aphyto_lighting_1: {} %0Aphyto_lighting_2: {} %0Aphyto_lighting_3: {} %0Aphyto_lighting_4: {} %0Afan: {} %0Aautomatic_watering_1: {} %0Aautomatic_watering_2: {} %0Aautomatic_watering_3: {} %0Atemperature_indoor: {}°C %0Ahumidity_indoor: {}% %0Aillumination_indoor: {} lx %0Aillumination_outdoor: {} lx",
-                    phyto_lighting_1,
-                    phyto_lighting_2,
-                    phyto_lighting_3,
-                    phyto_lighting_4,
-                    fan,
-                    automatic_watering_1,
-                    automatic_watering_2,
-                    automatic_watering_3,
-                    winter_garden.temperature_indoor,
-                    winter_garden.humidity_indoor,
-                    winter_garden.illumination_indoor,
-                    winter_garden.illumination_outdoor
-                );
+        let winter_garden_data: String = format!(
+            "Winter Garden: %0Aphyto lighting 1: {} %0Aphyto lighting 2: {} %0Aphyto lighting 3: {} %0Aphyto lighting 4: {} %0Afan: {} %0Aautomatic watering 1: {} %0Aautomatic watering 2: {} %0Aautomatic watering 3: {} %0Atemperature indoor: {}°C %0Ahumidity indoor: {}% %0Aillumination indoor: {} lx %0Aillumination outdoor: {} lx",
+            phyto_lighting_1,
+            phyto_lighting_2,
+            phyto_lighting_3,
+            phyto_lighting_4,
+            fan,
+            automatic_watering_1,
+            automatic_watering_2,
+            automatic_watering_3,
+            winter_garden.temperature_indoor,
+            winter_garden.humidity_indoor,
+            winter_garden.illumination_indoor,
+            winter_garden.illumination_outdoor
+        );
         send_notification(&winter_garden_data, chat_id);
     }
 
     pub fn send_alarm(message: &str) {
-        let vec_chat_id = crate::psql::postgresql::select_chat_id().unwrap_or_default();
+        let vec_chat_id: Vec<i32> = crate::psql::postgresql::select_chat_id().unwrap_or_default();
         for id in vec_chat_id {
             send_notification(message, id);
         }
@@ -211,7 +212,7 @@ pub mod api {
         match crate::json::deserialize::last_message() {
             Ok((message, message_time, chat_id)) => {
                 if message == "/start" {
-                    let message_time_cache =
+                    let message_time_cache: i32 =
                         crate::psql::postgresql::select_message_time().unwrap_or_default();
                     info!(
                         "message = {}, message_time = {}, message_time_cache = {}",
@@ -243,7 +244,7 @@ pub mod api {
                 }
 
                 if message == "/ats" {
-                    let message_time_cache =
+                    let message_time_cache: i32 =
                         crate::psql::postgresql::select_message_time().unwrap_or_default();
                     info!(
                         "message = {}, message_time = {}, message_time_cache = {}",
@@ -259,7 +260,7 @@ pub mod api {
                 }
 
                 if message == "/wintergarden" {
-                    let message_time_cache =
+                    let message_time_cache: i32 =
                         crate::psql::postgresql::select_message_time().unwrap_or_default();
                     info!(
                         "message = {}, message_time = {}, message_time_cache = {}",

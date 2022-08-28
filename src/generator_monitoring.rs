@@ -14,7 +14,7 @@ pub mod generator {
             if crate::modbus_ats::ats_control::reading_connection() == Some(true) {
                 // Create a request event for the operation of the generator
                 // in the mode of transmission of electricity from the power grid.
-                let event = log_request_to_generator();
+                let event: String = log_request_to_generator();
                 // Records the event to the SQL table 'app_log' and outputs it to info! env_logger.
                 crate::logger::log::record(&event);
                 // Cheking generator_faulty value
@@ -23,7 +23,7 @@ pub mod generator {
                 // 2 - the generator_faulty value is not 0 or 1.
                 match crate::psql::postgresql::select_generator_faulty() {
                     Ok(0) => {
-                        let event = "the efficiency of the generator in the mode 
+                        let event: &str = "the efficiency of the generator in the mode 
                         of transmission of electricity from the power grid has been restored";
                         // Records the event to the SQL table 'app_log' and outputs it to info! env_logger.
                         crate::logger::log::record(event);
@@ -34,27 +34,27 @@ pub mod generator {
                         break 'inner;
                     }
                     Ok(1) => {
-                        let event =
+                        let event: &str =
                             "Alarm! The generator is faulty! Urgently perform service work!";
                         // Records the event to the SQL table 'app_log' and outputs it to info! env_logger.
                         crate::logger::log::record(event);
                     }
                     Ok(2) => {
-                        let event = "the generator_faulty value is not 0 or 1";
+                        let event: &str = "the generator_faulty value is not 0 or 1";
                         // Records the event to the SQL table 'app_log' and outputs it to info! env_logger.
                         crate::logger::log::record(event);
                         // Sending telegram notification.
                         crate::tg::api::send_alarm(event);
                     }
                     Err(e) => {
-                        let event = format!("generator_faulty() error: {}", e);
+                        let event: String = format!("generator_faulty() error: {}", e);
                         // Records the event to the SQL table 'app_log' and outputs it to info! env_logger.
                         crate::logger::log::record(&event);
                         // Sending telegram notification.
                         crate::tg::api::send_alarm(&event);
                     }
                     _ => {
-                        let event = "error: the generator_faulty value is _";
+                        let event: &str = "error: the generator_faulty value is _";
                         // Records the event to the SQL table 'app_log' and outputs it to info! env_logger.
                         crate::logger::log::record(event);
                         // Sending telegram notification.
@@ -72,7 +72,7 @@ pub mod generator {
         if crate::modbus_ats::ats_control::reading_connection() == Some(true) {
             // Create a request event for the operation of the generator
             // in the mode of transmission of electricity from the power grid.
-            let event = log_request_to_generator();
+            let event: String = log_request_to_generator();
             // Records the event to the SQL table 'app_log' and outputs it to info! env_logger.
             crate::logger::log::record(&event);
             // Checking generator_faulty value
@@ -81,12 +81,13 @@ pub mod generator {
             // 2 - the generator_faulty value is not 0 or 1.
             match crate::psql::postgresql::select_generator_faulty() {
                 Ok(0) => {
-                    let event = "generator is working properly in the mode of electricity transmission from the power grid";
+                    let event: &str = "generator is working properly in the mode of electricity transmission from the power grid";
                     // Records the event to the SQL table 'app_log' and outputs it to info! env_logger.
                     crate::logger::log::record(event);
                 }
                 Ok(1) => {
-                    let event = "Alarm! The generator is faulty! Urgently perform service work!";
+                    let event: &str =
+                        "Alarm! The generator is faulty! Urgently perform service work!";
                     // Records the event to the SQL table 'app_log' and outputs it to info! env_logger.
                     crate::logger::log::record(event);
                     // Sending telegram notification.
@@ -97,21 +98,21 @@ pub mod generator {
                     inner_loop_generator_faulty();
                 }
                 Ok(2) => {
-                    let event = "the generator_faulty value is not 0 or 1";
+                    let event: &str = "the generator_faulty value is not 0 or 1";
                     // Records the event to the SQL table 'app_log' and outputs it to info! env_logger.
                     crate::logger::log::record(event);
                     // Sending telegram notification.
                     crate::tg::api::send_alarm(event);
                 }
                 Err(e) => {
-                    let event = format!("generator_faulty() error: {}", e);
+                    let event: String = format!("generator_faulty() error: {}", e);
                     // Records the event to the SQL table 'app_log' and outputs it to info! env_logger.
                     crate::logger::log::record(&event);
                     // Sending telegram notification.
                     crate::tg::api::send_alarm(&event);
                 }
                 _ => {
-                    let event = "error: the generator_faulty value is _";
+                    let event: &str = "error: the generator_faulty value is _";
                     // Records the event to the SQL table 'app_log' and outputs it to info! env_logger.
                     crate::logger::log::record(event);
                     // Sending telegram notification.

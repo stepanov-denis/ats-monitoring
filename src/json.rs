@@ -51,7 +51,7 @@ pub mod deserialize {
     }
 
     pub fn last_message() -> Result<(String, i32, i32)> {
-        let data = crate::tg::api::update().unwrap_or_default();
+        let data: String = crate::tg::api::update().unwrap_or_default();
 
         // r#""# required according to the serde_json documentation:
         // Some JSON input data as a &str. Maybe this comes from the user.
@@ -75,20 +75,20 @@ pub mod deserialize {
         // format!("{}", foo) can be replaced by foo.clone() if foo: String or foo.to_owned() if foo: &str.
 
         #[allow(clippy::useless_format)]
-        let format_data = format!(r#"{}"#, data);
+        let format_data: String = format!(r#"{}"#, data);
         let update: Update = serde_json::from_str(&format_data)?;
-        let len = update.result.len();
+        let len: usize = update.result.len();
         if len > 0 {
-            let message = &update.result[len - 1].message.text;
-            let message_time = update.result[len - 1].message.date;
-            let chat_id = update.result[len - 1].message.chat.id;
+            let message: &String = &update.result[len - 1].message.text;
+            let message_time: i32 = update.result[len - 1].message.date;
+            let chat_id: i32 = update.result[len - 1].message.chat.id;
             return Ok((message.to_string(), message_time, chat_id));
         }
         Ok(("empty string".to_string(), 0, 0))
     }
 
     pub fn chat_id() -> Result<()> {
-        let data = crate::tg::api::update().unwrap_or_default();
+        let data: String = crate::tg::api::update().unwrap_or_default();
 
         // r#""# required according to the serde_json documentation:
         // Some JSON input data as a &str. Maybe this comes from the user.
@@ -112,13 +112,14 @@ pub mod deserialize {
         // format!("{}", foo) can be replaced by foo.clone() if foo: String or foo.to_owned() if foo: &str.
 
         #[allow(clippy::useless_format)]
-        let format_data = format!(r#"{}"#, data);
+        let format_data: String = format!(r#"{}"#, data);
         let update: Update = serde_json::from_str(&format_data)?;
-        let len = update.result.len();
+        let len: usize = update.result.len();
         if len > 0 {
-            let mut contains = false;
-            let chat_id = update.result[len - 1].message.chat.id;
-            let mut vec_chat_id = crate::psql::postgresql::select_chat_id().unwrap_or_default();
+            let mut contains: bool = false;
+            let chat_id: i32 = update.result[len - 1].message.chat.id;
+            let mut vec_chat_id: Vec<i32> =
+                crate::psql::postgresql::select_chat_id().unwrap_or_default();
             for id in &vec_chat_id {
                 if id == &chat_id {
                     contains = true;

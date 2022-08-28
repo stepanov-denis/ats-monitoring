@@ -1,5 +1,6 @@
 pub mod gateway {
     use error_chain::error_chain;
+    use reqwest::blocking::Response;
     use reqwest::StatusCode;
 
     error_chain! {
@@ -12,7 +13,7 @@ pub mod gateway {
     /// Returns the URL for the http post request
     /// for the sms gateway API to send an sms message.
     fn sms_message(s: &str) -> Option<String> {
-        let mut message =
+        let mut message: String =
             crate::read_env::env::read_str("GATEWAY_STR_CONNECTION").unwrap_or_default();
         message.push_str(&crate::read_env::env::read_str(s).unwrap_or_default());
         Some(message)
@@ -21,10 +22,10 @@ pub mod gateway {
     /// Sending SMS notification.
     fn send_message(message_env: &str) -> Result<()> {
         info!("executing an http request to an sms notification service provider");
-        let resp = reqwest::blocking::get(sms_message(message_env).unwrap_or_default())?;
+        let resp: Response = reqwest::blocking::get(sms_message(message_env).unwrap_or_default())?;
         match resp.status() {
             StatusCode::OK => {
-                let event = format!(
+                let event: String = format!(
                     "http request completed successfully, an sms message was sent: {:?}",
                     crate::read_env::env::read_str(message_env)
                 );
@@ -32,7 +33,7 @@ pub mod gateway {
                 crate::logger::log::record(&event);
             }
             _ => {
-                let event = format!(
+                let event: String = format!(
                     "error: the sms notification was not sent, status http request: {}",
                     resp.status()
                 );
@@ -50,7 +51,7 @@ pub mod gateway {
                 info!("send_notification('{}'): ok", message_env);
             }
             Err(e) => {
-                let event = format!(
+                let event: String = format!(
                     "send_notification(
                     '{}',
                 ) error: {}",
